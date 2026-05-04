@@ -561,7 +561,10 @@ const SUPLS=[
   {group:"🍄 Justo al terminar el desayuno",sub:"Esperar 15-20 min sin comer ni beber después",items:[
     {pill:"💊 Fármaco",pc:"rgba(255,69,58,0.2)",ptx:"#FF8A85",name:"Mycostatin — 1ª toma",dose:"Dosis prescrita · enjuague 1-2 min y traga<br/>Actúa sobre mucosa oral, faríngea y esofágica — no se absorbe sistémicamente"}
   ]},
-  {group:"☀️ Media mañana — entre comidas",sub:"Mín. 2h después del desayuno · 1h antes de comer",items:[
+  {group:"🌿 17:00 — Media tarde · en ayunas",sub:"Mín. 2h después de comer",items:[
+    {pill:"💊 Suplemento",pc:"rgba(10,132,255,0.2)",ptx:"#6AB8FF",name:"Zinc-L-Carnosina — 2ª toma",dose:"1 cápsula (75 mg) · con agua · en ayunas<br/>Toma intermedia de tarde para mantener niveles constantes sobre la mucosa"}
+  ]},
+  {group:"🍄 17:30 — Media tarde · entre comidas",sub:"30 min después del Zinc-carnosina",items:[
     {pill:"💊 Prescrito",pc:"rgba(48,209,88,0.18)",ptx:"#70D080",name:"Mico Neo CLN",dose:"1 sobre · disolver en agua fría o tibia<br/>Hongos medicinales — inmunomodulador, prebiótico de Akkermansia. Siempre fuera de comidas"}
   ]},
   {group:"⏱ 15-20 min antes de comer",sub:"",items:[
@@ -582,7 +585,7 @@ const SUPLS=[
   {group:"🌑 Antes de dormir — ayunas",sub:"Mínimo 2h después de cenar",items:[
     {pill:"💊 Fármaco",pc:"rgba(255,69,58,0.2)",ptx:"#FF8A85",name:"Jorveza (budesonida tópica)",dose:"① Dejar disolver lentamente en la boca<br/>② Esperar 30 min sin comer, beber ni enjuagarse<br/>③ Enjuagarse la boca y escupir (elimina restos de corticoide)<br/>④ Ahora tomar Mycostatin y Zinc-carnosina"},
     {pill:"💊 Fármaco",pc:"rgba(255,69,58,0.2)",ptx:"#FF8A85",name:"Mycostatin — 4ª y última toma",dose:"Después del enjuague del Jorveza<br/>Combinación nocturna Jorveza + Mycostatin cubre el esófago toda la noche"},
-    {pill:"💊 Suplemento",pc:"rgba(10,132,255,0.2)",ptx:"#6AB8FF",name:"Zinc-L-Carnosina — 2ª toma",dose:"1 cápsula (75 mg) · ayunas nocturno<br/>Actúa sobre la mucosa esofágica e intestinal durante toda la noche — sinergia con Jorveza"}
+    {pill:"💊 Suplemento",pc:"rgba(10,132,255,0.2)",ptx:"#6AB8FF",name:"Zinc-L-Carnosina — 2ª toma (si no la tomaste a las 17:00)",dose:"1 cápsula · solo si no se tomó por la tarde<br/>Sinergia nocturna con Jorveza sobre la mucosa esofágica e intestinal"}
   ]}
 ];
 
@@ -1073,8 +1076,11 @@ const REMIND_SLOTS = [
   { time:'07:50', label:'Post-desayuno', icon:'🍄', items:[
     {name:'Mycostatin 1ª toma', dose:'Enjuague 1-2 min y traga · esperar 15 min'},
   ]},
-  { time:'10:30', label:'Media mañana', icon:'☀️', items:[
-    {name:'Mico Neo CLN', dose:'1 sobre disuelto en agua · entre comidas'},
+  { time:'17:00', label:'Media tarde', icon:'🌿', items:[
+    {name:'Zinc-L-Carnosina (2ª toma)', dose:'1 cápsula · con agua · en ayunas · mín. 2h después de comer'},
+  ]},
+  { time:'17:30', label:'Media tarde', icon:'🍄', items:[
+    {name:'Mico Neo CLN', dose:'1 sobre disuelto en agua fría · fuera de comidas'},
   ]},
   { time:'13:45', label:'Antes de comer', icon:'⏱', items:[
     {name:'L-Glutamina ZE 877 (2ª)', dose:'2 cápsulas · 15 min antes de comer · pauta 2-2-0'},
@@ -1098,7 +1104,7 @@ const REMIND_SLOTS = [
   { time:'23:00', label:'Antes de dormir', icon:'🌑', items:[
     {name:'Jorveza', dose:'Disolver en boca · esperar 30 min · enjuagarse'},
     {name:'Mycostatin 4ª toma', dose:'Después del enjuague del Jorveza'},
-    {name:'Zinc-L-Carnosina (2ª)', dose:'1 cápsula · ayunas nocturno'},
+    {name:'Zinc-L-Carnosina (si no tomada a las 17:00)', dose:'Solo si no se tomó por la tarde · sinergia nocturna con Jorveza'},
   ]},
 ];
 
