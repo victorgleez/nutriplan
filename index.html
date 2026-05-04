@@ -183,6 +183,27 @@ html,body{background:#000;color:#fff;font-family:-apple-system,'SF Pro Display',
   .notif-ok{background:rgba(48,209,88,0.1);border:1px solid rgba(48,209,88,0.25);color:#70D080;}
   .notif-no{background:rgba(255,69,58,0.1);border:1px solid rgba(255,69,58,0.25);color:#FF8A85;}
   .notif-info{background:rgba(255,214,10,0.08);border:1px solid rgba(255,214,10,0.2);color:#FFD60A;}
+
+  /* AYUNO */
+  .fast-card{background:#1C1C1E;border-radius:16px;margin:0 16px 12px;overflow:hidden;}
+  .fast-header{padding:13px 14px 10px;display:flex;align-items:center;justify-content:space-between;}
+  .fast-title{font-size:15px;font-weight:700;color:#fff;}
+  .fast-badge{padding:4px 10px;border-radius:20px;font-size:11.5px;font-weight:700;}
+  .fast-badge.ok{background:rgba(48,209,88,0.15);color:#30D158;}
+  .fast-badge.warn{background:rgba(255,159,10,0.15);color:#FF9F0A;}
+  .fast-badge.bad{background:rgba(255,69,58,0.15);color:#FF453A;}
+  .fast-times{display:flex;gap:0;border-top:1px solid rgba(255,255,255,0.06);}
+  .fast-time-block{flex:1;padding:12px 14px;text-align:center;}
+  .fast-time-block:first-child{border-right:1px solid rgba(255,255,255,0.06);}
+  .fast-time-lbl{font-size:10.5px;font-weight:700;color:#636366;text-transform:uppercase;letter-spacing:.7px;margin-bottom:6px;}
+  .fast-time-input{background:#2C2C2E;border:1px solid rgba(255,255,255,0.1);border-radius:10px;color:#30D158;font-size:20px;font-weight:800;padding:8px 10px;width:100%;text-align:center;font-family:inherit;outline:none;-webkit-appearance:none;letter-spacing:1px;}
+  .fast-time-input:focus{border-color:#30D158;}
+  .fast-bar{height:8px;background:#2C2C2E;margin:0 14px 14px;border-radius:4px;overflow:hidden;position:relative;}
+  .fast-bar-fill{height:100%;border-radius:4px;transition:width .4s,background .4s;}
+  .fast-info{padding:0 14px 13px;font-size:12px;color:#8E8E93;line-height:1.6;}
+  .fast-supl-note{background:rgba(94,92,230,0.1);border:1px solid rgba(94,92,230,0.2);border-radius:10px;padding:10px 13px;margin:0 16px 14px;font-size:12px;color:#A8A6FF;line-height:1.6;}
+
+  .export-unified{display:flex;align-items:center;justify-content:center;gap:9px;margin:0 16px 16px;background:linear-gradient(135deg,#1A3A2A,#0D2018);border:1.5px solid rgba(48,209,88,0.4);border-radius:14px;padding:14px;color:#30D158;font-size:14px;font-weight:800;cursor:pointer;width:calc(100% - 32px);letter-spacing:.2px;touch-action:manipulation;}
 </style>
 </head>
 <body>
@@ -204,7 +225,11 @@ html,body{background:#000;color:#fff;font-family:-apple-system,'SF Pro Display',
   <div id="meals-container" style="padding:0 16px;"></div>
   <button class="export-btn" onclick="exportWeek()">
     <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
-    Exportar resumen semanal
+    Exportar solo comidas
+  </button>
+  <button class="export-unified" onclick="exportAll()">
+    <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+    📋 Exportar resumen completo
   </button>
   <div style="height:8px;"></div>
   <div style="height:60px;display:flex;align-items:center;justify-content:center;opacity:0.15;font-size:22px;letter-spacing:6px;padding-top:10px;">🌿 ✦ 🌿</div>
@@ -224,7 +249,7 @@ html,body{background:#000;color:#fff;font-family:-apple-system,'SF Pro Display',
 
 <!-- SUPLEMENTACIÓN -->
 <div id="s-supl" class="screen">
-  <div class="header"><div class="screen-title">Suplementación</div><div class="screen-sub">Protocolo completo · Dra. de la Puerta</div></div>
+  <div class="header"><div class="screen-title">Suplementación</div><div class="screen-sub" id="supl-date-sub">Protocolo completo · Dra. de la Puerta</div></div>
   <div style="background:rgba(94,92,230,0.12);border:1px solid rgba(94,92,230,0.22);border-radius:14px;margin:0 16px 10px;padding:11px 13px;">
     <div style="font-size:13px;color:#A8A6FF;line-height:1.6;">⚕️ Pauta 11/03/2026. No modifiques dosis sin consultar a la Dra. de la Puerta.</div>
   </div>
@@ -376,6 +401,30 @@ html,body{background:#000;color:#fff;font-family:-apple-system,'SF Pro Display',
     Activar notificaciones
   </button>
   <div id="notif-status" class="notif-status notif-info" style="display:none;"></div>
+  <!-- AYUNO INTERMITENTE -->
+  <div class="fast-card">
+    <div class="fast-header">
+      <div>
+        <div class="fast-title">⏳ Ayuno intermitente</div>
+        <div style="font-size:11.5px;color:#8E8E93;margin-top:2px;">Objetivo: 12h · ajusta tus horarios</div>
+      </div>
+      <div class="fast-badge ok" id="fast-badge">— h</div>
+    </div>
+    <div class="fast-times">
+      <div class="fast-time-block">
+        <div class="fast-time-lbl">🌅 Desayuno</div>
+        <input class="fast-time-input" type="time" id="fast-breakfast" value="09:00" oninput="saveFastTimes();updateFasting();"/>
+      </div>
+      <div class="fast-time-block">
+        <div class="fast-time-lbl">🌙 Cena</div>
+        <input class="fast-time-input" type="time" id="fast-dinner" value="21:00" oninput="saveFastTimes();updateFasting();"/>
+      </div>
+    </div>
+    <div class="fast-bar"><div class="fast-bar-fill" id="fast-bar" style="width:0%;background:#30D158;"></div></div>
+    <div class="fast-info" id="fast-info"></div>
+  </div>
+  <div class="fast-supl-note" id="fast-supl-note"></div>
+
   <div class="rem-header-bar">
     <div style="font-size:12px;color:#636366;">Hora actual: <span id="rem-clock" style="color:#fff;font-weight:700;"></span></div>
     <button class="rem-edit-btn" id="rem-edit-btn" onclick="toggleRemEdit()">✏️ Editar horas</button>
@@ -423,6 +472,10 @@ html,body{background:#000;color:#fff;font-family:-apple-system,'SF Pro Display',
   <div style="position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:100%;max-width:430px;height:env(safe-area-inset-bottom,0px);background:#121212;z-index:99;pointer-events:none;"></div>
 </div><!-- /app -->
 <script>
+function getTodayIdx(){
+  const d = new Date().getDay(); // 0=Sun,1=Mon...6=Sat
+  return d === 0 ? 6 : d - 1;   // convert to Mon=0...Sun=6
+}
 const DAYS=["Lun","Mar","Mié","Jue","Vie","Sáb","Dom"];
 
 const PLAN1=[
@@ -573,10 +626,7 @@ const SUPLS=[
   {group:"🍄 Justo al terminar el desayuno",sub:"Esperar 15-20 min sin comer ni beber después",items:[
     {pill:"💊 Fármaco",pc:"rgba(255,69,58,0.2)",ptx:"#FF8A85",name:"Mycostatin — 1ª toma",dose:"Dosis prescrita · enjuague 1-2 min y traga<br/>Actúa sobre mucosa oral, faríngea y esofágica — no se absorbe sistémicamente"}
   ]},
-  {group:"🌿 17:00 — Media tarde · en ayunas",sub:"Mín. 2h después de comer",items:[
-    {pill:"💊 Suplemento",pc:"rgba(10,132,255,0.2)",ptx:"#6AB8FF",name:"Zinc-L-Carnosina — 2ª toma",dose:"1 cápsula (75 mg) · con agua · en ayunas<br/>Toma intermedia de tarde para mantener niveles constantes sobre la mucosa"}
-  ]},
-  {group:"🍄 17:30 — Media tarde · entre comidas",sub:"30 min después del Zinc-carnosina",items:[
+  {group:"☀️ Media mañana — entre comidas",sub:"Mín. 2h después desayuno · 2h antes de comer",items:[
     {pill:"💊 Prescrito",pc:"rgba(48,209,88,0.18)",ptx:"#70D080",name:"Mico Neo CLN",dose:"1 sobre · disolver en agua fría o tibia<br/>Hongos medicinales — inmunomodulador, prebiótico de Akkermansia. Siempre fuera de comidas"}
   ]},
   {group:"⏱ 15-20 min antes de comer",sub:"",items:[
@@ -587,8 +637,9 @@ const SUPLS=[
     {pill:"💊 Fármaco",pc:"rgba(255,69,58,0.2)",ptx:"#FF8A85",name:"Mycostatin — 2ª toma",dose:"Enjuague y traga · espera 15-20 min antes de beber"},
     {pill:"⚠️ Si diarrea",pc:"rgba(255,214,10,0.18)",ptx:"#FFD060",name:"Eubiotics Buty-D — toma extra",dose:"1 cápsula extra · solo en días con diarrea activa"}
   ]},
-  {group:"⏱ 15-20 min antes de comer",sub:"Solo Gelsectan — la Glutamina no se toma antes de cenar",items:[
-    {pill:"💊 Prescrito",pc:"rgba(48,209,88,0.18)",ptx:"#70D080",name:"Gelsectan — 2ª toma",dose:"1 cápsula · 2ª toma del día (pauta 2-2-0)"}
+  {group:"🌿 20:30 — Antes de cenar · en ayunas",sub:"Tomar junto con el Gelsectan",items:[
+    {pill:"💊 Suplemento",pc:"rgba(10,132,255,0.2)",ptx:"#6AB8FF",name:"Zinc-L-Carnosina — 2ª toma",dose:"1 cápsula (75 mg) · con agua · en ayunas<br/>Sinergia nocturna con Jorveza sobre la mucosa esofágica"},
+    {pill:"💊 Prescrito",pc:"rgba(48,209,88,0.18)",ptx:"#70D080",name:"Gelsectan — 2ª toma",dose:"1 cápsula · 15-20 min antes de cenar"}
   ]},
   {group:"🌙 Con la cena",sub:"",items:[
     {pill:"💊 Prescrito",pc:"rgba(48,209,88,0.18)",ptx:"#70D080",name:"Oliovita Piel y Mucosas — 2ª toma",dose:"2 cápsulas · 2ª toma del día · con alimento"},
@@ -603,20 +654,21 @@ const SUPLS=[
 // Count total items
 const TOTAL_SUPLS = SUPLS.reduce((s,g)=>s+g.items.length,0);
 
-// ── STATE ─────────────────────────────────────────────────────────────────
+// -- STATE -----------------------------------------------------------------
 let currentDay=0, currentMenu=0, openMeals=new Set(), openExtras=new Set();
 let shopChecked=new Set(JSON.parse(localStorage.getItem('nutricheck')||'[]'));
 let suplChecked=new Set(JSON.parse(localStorage.getItem('suplcheck')||'[]'));
 
-// ── NAV ───────────────────────────────────────────────────────────────────
+// -- NAV -------------------------------------------------------------------
 function showTab(id,btn){
   document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
   document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
   document.getElementById('s-'+id).classList.add('active');
   btn.classList.add('active');
   document.getElementById('screen').scrollTop=0;
-  if(id==='remind'){ buildRemindTimeline(); }
-  if(id==='sintomas'){ buildSymDays(); renderSymGrid(); renderSymWeek(); }
+  if(id==='remind'){ buildRemindTimeline(); loadFastTimes(); updateFasting(); }
+  if(id==='supl'){ const dEl=document.getElementById('supl-date-sub'); if(dEl){const n=new Date();dEl.textContent=n.toLocaleDateString('es-ES',{weekday:'long',day:'numeric',month:'long'});}}
+  if(id==='sintomas'){ if(symDay===0){symDay=getTodayIdx();} buildSymDays(); renderSymGrid(); renderSymWeek(); }
 }
 function showGuia(id,btn){
   document.querySelectorAll('.gsec').forEach(s=>s.classList.remove('active'));
@@ -625,7 +677,7 @@ function showGuia(id,btn){
   btn.classList.add('active');
 }
 
-// ── PLAN ──────────────────────────────────────────────────────────────────
+// -- PLAN ------------------------------------------------------------------
 function exportWeek(){
   const plan=currentMenu===0?PLAN1:PLAN2;
   const menuName=currentMenu===0?'Menú 1 — Clásico':'Menú 2 — Airfryer';
@@ -635,7 +687,7 @@ function exportWeek(){
   let txt=`RESUMEN SEMANAL NUTRIPLAN\n`;
   txt+=`${menuName}\n`;
   txt+=`Exportado: ${dateStr}\n`;
-  txt+=`${'─'.repeat(40)}\n\n`;
+  txt+=`${'-'.repeat(40)}\n\n`;
   let totalMeals=0, doneMeals=0;
   DAYS.forEach((dayName,d)=>{
     txt+=`📅 ${dayName.toUpperCase()} — ${plan[d].totalKcal} kcal\n`;
@@ -651,7 +703,7 @@ function exportWeek(){
     });
     txt+='\n';
   });
-  txt+=`${'─'.repeat(40)}\n`;
+  txt+=`${'-'.repeat(40)}\n`;
   txt+=`📊 ADHERENCIA: ${doneMeals}/${totalMeals} comidas realizadas (${Math.round(doneMeals/totalMeals*100)}%)\n\n`;
   txt+=`Notas sobre lo comido fuera del plan:\n`;
   let hasNotes=false;
@@ -677,7 +729,8 @@ function exportWeek(){
   }
 }
 function buildDays(){
-  document.getElementById('day-scroll').innerHTML=DAYS.map((d,i)=>`<button class="day-pill${i===0?' active':''}" onclick="selectDay(${i},this)">${d}</button>`).join('');
+  const today = getTodayIdx();
+  document.getElementById('day-scroll').innerHTML=DAYS.map((d,i)=>`<button class="day-pill${i===today?' active':''}" onclick="selectDay(${i},this)">${d}</button>`).join('');
 }
 function selectDay(i,btn){
   currentDay=i;openMeals=new Set();
@@ -758,7 +811,7 @@ function mealHTML(m,i){
 }
 function toggleMeal(i){if(openMeals.has(i))openMeals.delete(i);else openMeals.add(i);renderMeals();}
 
-// ── EXTRAS ────────────────────────────────────────────────────────────────
+// -- EXTRAS ----------------------------------------------------------------
 function buildExtras(){
   document.getElementById('extras-container').innerHTML=EXTRAS.map((r,i)=>extraHTML(r,i)).join('');
 }
@@ -782,12 +835,12 @@ function extraHTML(r,i){
 }
 function toggleExtra(i){if(openExtras.has(i))openExtras.delete(i);else openExtras.add(i);buildExtras();}
 
-// ── SUPL ──────────────────────────────────────────────────────────────────
+// -- SUPL ------------------------------------------------------------------
 function buildSupl(){
   let html='';let idx=0;
   SUPLS.forEach(g=>{
     html+=`<div class="sbl" style="margin-bottom:10px;">
-      <div class="sbh"><div class="sbi">${g.group.split(' ')[0]}</div><div><div class="sbt">${g.group.replace(/^\S+\s/,'')}</div>${g.sub?`<div class="sbs">${g.sub}</div>`:''}</div></div>
+      <div class="sbh"><div class="sbi">${g.group.split(' ')[0]}</div><div><div class="sbt">${g.group.split(' ').slice(1).join(' ')}</div>${g.sub?`<div class="sbs">${g.sub}</div>`:''}</div></div>
       <div class="sbitems">`;
     g.items.forEach(it=>{
       const k=idx;
@@ -830,7 +883,7 @@ function updateSuplProg(){
 }
 function resetSupl(){suplChecked=new Set();localStorage.setItem('suplcheck','[]');buildSupl();}
 
-// ── SHOP ──────────────────────────────────────────────────────────────────
+// -- SHOP ------------------------------------------------------------------
 let currentStore=0;
 const STORE_NAMES=['Mercadona','Aldi','Lidl'];
 function selectStore(idx){
@@ -907,13 +960,13 @@ function updateShop(){
 function toggleShop(key){if(shopChecked.has(key))shopChecked.delete(key);else shopChecked.add(key);localStorage.setItem('nutricheck',JSON.stringify([...shopChecked]));updateShop();}
 function clearAll(){shopChecked=new Set();localStorage.setItem('nutricheck','[]');updateShop();}
 
-// ── INIT ──────────────────────────────────────────────────────────────────
-buildDays();renderMeals();buildExtras();buildSupl();updateShop();
+// -- INIT ------------------------------------------------------------------
+currentDay=getTodayIdx();buildDays();renderMeals();buildExtras();buildSupl();updateShop();
 
 
-// ══════════════════════════════════════════════════════════════════════════════
+// ==============================================================================
 // SÍNTOMAS
-// ══════════════════════════════════════════════════════════════════════════════
+// ==============================================================================
 const SYM_GENERAL = [
   {id:'great', label:'😊 Muy bien', cls:'s-ok'},
   {id:'ok',    label:'🙂 Normal',   cls:'s-ok'},
@@ -936,8 +989,16 @@ const SYM_ESOFAGO = [
   {id:'atasco', label:'🔴 Atasco comida', cls:'s-bad'},
   {id:'ardor',  label:'🔥 Ardor/reflujo', cls:'s-bad'},
 ];
+const SYM_PIEL = [
+  {id:'pielok',     label:'✅ Piel sin molestias', cls:'s-ok'},
+  {id:'picorpiel',  label:'🔴 Picores en piel',    cls:'s-bad'},
+  {id:'picorpubis', label:'🔴 Picores en pubis',   cls:'s-bad'},
+  {id:'dermatis',   label:'🟠 Dermatitis',          cls:'s-mild'},
+  {id:'rojeces',    label:'🟠 Rojeces/eccema',      cls:'s-mild'},
+  {id:'urticaria',  label:'🔴 Urticaria',           cls:'s-bad'},
+];
 
-let symDay = 0;
+let symDay = 0; // will be set to today on init
 
 function getSymKey(day, id){ return 'sym-' + day + '-' + id; }
 function getSymVal(day, id){
@@ -992,6 +1053,7 @@ function renderSymGrid(){
   renderGroup('sym-grid-general', SYM_GENERAL);
   renderGroup('sym-grid-digestion', SYM_DIGESTION);
   renderGroup('sym-grid-esofago', SYM_ESOFAGO);
+  renderGroup('sym-grid-piel', SYM_PIEL);
   const noteEl = document.getElementById('sym-note-txt');
   if(noteEl) noteEl.value = getSymNote(symDay);
   noteEl.oninput = () => saveSymNote(symDay, noteEl.value);
@@ -1017,8 +1079,14 @@ function renderSymWeek(){
     {id:'nausea',  label:'Náuseas',     cls:'sym-tag-bad'},
     {id:'eok',     label:'Esófago OK',  cls:'sym-tag-ok'},
     {id:'disfa',   label:'Disfagia',    cls:'sym-tag-mild'},
-    {id:'atasco',  label:'Atasco',      cls:'sym-tag-bad'},
-    {id:'ardor',   label:'Ardor',       cls:'sym-tag-bad'},
+    {id:'atasco',    label:'Atasco',           cls:'sym-tag-bad'},
+    {id:'ardor',     label:'Ardor',             cls:'sym-tag-bad'},
+    {id:'pielok',    label:'Piel OK',            cls:'sym-tag-ok'},
+    {id:'picorpiel', label:'Picores piel',       cls:'sym-tag-bad'},
+    {id:'picorpubis',label:'Picores pubis',      cls:'sym-tag-bad'},
+    {id:'dermatis',  label:'Dermatitis',         cls:'sym-tag-mild'},
+    {id:'rojeces',   label:'Rojeces/eccema',     cls:'sym-tag-mild'},
+    {id:'urticaria', label:'Urticaria',          cls:'sym-tag-bad'},
   ];
   let html = '<div class="sym-week-grid">';
   DAYS.forEach((d,i) => {
@@ -1047,7 +1115,7 @@ function renderSymWeek(){
 function exportSymptoms(){
   const data = JSON.parse(localStorage.getItem('symptoms')||'{}');
   const today = new Date().toLocaleDateString('es-ES',{weekday:'long',year:'numeric',month:'long',day:'numeric'});
-  let txt = `SÍNTOMAS SEMANALES — NUTRIPLAN\nExportado: ${today}\n${'─'.repeat(40)}\n\n`;
+  let txt = `SÍNTOMAS SEMANALES — NUTRIPLAN\nExportado: ${today}\n${'-'.repeat(40)}\n\n`;
   DAYS.forEach((d,i) => {
     const active = [];
     [...SYM_GENERAL, ...SYM_DIGESTION, ...SYM_ESOFAGO].forEach(s => {
@@ -1069,12 +1137,12 @@ function exportSymptoms(){
   }
 }
 
-// ══════════════════════════════════════════════════════════════════════════════
+// ==============================================================================
 // RECORDATORIOS
-// ══════════════════════════════════════════════════════════════════════════════
+// ==============================================================================
 const REMIND_SLOTS = [
   { time:'07:00', label:'Al levantarte', icon:'🌄', items:[
-    {name:'Zinc-L-Carnosina', dose:'1 cápsula · en ayunas con agua'},
+    {name:'Zinc-L-Carnosina (1ª)', dose:'1 cápsula · en ayunas con agua'},
     {name:'L-Glutamina ZE 877 (1ª)', dose:'2 cápsulas · 15-20 min antes del desayuno · pauta 2-2-0'},
     {name:'Gelsectan (1ª)', dose:'1 cápsula · 15-20 min antes del desayuno'},
   ]},
@@ -1082,16 +1150,13 @@ const REMIND_SLOTS = [
     {name:'Eubiotics Buty-D', dose:'1 cápsula · con alimento'},
     {name:'Oliovita', dose:'2 cápsulas · con alimento'},
     {name:'Finasteride', dose:'1 comprimido · con o sin alimento'},
-    {name:'Metagenics Akkermansia', dose:'1-2 comprimidos · con alimento · necesita comida para sobrevivir'},
+    {name:'Metagenics Akkermansia', dose:'1-2 comprimidos · con alimento'},
   ]},
   { time:'07:50', label:'Post-desayuno', icon:'🍄', items:[
     {name:'Mycostatin 1ª toma', dose:'Enjuague 1-2 min y traga · esperar 15 min'},
   ]},
-  { time:'17:00', label:'Media tarde', icon:'🌿', items:[
-    {name:'Zinc-L-Carnosina (2ª toma)', dose:'1 cápsula · con agua · en ayunas · mín. 2h después de comer'},
-  ]},
-  { time:'17:30', label:'Media tarde', icon:'🍄', items:[
-    {name:'Mico Neo CLN', dose:'1 sobre disuelto en agua fría · fuera de comidas'},
+  { time:'11:00', label:'Media mañana', icon:'☀️', items:[
+    {name:'Mico Neo CLN', dose:'1 sobre disuelto en agua fría · fuera de comidas · entre desayuno y comida'},
   ]},
   { time:'13:45', label:'Antes de comer', icon:'⏱', items:[
     {name:'L-Glutamina ZE 877 (2ª)', dose:'2 cápsulas · 15 min antes de comer · pauta 2-2-0'},
@@ -1103,19 +1168,21 @@ const REMIND_SLOTS = [
   { time:'14:20', label:'Post-comida', icon:'🍄', items:[
     {name:'Mycostatin 2ª toma', dose:'Enjuague y traga · esperar 15 min'},
   ]},
+  { time:'20:30', label:'Media tarde', icon:'🌿', items:[
+    {name:'Zinc-L-Carnosina (2ª)', dose:'1 cápsula · con agua · en ayunas · justo antes del Gelsectan'},
+  ]},
   { time:'20:45', label:'Antes de cenar', icon:'⏱', items:[
-    {name:'Gelsectan (2ª)', dose:'1 cápsula · 15 min antes de cenar · pauta 2-2-0 Glutamina no aplica'},
+    {name:'Gelsectan (2ª)', dose:'1 cápsula · 15 min antes de cenar'},
   ]},
   { time:'21:00', label:'Cena', icon:'🌙', items:[
     {name:'Oliovita (2ª)', dose:'2 cápsulas · con alimento'},
   ]},
   { time:'21:20', label:'Post-cena', icon:'🍄', items:[
-    {name:'Mycostatin 3ª toma', dose:'Enjuague y traga'},
+    {name:'Mycostatin 3ª toma', dose:'Después de cenar · enjuague y traga'},
   ]},
   { time:'23:00', label:'Antes de dormir', icon:'🌑', items:[
-    {name:'Jorveza', dose:'Disolver en boca · esperar 30 min · enjuagarse'},
+    {name:'Jorveza', dose:'Disolver en boca · esperar 30 min · enjuagarse y escupir'},
     {name:'Mycostatin 4ª toma', dose:'Después del enjuague del Jorveza'},
-
   ]},
 ];
 
@@ -1249,6 +1316,166 @@ window.addEventListener('load', () => {
     scheduleNotifications();
   }
 });
+
+// ==============================================================================
+// AYUNO INTERMITENTE
+// ==============================================================================
+function loadFastTimes(){
+  const s = JSON.parse(localStorage.getItem('fasttimes')||'{}');
+  const bf = document.getElementById('fast-breakfast');
+  const di = document.getElementById('fast-dinner');
+  if(bf && s.breakfast) bf.value = s.breakfast;
+  if(di && s.dinner)    di.value = s.dinner;
+}
+function saveFastTimes(){
+  const bf = document.getElementById('fast-breakfast');
+  const di = document.getElementById('fast-dinner');
+  localStorage.setItem('fasttimes', JSON.stringify({
+    breakfast: bf ? bf.value : '09:00',
+    dinner:    di ? di.value : '21:00'
+  }));
+}
+function addMinutes(time, mins){
+  const [h,m] = time.split(':').map(Number);
+  const total = h*60 + m + mins;
+  const nh = Math.floor(((total % 1440) + 1440) % 1440 / 60);
+  const nm = ((total % 1440) + 1440) % 1440 % 60;
+  return nh.toString().padStart(2,'0') + ':' + nm.toString().padStart(2,'0');
+}
+function timeDiffHours(from, to){
+  const [fh,fm] = from.split(':').map(Number);
+  const [th,tm] = to.split(':').map(Number);
+  let diff = (th*60+tm) - (fh*60+fm);
+  if(diff < 0) diff += 1440;
+  return diff / 60;
+}
+function updateFasting(){
+  const bf = document.getElementById('fast-breakfast');
+  const di = document.getElementById('fast-dinner');
+  const badge = document.getElementById('fast-badge');
+  const bar = document.getElementById('fast-bar');
+  const info = document.getElementById('fast-info');
+  const note = document.getElementById('fast-supl-note');
+  if(!bf||!di||!badge) return;
+
+  const breakfast = bf.value || '09:00';
+  const dinner    = di.value || '21:00';
+
+  // Fasting window = from end of dinner to breakfast next day
+  const fastHours = timeDiffHours(dinner, breakfast);
+  const eatHours  = timeDiffHours(breakfast, dinner);
+  const pct = Math.min(100, Math.round(fastHours / 12 * 100));
+  const fastOk = fastHours >= 12;
+  const fastGreat = fastHours >= 14;
+
+  // Badge
+  const hh = Math.floor(fastHours);
+  const mm = Math.round((fastHours - hh) * 60);
+  badge.textContent = hh + 'h' + (mm > 0 ? mm+'m' : '');
+  badge.className = 'fast-badge ' + (fastGreat ? 'ok' : fastOk ? 'ok' : 'warn');
+
+  // Bar
+  bar.style.width = pct + '%';
+  bar.style.background = fastGreat ? '#30D158' : fastOk ? '#30D158' : '#FF9F0A';
+
+  // Info text
+  const zinc_morning = addMinutes(breakfast, -40);
+  const gels_morning = addMinutes(breakfast, -20);
+  const mycost_post_bf = addMinutes(breakfast, 20);
+  const glut_lunch = addMinutes(breakfast, (eatHours/2 * 60) - 15);
+  const gels_dinner = addMinutes(dinner, -20);
+  const jorveza = addMinutes(dinner, 120);
+  const zinc_evening = addMinutes(dinner, -420); // 17:00 approx
+
+  info.innerHTML = fastOk
+    ? `✅ Ventana de ayuno: <b style="color:#30D158;">${hh}h${mm>0?mm+'m':''}</b> · ventana de comida: <b>${Math.floor(eatHours)}h</b><br/>
+       🌑 Inicio ayuno: <b>${dinner}</b> → fin ayuno: <b>${breakfast}</b>`
+    : `⚠️ Ayuno actual: <b style="color:#FF9F0A;">${hh}h${mm>0?mm+'m':''}</b> — por debajo del objetivo de 12h<br/>
+       Para llegar a 12h: cena antes de las <b>${addMinutes(breakfast, -720)}</b> o desayuna después de las <b>${addMinutes(dinner, 720)}</b>`;
+
+  // Supplement schedule note
+  note.innerHTML = `<b>📋 Horario de suplementos para hoy:</b><br/>
+    🌄 <b>${zinc_morning}</b> → Zinc-carnosina + Gelsectan (${gels_morning})<br/>
+    🍳 <b>${breakfast}</b> → Desayuno · Buty-D · Oliovita · Finasteride · Akkermansia<br/>
+    🍄 <b>${mycost_post_bf}</b> → Mycostatin 1ª<br/>
+    ⏱ <b>${addMinutes(glut_lunch,0)}</b> → Glutamina 2ª (antes de comer)<br/>
+    🌿 <b>17:00</b> → Zinc-carnosina 2ª · 17:30 Mico Neo<br/>
+    ⏱ <b>${gels_dinner}</b> → Gelsectan 2ª (antes de cenar)<br/>
+    🌙 <b>${dinner}</b> → Cena · Oliovita · post-cena Mycostatin<br/>
+    🌑 <b>${jorveza}</b> → Jorveza · Mycostatin nocturno`;
+}
+
+function initFasting(){ loadFastTimes(); updateFasting(); }
+initFasting();
+function exportAll(){
+  const plan = currentMenu===0?PLAN1:PLAN2;
+  const menuName = currentMenu===0?'Menú 1 — Clásico':'Menú 2 — Airfryer';
+  const log = JSON.parse(localStorage.getItem('meallog')||'{}');
+  const symData = JSON.parse(localStorage.getItem('symptoms')||'{}');
+  const suplData = JSON.parse(localStorage.getItem('suplcheck')||'[]');
+  const today = new Date().toLocaleDateString('es-ES',{weekday:'long',year:'numeric',month:'long',day:'numeric'});
+  const bar = '='.repeat(42);
+
+  let txt = `${bar}\nRESUMEN SEMANAL COMPLETO — NUTRIPLAN\n${menuName}\nExportado: ${today}\n${bar}\n\n`;
+
+  // -- DIETA --
+  txt += `🍽️  DIETA\n${'-'.repeat(42)}\n`;
+  let totalM=0, doneM=0;
+  DAYS.forEach((d,i)=>{
+    txt += `\n📅 ${d.toUpperCase()} — ${plan[i].totalKcal} kcal\n`;
+    plan[i].meals.forEach((m,j)=>{
+      totalM++;
+      const key = getMealKey(i, currentMenu, j);
+      const done = log[key+'-done']||false;
+      const note = log[key+'-note']||'';
+      if(done) doneM++;
+      txt += `  ${done?'✅':'⬜'} ${m.type}: ${m.name}\n`;
+      if(note) txt += `     📝 ${note}\n`;
+    });
+  });
+  txt += `\n📊 Adherencia dieta: ${doneM}/${totalM} (${Math.round(doneM/totalM*100)}%)\n`;
+
+  // -- SÍNTOMAS --
+  txt += `\n\n🩺  SÍNTOMAS\n${'-'.repeat(42)}\n`;
+  const ALL_SYMS = [...SYM_GENERAL,...SYM_DIGESTION,...SYM_ESOFAGO,...SYM_PIEL];
+  DAYS.forEach((d,i)=>{
+    const active = ALL_SYMS.filter(s=>symData['sym-'+i+'-'+s.id]);
+    const note = symData['sym-'+i+'-note']||'';
+    txt += `\n📅 ${d.toUpperCase()}\n`;
+    if(active.length){
+      txt += `  ${active.map(s=>s.label.split(' ').slice(1).join(' '))}\n`;
+    } else {
+      txt += `  Sin registro\n`;
+    }
+    if(note) txt += `  📝 ${note}\n`;
+  });
+
+  // -- SUPLEMENTACIÓN --
+  txt += `\n\n💊  SUPLEMENTACIÓN\n${'-'.repeat(42)}\n`;
+  const checkedSet = new Set(JSON.parse(localStorage.getItem('suplcheck')||'[]'));
+  const totalS = SUPLS.reduce((s,g)=>s+g.items.length,0);
+  const doneS = checkedSet.size;
+  txt += `Tomados hoy: ${doneS}/${totalS} (${Math.round(doneS/totalS*100)}%)\n\n`;
+  let si=0;
+  SUPLS.forEach(g=>{
+    txt += `${g.group.split(' ').slice(1).join(' ')}\n`;
+    g.items.forEach(it=>{
+      const k='s'+si;
+      txt += `  ${checkedSet.has(k)?'✅':'⬜'} ${it.name}\n`;
+      si++;
+    });
+  });
+
+  txt += `\n${bar}\nGenerado por NutriPlan · app personal de Víctor González\n${bar}`;
+
+  if(navigator.share){
+    navigator.share({title:'Resumen completo NutriPlan', text:txt}).catch(()=>{});
+  } else {
+    navigator.clipboard.writeText(txt).then(()=>alert('Resumen completo copiado — pégalo en un mensaje')).catch(()=>{
+      const ta=document.createElement('textarea');ta.value=txt;document.body.appendChild(ta);ta.select();document.execCommand('copy');document.body.removeChild(ta);alert('Copiado');
+    });
+  }
+}
 
 </script>
 </body>
