@@ -11,7 +11,7 @@
 *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
 html,body{background:#000;color:#fff;font-family:-apple-system,'SF Pro Display','Helvetica Neue',sans-serif;height:100%;overflow:hidden;}
 #app{height:100vh;display:flex;flex-direction:column;max-width:430px;margin:0 auto;}
-#screen{flex:1;overflow-y:auto;overflow-x:hidden;padding-bottom:120px;padding-top:env(safe-area-inset-top,44px);-webkit-overflow-scrolling:touch;}
+#screen{flex:1;overflow-y:auto;overflow-x:hidden;padding-bottom:160px;padding-top:env(safe-area-inset-top,44px);-webkit-overflow-scrolling:touch;}
 ::-webkit-scrollbar{display:none;}
 #tabbar{position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:100%;max-width:430px;background:#121212;border-top:1px solid rgba(255,255,255,0.08);display:flex;padding:10px 0;padding-bottom:calc(12px + env(safe-area-inset-bottom,0px));z-index:9999;}
 #tabbar::after{content:'';position:absolute;bottom:calc(-1 * env(safe-area-inset-bottom));left:0;right:0;height:env(safe-area-inset-bottom);background:#121212;}
@@ -207,6 +207,8 @@ html,body{background:#000;color:#fff;font-family:-apple-system,'SF Pro Display',
     Exportar resumen semanal
   </button>
   <div style="height:8px;"></div>
+  <div style="height:60px;display:flex;align-items:center;justify-content:center;opacity:0.15;font-size:22px;letter-spacing:6px;padding-top:10px;">🌿 ✦ 🌿</div>
+
 </div>
 
 <!-- EXTRA -->
@@ -216,6 +218,8 @@ html,body{background:#000;color:#fff;font-family:-apple-system,'SF Pro Display',
     <div style="font-size:13px;color:#FF9F0A;line-height:1.6;">⭐ Más elaboradas pero 100% compatibles. Úsalas cuando quieras variar.</div>
   </div>
   <div id="extras-container" style="padding:0 16px;"></div>
+  <div style="height:60px;display:flex;align-items:center;justify-content:center;opacity:0.15;font-size:22px;letter-spacing:6px;padding-top:10px;">🌿 ✦ 🌿</div>
+
 </div>
 
 <!-- SUPLEMENTACIÓN -->
@@ -236,6 +240,8 @@ html,body{background:#000;color:#fff;font-family:-apple-system,'SF Pro Display',
     </button>
   </div>
   <div style="padding:0 16px 16px;" id="supl-container"></div>
+  <div style="height:60px;display:flex;align-items:center;justify-content:center;opacity:0.15;font-size:22px;letter-spacing:6px;padding-top:10px;">🌿 ✦ 🌿</div>
+
 </div>
 
 <!-- COMPRA -->
@@ -274,6 +280,8 @@ html,body{background:#000;color:#fff;font-family:-apple-system,'SF Pro Display',
     </div>
   </div>
   <div id="shop-container" style="padding:0 16px 16px;"></div>
+  <div style="height:60px;display:flex;align-items:center;justify-content:center;opacity:0.15;font-size:22px;letter-spacing:6px;padding-top:10px;">🌿 ✦ 🌿</div>
+
 </div>
 
 <!-- GUÍA -->
@@ -356,6 +364,8 @@ html,body{background:#000;color:#fff;font-family:-apple-system,'SF Pro Display',
       Exportar síntomas de la semana
     </button>
   </div>
+  <div style="height:60px;display:flex;align-items:center;justify-content:center;opacity:0.15;font-size:22px;letter-spacing:6px;padding-top:10px;">🌿 ✦ 🌿</div>
+
 </div>
 
 <!-- RECORDATORIOS -->
@@ -372,6 +382,8 @@ html,body{background:#000;color:#fff;font-family:-apple-system,'SF Pro Display',
   </div>
   <div style="padding:0 16px 20px;" id="remind-timeline"></div>
 </div>
+
+  <div style="height:60px;display:flex;align-items:center;justify-content:center;opacity:0.15;font-size:22px;letter-spacing:6px;padding-top:10px;">🌿 ✦ 🌿</div>
 
 </div><!-- /screen -->
 
@@ -584,8 +596,7 @@ const SUPLS=[
   ]},
   {group:"🌑 Antes de dormir — ayunas",sub:"Mínimo 2h después de cenar",items:[
     {pill:"💊 Fármaco",pc:"rgba(255,69,58,0.2)",ptx:"#FF8A85",name:"Jorveza (budesonida tópica)",dose:"① Dejar disolver lentamente en la boca<br/>② Esperar 30 min sin comer, beber ni enjuagarse<br/>③ Enjuagarse la boca y escupir (elimina restos de corticoide)<br/>④ Ahora tomar Mycostatin y Zinc-carnosina"},
-    {pill:"💊 Fármaco",pc:"rgba(255,69,58,0.2)",ptx:"#FF8A85",name:"Mycostatin — 4ª y última toma",dose:"Después del enjuague del Jorveza<br/>Combinación nocturna Jorveza + Mycostatin cubre el esófago toda la noche"},
-    {pill:"💊 Suplemento",pc:"rgba(10,132,255,0.2)",ptx:"#6AB8FF",name:"Zinc-L-Carnosina — 2ª toma (si no la tomaste a las 17:00)",dose:"1 cápsula · solo si no se tomó por la tarde<br/>Sinergia nocturna con Jorveza sobre la mucosa esofágica e intestinal"}
+    {pill:"💊 Fármaco",pc:"rgba(255,69,58,0.2)",ptx:"#FF8A85",name:"Mycostatin — 4ª y última toma",dose:"Después del enjuague del Jorveza<br/>Combinación nocturna Jorveza + Mycostatin cubre el esófago toda la noche"}
   ]}
 ];
 
@@ -1104,7 +1115,7 @@ const REMIND_SLOTS = [
   { time:'23:00', label:'Antes de dormir', icon:'🌑', items:[
     {name:'Jorveza', dose:'Disolver en boca · esperar 30 min · enjuagarse'},
     {name:'Mycostatin 4ª toma', dose:'Después del enjuague del Jorveza'},
-    {name:'Zinc-L-Carnosina (si no tomada a las 17:00)', dose:'Solo si no se tomó por la tarde · sinergia nocturna con Jorveza'},
+
   ]},
 ];
 
