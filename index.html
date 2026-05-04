@@ -557,9 +557,8 @@ const SHOPPING_CATS=[
 ];
 
 const SUPLS=[
-  {group:"🌄 Al levantarte — en ayunas",sub:"Solo agua · esperar 30-40 min antes de desayunar",items:[
-    {pill:"💊 Suplemento",pc:"rgba(10,132,255,0.2)",ptx:"#6AB8FF",name:"Zinc-L-Carnosina (PepZin GI)",dose:"1 cápsula (75 mg) · con agua<br/>Ayunas estricto — pierde eficacia con alimentos"},
-    {pill:"💊 Suplemento",pc:"rgba(10,132,255,0.2)",ptx:"#6AB8FF",name:"Metagenics Akkermansia Confort Intestinal",dose:"1-2 comprimidos · con agua<br/>Akkermansia muciniphila pasteurizada — repuebla directamente la bacteria más reducida de tu microbiota"}
+  {group:"🌄 Al levantarte — en ayunas",sub:"Solo agua · Zinc-carnosina solo · esperar 30-40 min",items:[
+    {pill:"💊 Suplemento",pc:"rgba(10,132,255,0.2)",ptx:"#6AB8FF",name:"Zinc-L-Carnosina (PepZin GI)",dose:"1 cápsula (75 mg) · con agua<br/>Ayunas estricto — pierde eficacia con alimentos"}
   ]},
   {group:"⏱ 15-20 min antes del desayuno",sub:"En ayunas, antes de comer nada",items:[
     {pill:"💊 Prescrito",pc:"rgba(48,209,88,0.18)",ptx:"#70D080",name:"L-Glutamina ZE 877 — 1ª toma",dose:"2 cápsulas · antes del desayuno<br/>Pauta 2-2-0: desayuno y comida únicamente"},
@@ -568,7 +567,8 @@ const SUPLS=[
   {group:"🍳 Con el desayuno",sub:"Al empezar o durante la comida",items:[
     {pill:"💊 Prescrito",pc:"rgba(48,209,88,0.18)",ptx:"#70D080",name:"Eubiotics Buty-D",dose:"1 cápsula · con alimento<br/>Butirato + vitamina D — nutre el epitelio intestinal<br/><b style='color:#FFD60A'>Si hay diarrea: toma 1 aquí y 1 más con la comida</b>"},
     {pill:"💊 Prescrito",pc:"rgba(48,209,88,0.18)",ptx:"#70D080",name:"Oliovita Piel y Mucosas",dose:"2 cápsulas · con alimento<br/>Polifenoles del olivo — antiinflamatorio, antifúngico contra Candida"},
-    {pill:"💊 Fármaco",pc:"rgba(191,90,242,0.2)",ptx:"#D090F0",name:"Finasteride",dose:"1 comprimido · con o sin alimento<br/>Tomar siempre a la misma hora — el desayuno es el momento más fácil de recordar"}
+    {pill:"💊 Fármaco",pc:"rgba(191,90,242,0.2)",ptx:"#D090F0",name:"Finasteride",dose:"1 comprimido · con o sin alimento<br/>Tomar siempre a la misma hora — el desayuno es el momento más fácil de recordar"},
+    {pill:"💊 Suplemento",pc:"rgba(10,132,255,0.2)",ptx:"#6AB8FF",name:"Metagenics Akkermansia Confort Intestinal",dose:"1-2 comprimidos · con alimento<br/>Necesita comida para no degradarse antes de llegar al colon — tomar con el desayuno, no en ayunas"}
   ]},
   {group:"🍄 Justo al terminar el desayuno",sub:"Esperar 15-20 min sin comer ni beber después",items:[
     {pill:"💊 Fármaco",pc:"rgba(255,69,58,0.2)",ptx:"#FF8A85",name:"Mycostatin — 1ª toma",dose:"Dosis prescrita · enjuague 1-2 min y traga<br/>Actúa sobre mucosa oral, faríngea y esofágica — no se absorbe sistémicamente"}
@@ -1075,7 +1075,6 @@ function exportSymptoms(){
 const REMIND_SLOTS = [
   { time:'07:00', label:'Al levantarte', icon:'🌄', items:[
     {name:'Zinc-L-Carnosina', dose:'1 cápsula · en ayunas con agua'},
-    {name:'Metagenics Akkermansia', dose:'1-2 comprimidos · en ayunas con agua'},
     {name:'L-Glutamina ZE 877 (1ª)', dose:'2 cápsulas · 15-20 min antes del desayuno · pauta 2-2-0'},
     {name:'Gelsectan (1ª)', dose:'1 cápsula · 15-20 min antes del desayuno'},
   ]},
@@ -1083,6 +1082,7 @@ const REMIND_SLOTS = [
     {name:'Eubiotics Buty-D', dose:'1 cápsula · con alimento'},
     {name:'Oliovita', dose:'2 cápsulas · con alimento'},
     {name:'Finasteride', dose:'1 comprimido · con o sin alimento'},
+    {name:'Metagenics Akkermansia', dose:'1-2 comprimidos · con alimento · necesita comida para sobrevivir'},
   ]},
   { time:'07:50', label:'Post-desayuno', icon:'🍄', items:[
     {name:'Mycostatin 1ª toma', dose:'Enjuague 1-2 min y traga · esperar 15 min'},
