@@ -637,9 +637,11 @@ const SUPLS=[
     {pill:"💊 Fármaco",pc:"rgba(255,69,58,0.2)",ptx:"#FF8A85",name:"Mycostatin — 2ª toma",dose:"Enjuague y traga · espera 15-20 min antes de beber"},
     {pill:"⚠️ Si diarrea",pc:"rgba(255,214,10,0.18)",ptx:"#FFD060",name:"Eubiotics Buty-D — toma extra",dose:"1 cápsula extra · solo en días con diarrea activa"}
   ]},
-  {group:"🌿 20:30 — Antes de cenar · en ayunas",sub:"Tomar junto con el Gelsectan",items:[
-    {pill:"💊 Suplemento",pc:"rgba(10,132,255,0.2)",ptx:"#6AB8FF",name:"Zinc-L-Carnosina — 2ª toma",dose:"1 cápsula (75 mg) · con agua · en ayunas<br/>Sinergia nocturna con Jorveza sobre la mucosa esofágica"},
-    {pill:"💊 Prescrito",pc:"rgba(48,209,88,0.18)",ptx:"#70D080",name:"Gelsectan — 2ª toma",dose:"1 cápsula · 15-20 min antes de cenar"}
+  {group:"🌿 19:30 — Tarde · en ayunas",sub:"Mín. 1h antes de cenar · en ayunas",items:[
+    {pill:"💊 Suplemento",pc:"rgba(10,132,255,0.2)",ptx:"#6AB8FF",name:"Zinc-L-Carnosina — 2ª toma",dose:"1 cápsula (75 mg) · con agua · en ayunas<br/>Tomarlo bien separado de la cena — necesita ayunas para actuar sobre la mucosa"}
+  ]},
+  {group:"⏱ 20:45 — Antes de cenar",sub:"15-20 min antes de cenar",items:[
+    {pill:"💊 Prescrito",pc:"rgba(48,209,88,0.18)",ptx:"#70D080",name:"Gelsectan — 2ª toma",dose:"1 cápsula · 15-20 min antes de cenar<br/>Sella la mucosa antes de la última ingesta del día"}
   ]},
   {group:"🌙 Con la cena",sub:"",items:[
     {pill:"💊 Prescrito",pc:"rgba(48,209,88,0.18)",ptx:"#70D080",name:"Oliovita Piel y Mucosas — 2ª toma",dose:"2 cápsulas · 2ª toma del día · con alimento"},
@@ -1168,11 +1170,11 @@ const REMIND_SLOTS = [
   { time:'14:20', label:'Post-comida', icon:'🍄', items:[
     {name:'Mycostatin 2ª toma', dose:'Enjuague y traga · esperar 15 min'},
   ]},
-  { time:'20:30', label:'Media tarde', icon:'🌿', items:[
-    {name:'Zinc-L-Carnosina (2ª)', dose:'1 cápsula · con agua · en ayunas · justo antes del Gelsectan'},
+  { time:'19:30', label:'Tarde — ayunas', icon:'🌿', items:[
+    {name:'Zinc-L-Carnosina (2ª)', dose:'1 cápsula · con agua · en ayunas · mín. 1h antes de cenar'},
   ]},
   { time:'20:45', label:'Antes de cenar', icon:'⏱', items:[
-    {name:'Gelsectan (2ª)', dose:'1 cápsula · 15 min antes de cenar'},
+    {name:'Gelsectan (2ª)', dose:'1 cápsula · 15-20 min antes de cenar'},
   ]},
   { time:'21:00', label:'Cena', icon:'🌙', items:[
     {name:'Oliovita (2ª)', dose:'2 cápsulas · con alimento'},
