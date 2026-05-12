@@ -58,7 +58,7 @@ html,body{background:#000;color:#fff;font-family:-apple-system,'SF Pro Display',
 .day-pill.active{background:#30D158;color:#000;font-weight:800;}
 /* menu toggle */
 .menu-toggle{display:flex;margin:0 16px 12px;background:#1C1C1E;border-radius:12px;padding:4px;gap:4px;}
-.menu-btn{flex:1;padding:8px;border:none;border-radius:9px;cursor:pointer;font-size:13px;font-weight:600;background:transparent;color:#8E8E93;transition:all .15s;}
+.menu-btn{flex:1;padding:9px 4px;border:none;border-radius:9px;cursor:pointer;font-size:12px;font-weight:600;background:transparent;color:#8E8E93;transition:all .15s;white-space:nowrap;}
 .menu-btn.active{background:#2C2C2E;color:#fff;}
 /* meal cards */
 .meal-card{background:#1C1C1E;border-radius:16px;margin-bottom:10px;overflow:hidden;}
@@ -204,6 +204,9 @@ html,body{background:#000;color:#fff;font-family:-apple-system,'SF Pro Display',
   .fast-supl-note{background:rgba(94,92,230,0.1);border:1px solid rgba(94,92,230,0.2);border-radius:10px;padding:10px 13px;margin:0 16px 14px;font-size:12px;color:#A8A6FF;line-height:1.6;}
 
   .export-unified{display:flex;align-items:center;justify-content:center;gap:9px;margin:0 16px 16px;background:linear-gradient(135deg,#1A3A2A,#0D2018);border:1.5px solid rgba(48,209,88,0.4);border-radius:14px;padding:14px;color:#30D158;font-size:14px;font-weight:800;cursor:pointer;width:calc(100% - 32px);letter-spacing:.2px;touch-action:manipulation;}
+
+  .reset-meal-btn{display:flex;align-items:center;justify-content:center;gap:7px;margin:0 0 14px;background:#1C1C1E;border:1px solid rgba(255,69,58,0.35);border-radius:11px;padding:10px;color:#FF8A85;font-size:12.5px;font-weight:700;cursor:pointer;width:100%;touch-action:manipulation;}
+  .reset-meal-btn:active{background:#2C1A1A;}
 </style>
 </head>
 <body>
@@ -214,8 +217,12 @@ html,body{background:#000;color:#fff;font-family:-apple-system,'SF Pro Display',
 <div id="s-plan" class="screen active">
   <div class="header"><div class="screen-title">Plan semanal</div><div class="screen-sub">Sin gluten · Sin lácteos · Sin alcohol · Sin soja</div></div>
   <div class="menu-toggle">
-    <button class="menu-btn active" onclick="switchMenu(0,this)">🥘 Menú 1 — Clásico</button>
-    <button class="menu-btn" onclick="switchMenu(1,this)">🌬️ Menú 2 — Airfryer</button>
+    <button class="menu-btn active" onclick="switchMenu(0,this)">🥘 Casa</button>
+    <button class="menu-btn" onclick="switchMenu(1,this)">🌬️ Airfryer</button>
+    <button class="menu-btn" onclick="switchMenu(2,this)">🥡 Fuera</button>
+  </div>
+  <div style="padding:0 16px;">
+    <button class="reset-meal-btn" onclick="resetMealsWeek()">🔄 Restaurar todas las comidas y notas de la semana</button>
   </div>
   <div id="day-scroll"></div>
   <div id="kcal-banner" style="margin:0 16px 12px;background:linear-gradient(135deg,rgba(48,209,88,0.18),rgba(48,209,88,0.04));border:1px solid rgba(48,209,88,0.22);border-radius:14px;padding:12px 16px;display:flex;justify-content:space-between;align-items:center;">
@@ -253,15 +260,20 @@ html,body{background:#000;color:#fff;font-family:-apple-system,'SF Pro Display',
   <div style="background:rgba(94,92,230,0.12);border:1px solid rgba(94,92,230,0.22);border-radius:14px;margin:0 16px 10px;padding:11px 13px;">
     <div style="font-size:13px;color:#A8A6FF;line-height:1.6;">⚕️ Pauta 11/03/2026. No modifiques dosis sin consultar a la Dra. de la Puerta.</div>
   </div>
+  <div id="supl-day-scroll" style="display:flex;gap:8px;padding:0 16px 12px;overflow-x:auto;scrollbar-width:none;"></div>
   <div style="background:#1C1C1E;border-radius:14px;margin:0 16px 14px;padding:12px 14px;">
     <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
-      <span style="font-size:13px;font-weight:600;color:#fff;">Tomados hoy</span>
+      <span style="font-size:13px;font-weight:600;color:#fff;" id="supl-day-label">Tomados hoy</span>
       <span id="supl-count" style="font-size:13px;font-weight:700;color:#30D158;">0/19</span>
     </div>
     <div style="background:#2C2C2E;border-radius:4px;height:6px;overflow:hidden;"><div id="supl-prog" style="height:100%;background:#30D158;border-radius:4px;transition:width .3s;width:0%"></div></div>
-    <button onclick="resetSupl()" style="margin-top:12px;width:100%;background:#2C2C2E;border:1px solid rgba(255,69,58,0.35);border-radius:10px;padding:10px;color:#FF453A;font-size:13px;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;">
+    <button onclick="resetSuplDay()" style="margin-top:12px;width:100%;background:#2C2C2E;border:1px solid rgba(255,69,58,0.35);border-radius:10px;padding:10px;color:#FF453A;font-size:13px;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;">
       <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" viewBox="0 0 24 24"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/></svg>
-      Resetear todos los checks
+      Resetear checks de este día
+    </button>
+    <button onclick="resetSuplWeek()" style="margin-top:8px;width:100%;background:#2C2C2E;border:1px solid rgba(255,69,58,0.5);border-radius:10px;padding:10px;color:#FF453A;font-size:13px;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;">
+      <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" viewBox="0 0 24 24"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/></svg>
+      Restaurar TODA la semana
     </button>
   </div>
   <div style="padding:0 16px 16px;" id="supl-container"></div>
@@ -384,6 +396,7 @@ html,body{background:#000;color:#fff;font-family:-apple-system,'SF Pro Display',
     <button onclick="clearSymDay()" style="background:none;border:none;color:#636366;font-size:12px;cursor:pointer;text-decoration:underline;margin-top:10px;display:block;">Borrar registro de hoy</button>
     <div class="sym-sec-title" style="margin-top:22px;">Resumen de la semana</div>
     <div id="sym-week-summary"></div>
+    <button class="reset-meal-btn" onclick="resetSymptomsWeek()" style="margin-top:14px;">🔄 Restaurar todos los síntomas de la semana</button>
     <button onclick="exportSymptoms()" style="display:flex;align-items:center;justify-content:center;gap:8px;margin:4px 0 16px;background:linear-gradient(135deg,#1A1A3A,#0D0D20);border:1px solid rgba(94,92,230,0.4);border-radius:12px;padding:13px;color:#A8A6FF;font-size:14px;font-weight:700;cursor:pointer;width:100%;">
       <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
       Exportar síntomas de la semana
@@ -406,7 +419,7 @@ html,body{background:#000;color:#fff;font-family:-apple-system,'SF Pro Display',
     <div class="fast-header">
       <div>
         <div class="fast-title">⏳ Ayuno intermitente</div>
-        <div style="font-size:11.5px;color:#8E8E93;margin-top:2px;">Objetivo: 12h · ajusta tus horarios</div>
+        <div style="font-size:11.5px;color:#8E8E93;margin-top:2px;">Ajusta el horario — el timeline se recalcula solo</div>
       </div>
       <div class="fast-badge ok" id="fast-badge">— h</div>
     </div>
@@ -466,7 +479,7 @@ html,body{background:#000;color:#fff;font-family:-apple-system,'SF Pro Display',
   </button>
   <button class="tab" onclick="showTab('remind',this)">
     <svg width="19" height="19" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" viewBox="0 0 24 24"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
-    <span class="tab-label">Avisos</span>
+    <span class="tab-label">Calc.</span>
   </button>
 </div>
   <div style="position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:100%;max-width:430px;height:env(safe-area-inset-bottom,0px);background:#121212;z-index:99;pointer-events:none;"></div>
@@ -479,54 +492,61 @@ function getTodayIdx(){
 const DAYS=["Lun","Mar","Mié","Jue","Vie","Sáb","Dom"];
 
 const PLAN1=[
-  {totalKcal:2700,meals:[
-    {type:"Desayuno",e:"🌅",c:"#FF9F0A",name:"Porridge avena SG · arándanos y chía",kcal:575,mb:"🦠 Beta-glucano de avena nutre Lactobacillus. Arándanos estimulan Akkermansia.",ing:["80g avena SG","300ml leche de coco","1 plátano","100g arándanos","1 cdta chía","1 cdta aceite de coco"],steps:["Calentar leche de coco.","Avena 5-7 min removiendo.","Servir con plátano, arándanos y chía."]},
-    {type:"Media mañana",e:"🍎",c:"#30D158",name:"Plátano + semillas de calabaza",kcal:240,mb:"🦠 Fructooligosacáridos del plátano como prebiótico. Zinc de las semillas para la barrera intestinal.",ing:["1 plátano grande","30g semillas de calabaza"],steps:["Servir. Opcional: tostar semillas 2 min en sartén seca."]},
-    {type:"Comida",e:"🍽️",c:"#0A84FF",name:"Salmón al horno · arroz integral y zanahoria",kcal:840,mb:"🦠 Omega-3 del salmón reduce inflamación intestinal. Cúrcuma potencia el efecto antiinflamatorio.",ing:["200g salmón fresco","130g arroz integral","200g zanahorias","2½ cdas AOVE","1 limón","1 cdta cúrcuma","pimienta negra"],steps:["Cocer arroz (1:2) 35 min.","Salmón y zanahorias con AOVE, limón, cúrcuma y pimienta.","Hornear 180°C, 18-20 min."]},
-    {type:"Merienda",e:"🌿",c:"#BF5AF2",name:"Batido · arándanos, coco y jengibre",kcal:335,mb:"🦠 Polifenoles de arándanos para Akkermansia. Jengibre inhibe bacterias patógenas.",ing:["200ml leche de coco","100g arándanos","½ plátano","1 cdta lino","1 cm jengibre"],steps:["Pelar jengibre. Triturar todo. Servir frío."]},
-    {type:"Cena",e:"🌙",c:"#5E5CE6",name:"Pavo a la plancha · patata y espinacas",kcal:710,mb:"🦠 Almidón resistente de la patata cocida nutre Faecalibacterium prausnitzii. Orégano antimicrobiano.",ing:["180g pechuga pavo","220g patata","150g espinacas baby","2 cdas AOVE","orégano","sal"],steps:["Cocer patata 20 min.","Pavo en plancha con AOVE, 5 min/lado.","Espinacas con AOVE y orégano 3 min."]}
-  ]},
-  {totalKcal:2650,meals:[
-    {type:"Desayuno",e:"🌅",c:"#FF9F0A",name:"Tostadas SG · huevo revuelto y aguacate",kcal:570,mb:"🦠 Colina del huevo para la mucosa. Fibra prebiótica del aguacate para Bifidobacterium.",ing:["2-3 rebanadas pan SG","2 huevos L","½ aguacate","1 tomate","1 cda AOVE","sal"],steps:["Batir huevos. AOVE a fuego bajo, revolver.","Tostar pan. Aplastar aguacate.","Montar: pan → aguacate → huevo → tomate."]},
-    {type:"Media mañana",e:"🍎",c:"#30D158",name:"Kiwi + semillas de chía y lino",kcal:220,mb:"🦠 Actinidina del kiwi mejora digestión proteica. Lino aporta omega-3 vegetal y fibra mucilaginosa.",ing:["2 kiwis","1 cdta chía","1 cdta lino"],steps:["Pelar y cortar kiwis. Espolvorear semillas."]},
-    {type:"Comida",e:"🍽️",c:"#0A84FF",name:"Pollo a la plancha · quinoa y espinacas",kcal:800,mb:"🦠 Quinoa prebiótico natural para Bifidobacterium. Espinacas con nitratos que estimulan Lactobacillus.",ing:["200g pechuga pollo","110g quinoa","200g espinacas baby","2½ cdas AOVE","1 limón","ajo en polvo","sal"],steps:["Quinoa (1:2) 15 min, reposar 5 min.","Pollo en plancha con AOVE y ajo, 6-7 min/lado.","Espinacas 3 min. Quinoa con limón."]},
-    {type:"Merienda",e:"🌿",c:"#BF5AF2",name:"Fresas · leche de arroz y chía",kcal:300,mb:"🦠 Polifenoles de fresas estimulan bacterias productoras de butirato. Chía forma gel protector.",ing:["200g fresas","200ml leche de arroz","1 cdta chía"],steps:["Cortar fresas. Leche con chía 5 min. Servir."]},
-    {type:"Cena",e:"🌙",c:"#5E5CE6",name:"Merluza al horno · boniato y calabacín",kcal:760,mb:"🦠 Boniato rico en betacarotenos que refuerzan la barrera intestinal. Eneldo antimicrobiano suave.",ing:["200g merluza","200g boniato","1 calabacín","2 cdas AOVE","1 limón","eneldo","sal"],steps:["Boniato en dados 10 min a 200°C.","Añadir merluza y calabacín con AOVE, limón y eneldo.","Hornear 18-20 min más."]}
-  ]},
+  // LUNES — Porridge con polifenoles
   {totalKcal:2680,meals:[
-    {type:"Desayuno",e:"🌅",c:"#FF9F0A",name:"Porridge avena SG · fresas y lino",kcal:560,mb:"🦠 Lino aporta lignanos que modulan la microbiota. Fresas con elagitaninos que Akkermansia metaboliza.",ing:["80g avena SG","300ml leche de coco","150g fresas","1 cdta lino","1 cdta aceite de coco"],steps:["Leche de coco. Avena 5-7 min.","Cortar fresas. Servir con fresas y lino."]},
-    {type:"Media mañana",e:"🍎",c:"#30D158",name:"Naranja + semillas de calabaza",kcal:215,mb:"🦠 Vitamina C de la naranja antiinflamatoria. Cucurbitacinas de semillas con efecto antifúngico.",ing:["1 naranja grande","25g semillas de calabaza"],steps:["Pelar y segmentar. Servir con semillas."]},
-    {type:"Comida",e:"🍽️",c:"#0A84FF",name:"Salmón a la plancha · arroz y zanahoria",kcal:830,mb:"🦠 Omega-3 antiinflamatorio directo sobre la mucosa. Zanahoria cocida aporta pectina para Bifidobacterium.",ing:["200g salmón fresco","130g arroz integral","200g zanahorias","2½ cdas AOVE","1 limón","1 cdta cúrcuma"],steps:["Cocer arroz 35 min.","Salmón en plancha 4 min/lado (piel primero).","Zanahoria al vapor 12 min. Aliñar con limón y cúrcuma."]},
-    {type:"Merienda",e:"🌿",c:"#BF5AF2",name:"Batido · plátano y coco",kcal:330,mb:"🦠 Inulina del plátano prebiótica. Ácido láurico del coco con efecto antifúngico contra Candida.",ing:["200ml leche de coco","1 plátano","1 cdta chía"],steps:["Triturar todo. Servir frío."]},
-    {type:"Cena",e:"🌙",c:"#5E5CE6",name:"Pollo al horno · patata y calabacín",kcal:745,mb:"🦠 Patata aporta almidón resistente para Faecalibacterium. Orégano con carvacrol antimicrobiano.",ing:["200g pechuga pollo","250g patata","1 calabacín","2½ cdas AOVE","orégano","sal"],steps:["Patata en dados, calabacín en rodajas.","Bandeja con AOVE, orégano y sal.","Hornear 200°C, 30-35 min."]}
+    {type:"Desayuno",e:"🌅",c:"#FF9F0A",name:"Porridge avena SG · arándanos, granada y lino",kcal:565,mb:"🦠 La combinación más potente para Akkermansia: punicalaginas de granada + antocianinos de arándanos. Lino aporta lignanos prebióticos.",ing:["80g avena SG","300ml leche de coco","100g arándanos","½ granada","1 cda lino molido","1 cdta AOVE crudo al final"],steps:["Calentar leche de coco. Avena 5-7 min removiendo.","Desgranar granada.","Servir con arándanos, granada, lino y un hilo de AOVE crudo."]},
+    {type:"Media mañana",e:"🍎",c:"#30D158",name:"Plátano + semillas de calabaza",kcal:240,mb:"🦠 Fructooligosacáridos del plátano alimentan Bifidobacterium. Zinc de las semillas para la barrera intestinal.",ing:["1 plátano grande","30g semillas de calabaza tostadas"],steps:["Tostar semillas 2 min en sartén seca. Servir con el plátano."]},
+    {type:"Comida",e:"🍽️",c:"#0A84FF",name:"Salmón al horno · arroz integral, zanahoria y AOVE crudo",kcal:830,mb:"🦠 Omega-3 antiinflamatorio. AOVE crudo aporta polifenoles del olivo (oleocantal, hidroxitirosol).",ing:["200g salmón fresco","130g arroz integral","200g zanahorias","1 cda AOVE para cocinar","2 cdas AOVE crudo al final","1 limón","1 cdta cúrcuma","pimienta negra"],steps:["Cocer arroz (1:2) 35 min.","Salmón y zanahorias con AOVE de cocina, limón, cúrcuma y pimienta.","Hornear 180°C, 18-20 min.","Aliñar el plato con AOVE crudo antes de servir."]},
+    {type:"Merienda",e:"🌿",c:"#BF5AF2",name:"Cacao puro · leche de coco con plátano",kcal:310,mb:"🦠 Cacao puro 100% (no procesado) es uno de los alimentos más ricos en polifenoles. Estimula directamente Akkermansia.",ing:["200ml leche de coco","1 cdta cacao puro 100%","1 plátano","1 cdta chía"],steps:["Triturar todo. Servir."]},
+    {type:"Cena",e:"🌙",c:"#5E5CE6",name:"Pavo a la plancha · patata y espinacas",kcal:735,mb:"🦠 Almidón resistente de la patata cocida alimenta Faecalibacterium prausnitzii. Orégano con carvacrol antimicrobiano.",ing:["180g pechuga pavo","220g patata","150g espinacas baby","2 cdas AOVE","orégano","sal"],steps:["Cocer patata 20 min.","Pavo en plancha 5 min/lado.","Espinacas con AOVE y orégano 3 min."]}
   ]},
-  {totalKcal:2700,meals:[
-    {type:"Desayuno",e:"🌅",c:"#FF9F0A",name:"Tostadas SG · huevo al plato y aguacate",kcal:570,mb:"🦠 Grasas monoinsaturadas del aguacate favorecen absorción de polifenoles y efecto antiinflamatorio.",ing:["2-3 rebanadas pan SG","2 huevos L","½ aguacate","1 tomate","1 cda AOVE","sal"],steps:["AOVE en sartén. Huevos al plato.","Tostar pan. Aplastar aguacate.","Montar: pan → aguacate → huevo → tomate."]},
-    {type:"Media mañana",e:"🍎",c:"#30D158",name:"Plátano · leche de coco y chía",kcal:255,mb:"🦠 Fructooligosacáridos + fibra soluble de chía: entorno ideal para Bifidobacterium.",ing:["1 plátano","150ml leche de coco","1 cdta chía"],steps:["Leche de coco con chía 5 min. Comer con el plátano."]},
-    {type:"Comida",e:"🍽️",c:"#0A84FF",name:"Pavo a la plancha · quinoa y berenjena",kcal:800,mb:"🦠 Berenjena contiene nasunina que protege membranas celulares intestinales. Quinoa con manganeso antioxidante.",ing:["200g pechuga pavo","110g quinoa","1 berenjena","2½ cdas AOVE","ajo en polvo","sal"],steps:["Cocer quinoa 15 min.","Berenjena en plancha con AOVE, 4 min/lado.","Pavo con AOVE y ajo, 6-7 min/lado."]},
-    {type:"Merienda",e:"🌿",c:"#BF5AF2",name:"Arándanos · leche de arroz y semillas",kcal:310,mb:"🦠 Antocianinos de arándanos para diversidad microbiana. Lino y chía modulan la respuesta inmune intestinal.",ing:["100g arándanos","200ml leche de arroz","1 cdta lino","1 cdta chía"],steps:["Mezclar leche con semillas. Servir con arándanos."]},
-    {type:"Cena",e:"🌙",c:"#5E5CE6",name:"Merluza a la plancha · patata y espinacas",kcal:765,mb:"🦠 Espinacas aportan folato esencial para renovación del epitelio intestinal.",ing:["200g merluza","250g patata","150g espinacas baby","2 cdas AOVE","1 limón","sal"],steps:["Cocer patata 20 min.","Merluza en plancha 3-4 min/lado.","Espinacas 3 min. Aliñar con limón."]}
+  // MARTES — Pescado azul + boniato
+  {totalKcal:2640,meals:[
+    {type:"Desayuno",e:"🌅",c:"#FF9F0A",name:"Crema de calabaza y boniato · semillas y AOVE",kcal:520,mb:"🦠 Desayuno salado sin huevo. Betacarotenos de calabaza y boniato refuerzan la mucosa intestinal.",ing:["200g calabaza asada","100g boniato cocido","200ml caldo vegetal","1 cda AOVE crudo","1 cda semillas de calabaza","1 cdta cúrcuma","pizca de jengibre"],steps:["Triturar calabaza, boniato, caldo, cúrcuma y jengibre.","Servir caliente con AOVE crudo y semillas."]},
+    {type:"Media mañana",e:"🍎",c:"#30D158",name:"Kiwi + chía y lino",kcal:220,mb:"🦠 Actinidina del kiwi mejora digestión proteica. Omega-3 vegetal del lino.",ing:["2 kiwis","1 cdta chía","1 cdta lino molido"],steps:["Pelar y cortar kiwis. Espolvorear semillas."]},
+    {type:"Comida",e:"🍽️",c:"#0A84FF",name:"Caballa al horno · arroz integral y espinacas",kcal:810,mb:"🦠 Caballa rica en omega-3 (más que el salmón) y vitamina D. Antiinflamatorio sistémico directo sobre la mucosa.",ing:["200g caballa fresca","130g arroz integral","200g espinacas baby","2 cdas AOVE","1 limón","tomillo","sal"],steps:["Cocer arroz 35 min.","Caballa con AOVE, limón y tomillo. Horno 200°C, 15 min.","Espinacas con AOVE 3 min."]},
+    {type:"Merienda",e:"🌿",c:"#BF5AF2",name:"Fresas, granada y leche de arroz",kcal:300,mb:"🦠 Elagitaninos de fresas + punicalaginas de granada: doble fuente para urolitinas que estimulan Akkermansia.",ing:["150g fresas","½ granada desgranada","200ml leche de arroz sin azúcar","1 cdta chía"],steps:["Cortar fresas. Mezclar con granada, leche de arroz y chía."]},
+    {type:"Cena",e:"🌙",c:"#5E5CE6",name:"Merluza al horno · boniato y calabacín",kcal:790,mb:"🦠 Proteína limpia de merluza para regenerar el epitelio. Boniato con almidón resistente.",ing:["200g merluza","200g boniato","1 calabacín","2 cdas AOVE","1 limón","eneldo","sal"],steps:["Boniato en dados 10 min a 200°C.","Añadir merluza y calabacín con AOVE, limón y eneldo.","Hornear 18-20 min más."]}
   ]},
+  // MIÉRCOLES — Crema vegetal + polifenoles
+  {totalKcal:2670,meals:[
+    {type:"Desayuno",e:"🌅",c:"#FF9F0A",name:"Porridge avena SG · cacao y arándanos",kcal:555,mb:"🦠 Triple polifenol: cacao puro + arándanos + AOVE crudo. Máximo estímulo Akkermansia.",ing:["80g avena SG","300ml leche de coco","1 cdta cacao puro 100%","100g arándanos","1 cda lino molido","1 cdta AOVE crudo"],steps:["Calentar leche de coco con el cacao removiendo.","Añadir avena 5-7 min.","Servir con arándanos, lino y AOVE."]},
+    {type:"Media mañana",e:"🍎",c:"#30D158",name:"Naranja + semillas de calabaza",kcal:215,mb:"🦠 Vitamina C antiinflamatoria. Cucurbitacinas de semillas con efecto antifúngico para reducir Candida.",ing:["1 naranja grande","25g semillas de calabaza"],steps:["Pelar y segmentar. Servir con semillas."]},
+    {type:"Comida",e:"🍽️",c:"#0A84FF",name:"Salmón a la plancha · arroz y zanahoria",kcal:830,mb:"🦠 Omega-3 reduce inflamación intestinal. Zanahoria cocida aporta pectina para Bifidobacterium.",ing:["200g salmón fresco","130g arroz integral","200g zanahorias","2½ cdas AOVE","1 limón","1 cdta cúrcuma"],steps:["Cocer arroz 35 min.","Salmón en plancha 4 min/lado (piel primero).","Zanahoria al vapor 12 min. Aliñar con limón y cúrcuma."]},
+    {type:"Merienda",e:"🌿",c:"#BF5AF2",name:"Granada y plátano · leche de coco",kcal:320,mb:"🦠 Sinergia: punicalaginas de granada + prebióticos del plátano + ácido láurico del coco antifúngico.",ing:["200ml leche de coco","½ granada","½ plátano","1 cdta chía"],steps:["Triturar con la granada. Servir frío."]},
+    {type:"Cena",e:"🌙",c:"#5E5CE6",name:"Pollo al horno · patata y calabacín",kcal:750,mb:"🦠 Patata cocida aporta almidón resistente. Orégano antimicrobiano contra E. coli Biovare elevado.",ing:["200g pechuga pollo","250g patata","1 calabacín","2½ cdas AOVE","orégano","sal"],steps:["Patata en dados, calabacín en rodajas.","Bandeja con AOVE, orégano y sal.","Hornear 200°C, 30-35 min."]}
+  ]},
+  // JUEVES — Crema vegetal + pavo
   {totalKcal:2690,meals:[
-    {type:"Desayuno",e:"🌅",c:"#FF9F0A",name:"Porridge avena SG · granada y chía",kcal:570,mb:"🦠 Granada es el alimento más potente para Akkermansia: punicalaginas → urolitina A de uso directo.",ing:["80g avena SG","300ml leche de coco","½ granada","1 plátano","1 cdta chía"],steps:["Leche de coco. Avena 5-7 min.","Desgranar granada. Servir con granada, plátano y chía."]},
-    {type:"Media mañana",e:"🍎",c:"#30D158",name:"Fresas + semillas de lino y calabaza",kcal:210,mb:"🦠 Elagitaninos de fresas + lignanos de lino forman urolitinas que nutren bacterias beneficiosas del colon.",ing:["200g fresas","1 cdta lino","1 cdta semillas de calabaza"],steps:["Lavar y cortar fresas. Espolvorear semillas."]},
-    {type:"Comida",e:"🍽️",c:"#0A84FF",name:"Salmón al horno · arroz y espinacas",kcal:845,mb:"🦠 Doble antiinflamatorio: omega-3 + cúrcuma. Espinacas con clorofila efecto detox sobre bacterias proteolíticas.",ing:["200g salmón fresco","130g arroz integral","150g espinacas baby","2½ cdas AOVE","1 limón","1 cdta cúrcuma"],steps:["Cocer arroz 35 min.","Salmón al horno 180°C, 18-20 min.","Espinacas con AOVE y cúrcuma 3 min."]},
-    {type:"Merienda",e:"🌿",c:"#BF5AF2",name:"Batido · arándanos y plátano",kcal:310,mb:"🦠 Sinergia: polifenoles de arándanos + prebióticos del plátano estimulan juntos Lactobacillus y Bifidobacterium.",ing:["200ml leche de arroz","100g arándanos","½ plátano","1 cdta chía"],steps:["Triturar todo. Servir frío."]},
-    {type:"Cena",e:"🌙",c:"#5E5CE6",name:"Pollo a la plancha · boniato y zanahoria",kcal:755,mb:"🦠 Boniato y zanahoria: betacarotenos → vitamina A esencial para integridad de la mucosa intestinal.",ing:["200g pechuga pollo","200g boniato","150g zanahorias","2 cdas AOVE","1 cdta cúrcuma","sal"],steps:["Boniato: horno 200°C 40 min o microondas 10 min.","Zanahorias en agua 12 min.","Pollo en plancha con AOVE y cúrcuma, 6-7 min/lado."]}
+    {type:"Desayuno",e:"🌅",c:"#FF9F0A",name:"Pudding de chía con coco, arándanos y granada",kcal:540,mb:"🦠 Chía forma gel mucilaginoso protector de la mucosa. Combinación triple de polifenoles antocianinas + punicalaginas.",ing:["4 cdas chía","300ml leche de coco","100g arándanos","½ granada","1 cdta canela de Ceilán","1 cda AOVE crudo"],steps:["La noche anterior: mezclar chía con leche de coco. Refrigerar.","Por la mañana: añadir arándanos, granada, canela y AOVE."]},
+    {type:"Media mañana",e:"🍎",c:"#30D158",name:"Plátano · leche de coco y chía",kcal:255,mb:"🦠 Inulina del plátano prebiótica. Ácido láurico del coco antifúngico contra Candida.",ing:["1 plátano","150ml leche de coco","1 cdta chía"],steps:["Mezclar leche de coco con chía 5 min. Servir con el plátano."]},
+    {type:"Comida",e:"🍽️",c:"#0A84FF",name:"Pavo al horno · quinoa y berenjena",kcal:800,mb:"🦠 Nasunina de la berenjena protege membranas celulares intestinales. Quinoa con manganeso antioxidante.",ing:["200g pechuga pavo","110g quinoa","1 berenjena","2½ cdas AOVE","ajo en polvo","sal"],steps:["Cocer quinoa 15 min.","Berenjena en plancha con AOVE 4 min/lado.","Pavo al horno con AOVE y ajo, 25 min a 180°C."]},
+    {type:"Merienda",e:"🌿",c:"#BF5AF2",name:"Arándanos, lino y leche de arroz",kcal:300,mb:"🦠 Antocianinos de arándanos reducen permeabilidad intestinal. Lignanos del lino modulan respuesta inmune.",ing:["100g arándanos","200ml leche de arroz","1 cda lino molido","1 cdta chía"],steps:["Mezclar leche con semillas. Servir con arándanos."]},
+    {type:"Cena",e:"🌙",c:"#5E5CE6",name:"Merluza a la plancha · patata y espinacas",kcal:795,mb:"🦠 Folato de espinacas para renovación del epitelio. Proteína limpia de merluza fácil de digerir.",ing:["200g merluza","250g patata","150g espinacas baby","2 cdas AOVE","1 limón","sal"],steps:["Cocer patata 20 min.","Merluza en plancha 3-4 min/lado.","Espinacas con AOVE 3 min. Aliñar con limón."]}
   ]},
-  {totalKcal:2730,meals:[
-    {type:"Desayuno",e:"🌅",c:"#FF9F0A",name:"Tostadas SG · huevo revuelto y aguacate",kcal:570,mb:"🦠 Colina del huevo: síntesis de fosfatidilcolina, componente clave de la mucosa. Aguacate prebiótico.",ing:["2-3 rebanadas pan SG","2 huevos L","½ aguacate","1 tomate","1 cda AOVE","sal"],steps:["Batir huevos. AOVE fuego bajo, revolver.","Tostar pan. Aplastar aguacate.","Montar con aguacate y tomate."]},
-    {type:"Media mañana",e:"🍎",c:"#30D158",name:"Granada + semillas de calabaza",kcal:240,mb:"🦠 Cucurbitacinas de semillas: efecto antifúngico para reducir Candida. Granada alimenta Akkermansia.",ing:["½ granada","30g semillas de calabaza"],steps:["Desgranar la granada. Servir con semillas."]},
-    {type:"Comida",e:"🍽️",c:"#0A84FF",name:"Pollo al horno · patata y zanahoria",kcal:830,mb:"🦠 Almidón resistente de la patata: alimento preferido del Faecalibacterium prausnitzii, la bacteria más antiinflamatoria.",ing:["200g pechuga pollo","250g patata","180g zanahorias","2½ cdas AOVE","orégano","1 limón","sal"],steps:["Patata y zanahoria en dados.","Bandeja con AOVE, orégano, limón y sal.","Hornear 200°C, 30-35 min."]},
-    {type:"Merienda",e:"🌿",c:"#BF5AF2",name:"Batido · fresas, coco y lino",kcal:325,mb:"🦠 Ácido láurico del coco antifúngico. Lino con fibra mucilaginosa que forma capa protectora sobre la mucosa.",ing:["200ml leche de coco","150g fresas","½ plátano","1 cdta lino"],steps:["Lavar fresas. Triturar todo. Servir frío."]},
-    {type:"Cena",e:"🌙",c:"#5E5CE6",name:"Merluza al horno · quinoa y calabacín",kcal:765,mb:"🦠 Quinoa aporta todos los aminoácidos esenciales que el intestino necesita para renovar sus células epiteliales.",ing:["200g merluza","100g quinoa","1 calabacín","2 cdas AOVE","1 limón","eneldo","sal"],steps:["Cocer quinoa 15 min.","Merluza y calabacín con AOVE, limón y eneldo.","Hornear 180°C, 18-20 min."]}
+  // VIERNES — DÍA HUEVO 1 (1 de los 2 permitidos)
+  {totalKcal:2680,meals:[
+    {type:"Desayuno",e:"🌅",c:"#FF9F0A",name:"Tostadas SG · huevo revuelto y aguacate",kcal:560,mb:"🦠 Día huevo (uno de 2/semana). Colina del huevo para fosfatidilcolina de la mucosa. Aguacate prebiótico.",ing:["2-3 rebanadas pan SG","2 huevos L","½ aguacate","1 tomate","1 cda AOVE","sal"],steps:["Batir huevos. AOVE fuego bajo, revolver.","Tostar pan. Aplastar aguacate.","Montar: pan → aguacate → huevo → tomate."]},
+    {type:"Media mañana",e:"🍎",c:"#30D158",name:"Fresas y granada + semillas",kcal:215,mb:"🦠 Elagitaninos de fresas y punicalaginas de granada: precursores de urolitina A, máximo estímulo Akkermansia.",ing:["100g fresas","½ granada","1 cda semillas de calabaza"],steps:["Lavar y cortar fresas. Servir con granada y semillas."]},
+    {type:"Comida",e:"🍽️",c:"#0A84FF",name:"Salmón al horno · arroz y espinacas",kcal:830,mb:"🦠 Doble antiinflamatorio: omega-3 + cúrcuma. Espinacas con clorofila efecto detox sobre bacterias proteolíticas.",ing:["200g salmón fresco","130g arroz integral","150g espinacas baby","2½ cdas AOVE","1 limón","1 cdta cúrcuma"],steps:["Cocer arroz 35 min.","Salmón al horno 180°C, 18-20 min.","Espinacas con AOVE y cúrcuma 3 min."]},
+    {type:"Merienda",e:"🌿",c:"#BF5AF2",name:"Cacao puro · arándanos y plátano",kcal:325,mb:"🦠 Cacao puro 100% + antocianinos de arándanos: dos de los alimentos más potentes para Akkermansia.",ing:["200ml leche de arroz","1 cdta cacao puro 100%","100g arándanos","½ plátano","1 cdta chía"],steps:["Triturar todo. Servir frío."]},
+    {type:"Cena",e:"🌙",c:"#5E5CE6",name:"Pollo a la plancha · boniato y zanahoria",kcal:750,mb:"🦠 Boniato y zanahoria: betacarotenos → vitamina A esencial para integridad de la mucosa intestinal.",ing:["200g pechuga pollo","200g boniato","150g zanahorias","2 cdas AOVE","1 cdta cúrcuma","sal"],steps:["Boniato al horno 200°C 40 min.","Zanahorias cocidas 12 min.","Pollo en plancha con AOVE y cúrcuma, 6-7 min/lado."]}
   ]},
+  // SÁBADO — Crema vegetal + pescado
+  {totalKcal:2680,meals:[
+    {type:"Desayuno",e:"🌅",c:"#FF9F0A",name:"Crema de zanahoria y boniato · semillas y AOVE",kcal:525,mb:"🦠 Betacarotenos en abundancia para la mucosa. Versión salada del desayuno con AOVE crudo polifenólico.",ing:["200g zanahoria asada","100g boniato cocido","200ml caldo vegetal","1 cda AOVE crudo","1 cda semillas de calabaza","1 cdta cúrcuma","jengibre"],steps:["Triturar zanahoria, boniato, caldo, cúrcuma y jengibre.","Servir caliente con AOVE crudo y semillas."]},
+    {type:"Media mañana",e:"🍎",c:"#30D158",name:"Granada y semillas de calabaza",kcal:240,mb:"🦠 Punicalaginas de granada (precursor urolitina A). Cucurbitacinas de semillas antifúngicas contra Candida.",ing:["½ granada","30g semillas de calabaza"],steps:["Desgranar la granada. Servir con semillas."]},
+    {type:"Comida",e:"🍽️",c:"#0A84FF",name:"Sardinas al horno · patata y ensalada",kcal:820,mb:"🦠 Sardinas son una de las mayores fuentes de omega-3 y vitamina D. Antiinflamatorio sistémico potente.",ing:["200g sardinas frescas","250g patata","100g canónigos","1 tomate","2 cdas AOVE","1 limón","orégano","sal"],steps:["Patata al horno en dados 30 min.","Sardinas 12 min a 200°C con limón y orégano.","Ensalada de canónigos y tomate con AOVE."]},
+    {type:"Merienda",e:"🌿",c:"#BF5AF2",name:"Batido de fresas, lino y coco",kcal:325,mb:"🦠 Elagitaninos de fresas. Ácido láurico del coco antifúngico. Lino mucilaginoso protege la mucosa.",ing:["200ml leche de coco","150g fresas","½ plátano","1 cda lino molido"],steps:["Triturar todo. Servir frío."]},
+    {type:"Cena",e:"🌙",c:"#5E5CE6",name:"Merluza al horno · quinoa y calabacín",kcal:770,mb:"🦠 Quinoa aporta aminoácidos esenciales para renovar células epiteliales. Calabacín con quercetina antiinflamatoria.",ing:["200g merluza","100g quinoa","1 calabacín","2 cdas AOVE","1 limón","eneldo","sal"],steps:["Cocer quinoa 15 min.","Merluza y calabacín con AOVE, limón y eneldo.","Hornear 180°C, 18-20 min."]}
+  ]},
+  // DOMINGO — DÍA HUEVO 2 (último de los 2 permitidos)
   {totalKcal:2720,meals:[
-    {type:"Desayuno",e:"🌅",c:"#FF9F0A",name:"Porridge avena SG · arándanos y granada",kcal:580,mb:"🦠 Doble potencia: antocianinos de arándanos + punicalaginas de granada. La combinación más potente para Akkermansia.",ing:["80g avena SG","300ml leche de coco","100g arándanos","½ granada","1 cdta lino"],steps:["Leche de coco. Avena 5-7 min.","Desgranar granada. Servir con arándanos, granada y lino."]},
-    {type:"Media mañana",e:"🍎",c:"#30D158",name:"Naranja + semillas de chía y calabaza",kcal:210,mb:"🦠 Vitamina C de la naranja cofactor para síntesis de colágeno intestinal. Chía forma gel que nutre bacterias.",ing:["1 naranja grande","1 cdta chía","1 cdta semillas de calabaza"],steps:["Pelar y segmentar. Espolvorear semillas."]},
-    {type:"Comida",e:"🍽️",c:"#0A84FF",name:"Pavo a la plancha · arroz y espinacas",kcal:820,mb:"🦠 Arroz integral con gamma-orizanol protector de mucosa. Espinacas aportan hierro cuya absorción mejora con microbiota equilibrada.",ing:["200g pechuga pavo","130g arroz integral","200g espinacas baby","2½ cdas AOVE","1 limón","ajo en polvo","sal"],steps:["Cocer arroz 35 min.","Pavo con AOVE y ajo, 6-7 min/lado.","Espinacas con limón 3 min."]},
-    {type:"Merienda",e:"🌿",c:"#BF5AF2",name:"Batido · plátano y arándanos",kcal:310,mb:"🦠 Antocianinos de arándanos reducen la permeabilidad intestinal (zonulina alta). Potasio del plátano para enterocitos.",ing:["200ml leche de arroz","100g arándanos","1 plátano","1 cdta chía"],steps:["Triturar todo. Servir frío."]},
-    {type:"Cena",e:"🌙",c:"#5E5CE6",name:"Salmón a la plancha · boniato y zanahoria",kcal:800,mb:"🦠 Cierre de semana: omega-3 del salmón + betacarotenos de boniato y zanahoria + cúrcuma. Triple acción sobre la mucosa.",ing:["200g salmón fresco","200g boniato","150g zanahorias","2 cdas AOVE","1 cdta cúrcuma","1 limón","sal"],steps:["Boniato: horno 200°C 40 min o microondas 10 min.","Zanahorias 12 min.","Salmón en plancha 4 min/lado. Aliñar con limón y cúrcuma."]}
+    {type:"Desayuno",e:"🌅",c:"#FF9F0A",name:"Tostadas SG · huevo al plato y aguacate",kcal:570,mb:"🦠 Día huevo (segundo de 2/semana). Grasas monoinsaturadas del aguacate para absorción de polifenoles.",ing:["2-3 rebanadas pan SG","2 huevos L","½ aguacate","1 tomate","1 cda AOVE","sal"],steps:["AOVE en sartén. Huevos al plato.","Tostar pan. Aplastar aguacate.","Montar: pan → aguacate → huevo → tomate."]},
+    {type:"Media mañana",e:"🍎",c:"#30D158",name:"Granada + chía y semillas",kcal:230,mb:"🦠 Punicalaginas de granada + chía: efecto antiinflamatorio doble. Chía con omega-3 vegetal.",ing:["½ granada","1 cda chía","1 cdta semillas de calabaza"],steps:["Desgranar la granada. Espolvorear semillas."]},
+    {type:"Comida",e:"🍽️",c:"#0A84FF",name:"Pavo al horno · arroz y espinacas",kcal:820,mb:"🦠 Arroz integral con gamma-orizanol protector de mucosa. Hierro de espinacas absorbido con microbiota equilibrada.",ing:["200g pechuga pavo","130g arroz integral","200g espinacas baby","2½ cdas AOVE","1 limón","ajo en polvo","sal"],steps:["Cocer arroz 35 min.","Pavo con AOVE y ajo, 6-7 min/lado.","Espinacas con limón 3 min."]},
+    {type:"Merienda",e:"🌿",c:"#BF5AF2",name:"Cacao puro · arándanos y plátano",kcal:320,mb:"🦠 Cierre de semana con máxima dosis de polifenoles: cacao 100% + antocianinos. Estímulo Akkermansia.",ing:["200ml leche de arroz","1 cdta cacao puro 100%","100g arándanos","1 plátano","1 cdta chía"],steps:["Triturar todo. Servir frío."]},
+    {type:"Cena",e:"🌙",c:"#5E5CE6",name:"Salmón a la plancha · boniato y zanahoria",kcal:780,mb:"🦠 Triple acción sobre la mucosa: omega-3 del salmón + betacarotenos de boniato y zanahoria + cúrcuma.",ing:["200g salmón fresco","200g boniato","150g zanahorias","2 cdas AOVE","1 cdta cúrcuma","1 limón","sal"],steps:["Boniato al horno 200°C 40 min.","Zanahorias cocidas 12 min.","Salmón en plancha 4 min/lado. Aliñar con limón y cúrcuma."]}
   ]}
 ];
 
@@ -582,6 +602,65 @@ const PLAN2=[
   ]}
 ];
 
+const PLAN3=[
+  // LUNES
+  {totalKcal:2400,meals:[
+    {type:"Desayuno",e:"🌅",c:"#FF9F0A",name:"FUERA: fruta + tortitas de maíz + aguacate",kcal:480,mb:"🦠 Sin huevo, opción salada portable. Aguacate aporta grasa monoinsaturada y prebióticos.",ing:["1 plátano","3 tortitas de maíz (no de arroz con cacahuete)","½ aguacate machacado","pizca de sal"],steps:["Aplastar aguacate con sal.","Untar en las tortitas.","Comer con el plátano aparte."]},
+    {type:"Media mañana",e:"🍎",c:"#30D158",name:"FUERA: fruta + semillas de calabaza",kcal:200,mb:"🦠 Snack portable sin frutos secos. Polifenoles + zinc.",ing:["1 plátano O 100g fresas O 1 naranja","20g semillas de calabaza"],steps:["Llevar en bolsa hermética. Comer entero."]},
+    {type:"Comida",e:"🍽️",c:"#0A84FF",name:"FUERA — CATERING: pescado plancha + arroz + ensalada simple",kcal:820,mb:"🦠 Pedir siempre pescado plancha sin salsas. Arroz blanco como guarnición segura. AOVE y limón aparte.",ing:["200g pescado plancha (lubina, merluza, dorada)","150g arroz blanco","Ensalada simple (lechuga, tomate, pepino)","AOVE y limón aparte","SIN: salsas, queso, crutones"],steps:["Pedir explícitamente sin gluten y sin lácteos.","Salsa siempre aparte.","Aliñar tú con AOVE y limón."]},
+    {type:"Merienda",e:"🌿",c:"#BF5AF2",name:"FUERA: fruta + tortitas de maíz",kcal:280,mb:"🦠 Snack portable seguro. Plátano con almidón resistente. Tortitas de maíz sin gluten certificado.",ing:["1 plátano","3 tortitas de maíz","1 cda semillas de calabaza"],steps:["Llevar listas en bolsa. Comer entre comidas."]},
+    {type:"Cena",e:"🌙",c:"#5E5CE6",name:"FUERA — RESTAURANTE: pollo o pavo plancha + patata cocida + verdura",kcal:620,mb:"🦠 Cena segura en cualquier restaurante. Pedir verdura al vapor o ensalada sin queso ni crutones.",ing:["180g pollo o pavo plancha","200g patata cocida o asada","100g verdura al vapor","AOVE y limón aparte","SIN: rebozados, fritos, salsas"],steps:["Pedir plancha simple, sin salsa.","Patata cocida o al vapor, no frita en aceite compartido.","Aliñar con AOVE y limón."]}
+  ]},
+  // MARTES
+  {totalKcal:2380,meals:[
+    {type:"Desayuno",e:"🌅",c:"#FF9F0A",name:"FUERA: porridge instantáneo de avena SG · arándanos liofilizados",kcal:475,mb:"🦠 Porridge en taza con agua caliente. Avena SG certificada sin contaminación cruzada.",ing:["50g copos avena SG instantáneos","250ml agua caliente","1 cda arándanos liofilizados o frescos","1 cda lino molido","pizca de canela"],steps:["Avena en taza, añadir agua caliente.","Esperar 3 min removiendo.","Añadir arándanos, lino y canela."]},
+    {type:"Media mañana",e:"🍎",c:"#30D158",name:"FUERA: kiwi + semillas",kcal:200,mb:"🦠 Actinidina del kiwi mejora digestión. Vitamina C antiinflamatoria.",ing:["2 kiwis","1 cda semillas de calabaza"],steps:["Llevar pelados ya en tupper. Comer con cuchara."]},
+    {type:"Comida",e:"🍽️",c:"#0A84FF",name:"FUERA — CATERING: huevo cocido + arroz + verdura (si única opción)",kcal:780,mb:"🦠 Si solo hay huevo disponible, mejor 2 huevos cocidos que comer mal. Ocasional, no diario.",ing:["2 huevos cocidos","150g arroz blanco","100g verdura cocida (judía verde, espinacas)","Tomate al natural","AOVE y limón aparte"],steps:["Ideal si no hay pescado disponible.","Verduras simples, sin salsas.","Aliñar con AOVE crudo."]},
+    {type:"Merienda",e:"🌿",c:"#BF5AF2",name:"FUERA: plátano + cacao puro",kcal:265,mb:"🦠 Cacao puro 100% en polvo, puedes llevar un sobre y mezclar con leche de coco/arroz de brick.",ing:["1 plátano","200ml leche vegetal (coco o arroz) brick","1 cdta cacao puro 100% en polvo"],steps:["Verter leche vegetal en vaso o termo.","Añadir cacao y remover.","Comer con el plátano."]},
+    {type:"Cena",e:"🌙",c:"#5E5CE6",name:"FUERA — RESTAURANTE: pescado horno + arroz + ensalada",kcal:660,mb:"🦠 Pescado al horno conserva omega-3 sin oxidarlos. Pedir sin salsa cremosa.",ing:["200g pescado horno","100g arroz blanco","Ensalada (sin queso, sin crutones)","AOVE y limón aparte"],steps:["Pedir pescado al horno simple.","Confirmar sin gluten en salsas.","AOVE crudo al servir."]}
+  ]},
+  // MIÉRCOLES
+  {totalKcal:2420,meals:[
+    {type:"Desayuno",e:"🌅",c:"#FF9F0A",name:"FUERA: fruta + tortitas de maíz + cacao",kcal:470,mb:"🦠 Polifenoles portables. Cacao puro 100% potente para Akkermansia.",ing:["1 plátano","100g arándanos","3 tortitas de maíz","1 cdta cacao puro 100%","200ml leche de coco brick"],steps:["Mezclar leche con cacao en vaso.","Comer la fruta con las tortitas."]},
+    {type:"Media mañana",e:"🍎",c:"#30D158",name:"FUERA: naranja + semillas de calabaza",kcal:215,mb:"🦠 Vitamina C antiinflamatoria. Cucurbitacinas antifúngicas contra Candida.",ing:["1 naranja","25g semillas de calabaza"],steps:["Pelar y comer."]},
+    {type:"Comida",e:"🍽️",c:"#0A84FF",name:"FUERA — CATERING: pescado plancha + patata cocida + ensalada",kcal:810,mb:"🦠 Combinación más segura del catering. Patata cocida con almidón resistente.",ing:["200g pescado plancha","200g patata cocida","Ensalada simple","AOVE y limón aparte"],steps:["Pedir patata cocida o al vapor (no frita).","Sin salsas ni queso.","Aliñar tú."]},
+    {type:"Merienda",e:"🌿",c:"#BF5AF2",name:"FUERA: plátano + lino + leche de coco",kcal:290,mb:"🦠 Lignanos del lino prebióticos. Ácido láurico del coco antifúngico.",ing:["1 plátano","200ml leche de coco brick","1 cda lino molido"],steps:["Mezclar leche con lino.","Comer con el plátano."]},
+    {type:"Cena",e:"🌙",c:"#5E5CE6",name:"FUERA — RESTAURANTE: pollo plancha + arroz + verdura",kcal:635,mb:"🦠 Proteína magra simple, almidón resistente, fibra de la verdura.",ing:["200g pollo plancha","100g arroz blanco","Verdura plancha (calabacín, espárrago)","AOVE y limón"],steps:["Plancha simple sin marinados.","Verdura plancha o vapor.","AOVE crudo al servir."]}
+  ]},
+  // JUEVES
+  {totalKcal:2400,meals:[
+    {type:"Desayuno",e:"🌅",c:"#FF9F0A",name:"FUERA: porridge instantáneo + plátano",kcal:480,mb:"🦠 Avena con beta-glucano para Lactobacillus. Plátano con FOS prebióticos.",ing:["50g copos avena SG instantáneos","250ml agua caliente o leche coco","1 plátano","1 cda lino molido","canela"],steps:["Avena con agua/leche caliente, 3 min.","Servir con plátano cortado, lino y canela."]},
+    {type:"Media mañana",e:"🍎",c:"#30D158",name:"FUERA: fresas + chía",kcal:195,mb:"🦠 Elagitaninos de fresas. Chía mucilaginosa para la mucosa.",ing:["150g fresas","1 cda chía"],steps:["Llevar en tupper. Comer enteras."]},
+    {type:"Comida",e:"🍽️",c:"#0A84FF",name:"FUERA — CATERING: arroz con pescado o pollo simple",kcal:800,mb:"🦠 Plato seguro tipo paella sin marisco. Arroz blanco con proteína y verduras.",ing:["150g arroz blanco","150g pescado o pollo cocido","Verdura mixta (zanahoria, calabacín)","AOVE crudo","Limón"],steps:["Pedir arroz simple sin marisco ni queso.","Pescado o pollo cocido o plancha.","AOVE crudo al servir."]},
+    {type:"Merienda",e:"🌿",c:"#BF5AF2",name:"FUERA: tortitas de maíz + plátano",kcal:280,mb:"🦠 Snack rápido sin frutos secos ni gluten. Plátano con almidón resistente.",ing:["3 tortitas de maíz","1 plátano","1 cda semillas de calabaza"],steps:["Comer en este orden."]},
+    {type:"Cena",e:"🌙",c:"#5E5CE6",name:"FUERA — RESTAURANTE: pescado horno + patata + verdura",kcal:645,mb:"🦠 Cena segura. Pescado al horno conserva omega-3.",ing:["200g pescado horno","200g patata cocida","Verdura vapor","AOVE crudo","Limón"],steps:["Pedir pescado simple sin salsa cremosa.","Patata cocida o asada simple.","Aliñar con AOVE."]}
+  ]},
+  // VIERNES — opción de huevo si es necesario (1 de 2 permitidos a la semana)
+  {totalKcal:2450,meals:[
+    {type:"Desayuno",e:"🌅",c:"#FF9F0A",name:"FUERA: huevo cocido + tortitas de maíz + fruta (si única opción)",kcal:520,mb:"🦠 Día huevo de la semana (1 de 2 permitidos). Si no hay alternativa, mejor huevo cocido que tortilla con aceites compartidos.",ing:["2 huevos cocidos","3 tortitas de maíz","1 plátano","½ aguacate"],steps:["Huevos cocidos en bolsa para llevar.","Aguacate machacado en tortitas.","Plátano aparte."]},
+    {type:"Media mañana",e:"🍎",c:"#30D158",name:"FUERA: kiwi + semillas de lino",kcal:200,mb:"🦠 Vitamina C del kiwi. Lignanos del lino modulan respuesta inmune.",ing:["2 kiwis","1 cda lino molido"],steps:["Llevar pelados. Comer con cuchara."]},
+    {type:"Comida",e:"🍽️",c:"#0A84FF",name:"FUERA — CATERING: pescado plancha + arroz + ensalada",kcal:810,mb:"🦠 Opción más segura del catering. Pescado plancha simple.",ing:["200g pescado plancha","150g arroz blanco","Ensalada simple sin queso","AOVE y limón aparte"],steps:["Confirmar sin gluten y sin lácteos.","Salsa aparte si la hay.","Aliñar tú."]},
+    {type:"Merienda",e:"🌿",c:"#BF5AF2",name:"FUERA: cacao + leche de coco + plátano",kcal:280,mb:"🦠 Polifenoles del cacao + ácido láurico del coco. Snack portable potente para Akkermansia.",ing:["200ml leche de coco brick","1 cdta cacao puro 100%","1 plátano"],steps:["Mezclar leche con cacao.","Comer con plátano."]},
+    {type:"Cena",e:"🌙",c:"#5E5CE6",name:"FUERA — RESTAURANTE: pollo o pescado + boniato + verdura",kcal:640,mb:"🦠 Boniato es alternativa a patata si la hay. Polifenoles + vitamina A.",ing:["200g proteína magra plancha","200g boniato asado","Verdura vapor","AOVE crudo"],steps:["Proteína simple sin salsa.","Boniato al horno simple.","AOVE al servir."]}
+  ]},
+  // SÁBADO — En casa de finde
+  {totalKcal:2520,meals:[
+    {type:"Desayuno",e:"🌅",c:"#FF9F0A",name:"FUERA: porridge avena SG con cacao y arándanos",kcal:495,mb:"🦠 Si tienes acceso a hervidor: porridge instantáneo con cacao. Polifenoles máximos.",ing:["50g avena SG instantáneos","250ml leche de coco brick caliente","1 cdta cacao puro 100%","100g arándanos","1 cda lino"],steps:["Calentar leche de coco con cacao.","Añadir avena 3 min.","Servir con arándanos y lino."]},
+    {type:"Media mañana",e:"🍎",c:"#30D158",name:"FUERA: granada + semillas",kcal:235,mb:"🦠 Punicalaginas de granada. Si no hay granada, alternativa: 1 plátano + arándanos.",ing:["½ granada","25g semillas de calabaza"],steps:["Llevar la granada ya desgranada en tupper."]},
+    {type:"Comida",e:"🍽️",c:"#0A84FF",name:"FUERA — RESTAURANTE: pescado horno + patata + ensalada mediterránea",kcal:830,mb:"🦠 Comida fin de semana segura. Ensalada con tomate aporta licopeno antioxidante.",ing:["200g pescado horno","200g patata cocida","Tomate, lechuga, pepino","Aceitunas negras","AOVE y limón"],steps:["Pedir sin queso ni crutones.","Aceitunas aportan polifenoles.","AOVE crudo abundante."]},
+    {type:"Merienda",e:"🌿",c:"#BF5AF2",name:"FUERA: fresas + lino + leche de coco",kcal:290,mb:"🦠 Elagitaninos de fresas + omega-3 vegetal del lino. Snack portable.",ing:["150g fresas","200ml leche de coco brick","1 cda lino molido"],steps:["Mezclar todo. Servir frío."]},
+    {type:"Cena",e:"🌙",c:"#5E5CE6",name:"FUERA — RESTAURANTE: salmón o pavo + arroz + verdura",kcal:670,mb:"🦠 Cierre del sábado con omega-3 si hay salmón disponible.",ing:["200g salmón o pavo plancha","100g arroz blanco","Verdura vapor o plancha","AOVE crudo"],steps:["Pescado o ave simple.","Sin salsas cremosas.","AOVE al servir."]}
+  ]},
+  // DOMINGO — Día huevo 2 si necesario
+  {totalKcal:2480,meals:[
+    {type:"Desayuno",e:"🌅",c:"#FF9F0A",name:"FUERA: huevo cocido + aguacate + tortitas (día huevo 2)",kcal:540,mb:"🦠 Segundo día huevo de la semana. Solo si no hay alternativa mejor.",ing:["2 huevos cocidos","½ aguacate","3 tortitas de maíz","1 tomate"],steps:["Huevo y aguacate en las tortitas.","Tomate al lado."]},
+    {type:"Media mañana",e:"🍎",c:"#30D158",name:"FUERA: granada + chía",kcal:220,mb:"🦠 Punicalaginas + omega-3 vegetal. Doble antiinflamatorio.",ing:["½ granada","1 cda chía"],steps:["Desgranar la granada. Mezclar con chía."]},
+    {type:"Comida",e:"🍽️",c:"#0A84FF",name:"FUERA — RESTAURANTE: pescado + arroz + ensalada",kcal:810,mb:"🦠 Comida segura tipo arrocería. Sin marisco ni queso.",ing:["200g pescado plancha","150g arroz blanco","Ensalada simple sin queso","AOVE crudo"],steps:["Pescado simple.","Arroz como guarnición.","Aliñar tú."]},
+    {type:"Merienda",e:"🌿",c:"#BF5AF2",name:"FUERA: cacao + plátano + lino",kcal:290,mb:"🦠 Polifenoles del cacao para cerrar la semana. Plátano con prebióticos.",ing:["200ml leche de coco brick","1 cdta cacao puro 100%","1 plátano","1 cda lino"],steps:["Mezclar leche con cacao.","Comer con plátano y lino."]},
+    {type:"Cena",e:"🌙",c:"#5E5CE6",name:"FUERA — RESTAURANTE: pescado horno + patata + verdura",kcal:620,mb:"🦠 Cierre semanal con pescado horno. Omega-3 antiinflamatorio.",ing:["200g pescado horno","200g patata cocida","Verdura vapor","AOVE crudo"],steps:["Pescado simple.","Patata cocida.","AOVE al servir."]}
+  ]}
+];
+
 const EXTRAS=[
   {name:"Curry de lentejas rojas · espinacas y arroz",kcal:870,tiempo:"45 min",desc:"Lentejas rojas: sin piel, sin remojo, muy digestivas.",mb:"🦠 Lentejas rojas fermentan lentamente y producen butirato que nutre el Faecalibacterium prausnitzii.",ing:["80g lentejas rojas","120g arroz integral","200g espinacas","300ml leche de coco","1 zanahoria","1 cdta cúrcuma","1 cdta jengibre en polvo","2 cdas AOVE"],steps:["Cocer arroz 35 min.","AOVE + cúrcuma + jengibre 1 min.","Añadir lentejas, zanahoria en dados y leche de coco. Cocer 20-25 min.","Espinacas los últimos 3 min. Servir sobre el arroz."]},
   {name:"Salmón en papillote · verduras y patata",kcal:820,tiempo:"40 min",desc:"El papillote mantiene todo el jugo y se ensucia mínimo.",mb:"🦠 Papillote conserva todos los omega-3 sin oxidarlos. Patata cocida desarrolla almidón resistente prebiótico.",ing:["200g salmón fresco","200g patata","1 calabacín","1 zanahoria","1 limón","2 cdas AOVE","eneldo","sal"],steps:["Cocer patata aparte 20 min.","Papel de aluminio: salmón en el centro.","Rodear con calabacín y zanahoria en juliana. AOVE + limón + eneldo.","Cerrar bien. Hornear 180°C, 20-22 min."]},
@@ -611,26 +690,26 @@ const SHOPPING_CATS=[
 
 const SUPLS=[
   {group:"🌄 Al levantarte — en ayunas",sub:"Solo agua · Zinc-carnosina solo · esperar 30-40 min",items:[
-    {pill:"💊 Suplemento",pc:"rgba(10,132,255,0.2)",ptx:"#6AB8FF",name:"Zinc-L-Carnosina (PepZin GI)",dose:"1 cápsula (75 mg) · con agua<br/>Ayunas estricto — pierde eficacia con alimentos"}
+    {pill:"💊 Suplemento",pc:"rgba(10,132,255,0.2)",ptx:"#6AB8FF",name:"Zinc-L-Carnosina (PepZin GI)",dose:"1 cápsula (75 mg) · con agua · nada más levantarte<br/>Ayunas estricto — esperar 30-40 min antes de desayunar"}
   ]},
   {group:"⏱ 15-20 min antes del desayuno",sub:"En ayunas, antes de comer nada",items:[
-    {pill:"💊 Prescrito",pc:"rgba(48,209,88,0.18)",ptx:"#70D080",name:"L-Glutamina ZE 877 — 1ª toma",dose:"2 cápsulas · antes del desayuno<br/>Pauta 2-2-0: desayuno y comida únicamente"},
+    {pill:"💊 Prescrito",pc:"rgba(48,209,88,0.18)",ptx:"#70D080",name:"L-Glutamina ZE 877 — 1ª toma",dose:"2 cápsulas · 15-20 min antes del desayuno · con agua<br/>Pauta 2-2-0: se toma antes del desayuno y antes de comer únicamente"},
     {pill:"💊 Prescrito",pc:"rgba(48,209,88,0.18)",ptx:"#70D080",name:"Gelsectan — 1ª toma",dose:"1 cápsula · antes del desayuno<br/>Xiloglucan + proteína de guisante + extracto de uva — sella la mucosa antes de la primera ingesta del día"}
   ]},,
   {group:"🍳 Con el desayuno",sub:"Al empezar o durante la comida",items:[
-    {pill:"💊 Prescrito",pc:"rgba(48,209,88,0.18)",ptx:"#70D080",name:"Eubiotics Buty-D",dose:"1 cápsula · con alimento<br/>Butirato + vitamina D — nutre el epitelio intestinal<br/><b style='color:#FFD60A'>Si hay diarrea: toma 1 aquí y 1 más con la comida</b>"},
+    {pill:"💊 Prescrito",pc:"rgba(48,209,88,0.18)",ptx:"#70D080",name:"Eubiotics Buty-D",dose:"1 cápsula · con alimento<br/>Butirato + vitamina D — nutre el epitelio intestinal<br/><b style='color:#FFD60A'>Si hay diarrea activa: toma 1 aquí en desayuno + 1 extra con la comida</b>"},
     {pill:"💊 Prescrito",pc:"rgba(48,209,88,0.18)",ptx:"#70D080",name:"Oliovita Piel y Mucosas",dose:"2 cápsulas · con alimento<br/>Polifenoles del olivo — antiinflamatorio, antifúngico contra Candida"},
     {pill:"💊 Fármaco",pc:"rgba(191,90,242,0.2)",ptx:"#D090F0",name:"Finasteride",dose:"1 comprimido · con o sin alimento<br/>Tomar siempre a la misma hora — el desayuno es el momento más fácil de recordar"},
     {pill:"💊 Suplemento",pc:"rgba(10,132,255,0.2)",ptx:"#6AB8FF",name:"Metagenics Akkermansia Confort Intestinal",dose:"1-2 comprimidos · con alimento<br/>Necesita comida para no degradarse antes de llegar al colon — tomar con el desayuno, no en ayunas"}
   ]},
   {group:"🍄 Justo al terminar el desayuno",sub:"Esperar 15-20 min sin comer ni beber después",items:[
-    {pill:"💊 Fármaco",pc:"rgba(255,69,58,0.2)",ptx:"#FF8A85",name:"Mycostatin — 1ª toma",dose:"Dosis prescrita · enjuague 1-2 min y traga<br/>Actúa sobre mucosa oral, faríngea y esofágica — no se absorbe sistémicamente"}
+    {pill:"💊 Fármaco",pc:"rgba(255,69,58,0.2)",ptx:"#FF8A85",name:"Mycostatin — 1ª toma",dose:"Enjuague bucal 1-2 min y traga · justo al terminar el desayuno<br/>Esperar 15-20 min sin comer ni beber después<br/>Actúa sobre mucosa oral, faríngea y esofágica"}
   ]},
   {group:"☀️ Media mañana — entre comidas",sub:"Mín. 2h después desayuno · 2h antes de comer",items:[
     {pill:"💊 Prescrito",pc:"rgba(48,209,88,0.18)",ptx:"#70D080",name:"Mico Neo CLN",dose:"1 sobre · disolver en agua fría o tibia<br/>Hongos medicinales — inmunomodulador, prebiótico de Akkermansia. Siempre fuera de comidas"}
   ]},
   {group:"⏱ 15-20 min antes de comer",sub:"",items:[
-    {pill:"💊 Prescrito",pc:"rgba(48,209,88,0.18)",ptx:"#70D080",name:"L-Glutamina ZE 877 — 2ª toma",dose:"2 cápsulas · antes de comer<br/>Pauta 2-2-0: 2ª y última toma del día"},
+    {pill:"💊 Prescrito",pc:"rgba(48,209,88,0.18)",ptx:"#70D080",name:"L-Glutamina ZE 877 — 2ª toma",dose:"2 cápsulas · 15-20 min antes de comer · con agua<br/>Pauta 2-2-0: esta es la última toma del día"},
   ]},
   {group:"🍽️ Con la comida y post-comida",sub:"Biome Balance con la comida · Mycostatin 2ª al terminar",items:[
     {pill:"💊 Prescrito",pc:"rgba(48,209,88,0.18)",ptx:"#70D080",name:"Biome Balance Antibiotics",dose:"1 cápsula · con alimento<br/>Probióticos de amplio espectro — reequilibra E. coli Biovare y Candida"},
@@ -648,8 +727,8 @@ const SUPLS=[
     {pill:"💊 Fármaco",pc:"rgba(255,69,58,0.2)",ptx:"#FF8A85",name:"Mycostatin — 3ª toma",dose:"Después de cenar · enjuague y traga · espera antes del Jorveza"}
   ]},
   {group:"🌑 Antes de dormir — ayunas",sub:"Mínimo 2h después de cenar",items:[
-    {pill:"💊 Fármaco",pc:"rgba(255,69,58,0.2)",ptx:"#FF8A85",name:"Jorveza (budesonida tópica)",dose:"① Dejar disolver lentamente en la boca<br/>② Esperar 30 min sin comer, beber ni enjuagarse<br/>③ Enjuagarse la boca y escupir (elimina restos de corticoide)<br/>④ Ahora tomar Mycostatin y Zinc-carnosina"},
-    {pill:"💊 Fármaco",pc:"rgba(255,69,58,0.2)",ptx:"#FF8A85",name:"Mycostatin — 4ª y última toma",dose:"Después del enjuague del Jorveza<br/>Combinación nocturna Jorveza + Mycostatin cubre el esófago toda la noche"}
+    {pill:"💊 Fármaco",pc:"rgba(255,69,58,0.2)",ptx:"#FF8A85",name:"Jorveza (budesonida tópica)",dose:"① Dejar disolver lentamente en la boca<br/>② Esperar 30 min sin comer, beber ni enjuagarse<br/>③ Enjuagarse la boca y escupir (elimina restos de corticoide)<br/>④ Ahora tomar Mycostatin 4ª toma"},
+    {pill:"💊 Fármaco",pc:"rgba(255,69,58,0.2)",ptx:"#FF8A85",name:"Mycostatin — 4ª y última toma",dose:"Enjuague y traga · inmediatamente después del enjuague del Jorveza<br/>La combinación nocturna sella el esófago durante toda la noche"}
   ]}
 ];
 
@@ -659,7 +738,7 @@ const TOTAL_SUPLS = SUPLS.reduce((s,g)=>s+g.items.length,0);
 // -- STATE -----------------------------------------------------------------
 let currentDay=0, currentMenu=0, openMeals=new Set(), openExtras=new Set();
 let shopChecked=new Set(JSON.parse(localStorage.getItem('nutricheck')||'[]'));
-let suplChecked=new Set(JSON.parse(localStorage.getItem('suplcheck')||'[]'));
+// (suplChecked legacy - replaced by getSuplDaySet for per-day tracking)
 
 // -- NAV -------------------------------------------------------------------
 function showTab(id,btn){
@@ -669,7 +748,7 @@ function showTab(id,btn){
   btn.classList.add('active');
   document.getElementById('screen').scrollTop=0;
   if(id==='remind'){ buildRemindTimeline(); loadFastTimes(); updateFasting(); }
-  if(id==='supl'){ const dEl=document.getElementById('supl-date-sub'); if(dEl){const n=new Date();dEl.textContent=n.toLocaleDateString('es-ES',{weekday:'long',day:'numeric',month:'long'});}}
+  if(id==='supl'){ suplDay=getTodayIdx(); buildSuplDays(); buildSupl(); const dEl=document.getElementById('supl-date-sub'); if(dEl){const n=new Date();dEl.textContent=n.toLocaleDateString('es-ES',{weekday:'long',day:'numeric',month:'long'});}}
   if(id==='sintomas'){ if(symDay===0){symDay=getTodayIdx();} buildSymDays(); renderSymGrid(); renderSymWeek(); }
 }
 function showGuia(id,btn){
@@ -681,8 +760,8 @@ function showGuia(id,btn){
 
 // -- PLAN ------------------------------------------------------------------
 function exportWeek(){
-  const plan=currentMenu===0?PLAN1:PLAN2;
-  const menuName=currentMenu===0?'Menú 1 — Clásico':'Menú 2 — Airfryer';
+  const plan=currentMenu===0?PLAN1:currentMenu===1?PLAN2:PLAN3;
+  const menuName=currentMenu===0?'Menú 1 — Casa':currentMenu===1?'Menú 2 — Airfryer':'Menú 3 — Fuera de casa';
   const log=JSON.parse(localStorage.getItem('meallog')||'{}');
   const today=new Date();
   const dateStr=today.toLocaleDateString('es-ES',{weekday:'long',year:'numeric',month:'long',day:'numeric'});
@@ -747,7 +826,7 @@ function switchMenu(idx,btn){
   renderMeals();
 }
 function renderMeals(){
-  const plan=currentMenu===0?PLAN1:PLAN2;
+  const plan=currentMenu===0?PLAN1:currentMenu===1?PLAN2:PLAN3;
   const day=plan[currentDay];
   document.getElementById('kcal-val').textContent=day.totalKcal+' kcal';
   document.getElementById('meals-container').innerHTML=day.meals.map((m,i)=>mealHTML(m,i)).join('');
@@ -838,7 +917,25 @@ function extraHTML(r,i){
 function toggleExtra(i){if(openExtras.has(i))openExtras.delete(i);else openExtras.add(i);buildExtras();}
 
 // -- SUPL ------------------------------------------------------------------
+let suplDay = 0;
+function getSuplData(){return JSON.parse(localStorage.getItem('suplbyday')||'{}');}
+function getSuplDaySet(day){const d=getSuplData(); return new Set(d['d'+day]||[]);}
+function saveSuplDaySet(day, set){const d=getSuplData(); d['d'+day]=[...set]; localStorage.setItem('suplbyday',JSON.stringify(d));}
+function buildSuplDays(){
+  const el=document.getElementById('supl-day-scroll');
+  if(!el)return;
+  el.innerHTML=DAYS.map((d,i)=>`<button class="day-pill${i===suplDay?' active':''}" onclick="selectSuplDay(${i})">${d}</button>`).join('');
+}
+function selectSuplDay(i){
+  suplDay=i;
+  buildSuplDays();
+  buildSupl();
+  const today=getTodayIdx();
+  const lbl=document.getElementById('supl-day-label');
+  if(lbl){lbl.textContent= i===today ? 'Tomados hoy' : 'Tomados '+DAYS[i].toLowerCase();}
+}
 function buildSupl(){
+  const checked=getSuplDaySet(suplDay);
   let html='';let idx=0;
   SUPLS.forEach(g=>{
     html+=`<div class="sbl" style="margin-bottom:10px;">
@@ -846,7 +943,7 @@ function buildSupl(){
       <div class="sbitems">`;
     g.items.forEach(it=>{
       const k=idx;
-      const chk=suplChecked.has('s'+k);
+      const chk=checked.has('s'+k);
       html+=`<button class="schk" onclick="toggleSupl(${k})">
         <div class="scb ${chk?'chk':'unc'}" id="sb${k}"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#000" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"${chk?'':' style="display:none"'}><path d="M20 6L9 17l-5-5"/></svg></div>
         <div class="scc">
@@ -864,10 +961,11 @@ function buildSupl(){
 }
 function toggleSupl(k){
   const key='s'+k;
-  if(suplChecked.has(key))suplChecked.delete(key);
-  else suplChecked.add(key);
-  localStorage.setItem('suplcheck',JSON.stringify([...suplChecked]));
-  const on=suplChecked.has(key);
+  const checked=getSuplDaySet(suplDay);
+  if(checked.has(key))checked.delete(key);
+  else checked.add(key);
+  saveSuplDaySet(suplDay,checked);
+  const on=checked.has(key);
   const box=document.getElementById('sb'+k);
   const nm=document.getElementById('sn'+k);
   const ds=document.getElementById('sd'+k);
@@ -877,13 +975,33 @@ function toggleSupl(k){
   updateSuplProg();
 }
 function updateSuplProg(){
-  const done=suplChecked.size;
+  const done=getSuplDaySet(suplDay).size;
   const el=document.getElementById('supl-count');
   const bar=document.getElementById('supl-prog');
   if(el)el.textContent=done+'/'+TOTAL_SUPLS;
   if(bar)bar.style.width=Math.round(done/TOTAL_SUPLS*100)+'%';
 }
-function resetSupl(){suplChecked=new Set();localStorage.setItem('suplcheck','[]');buildSupl();}
+function resetSuplDay(){
+  if(!confirm('Borrar los checks de '+DAYS[suplDay]+'?'))return;
+  saveSuplDaySet(suplDay,new Set());
+  buildSupl();
+}
+function resetSuplWeek(){
+  if(!confirm('Borrar TODA la semana de suplementos?'))return;
+  localStorage.setItem('suplbyday','{}');
+  buildSupl();
+}
+function resetMealsWeek(){
+  if(!confirm('Borrar todas las comidas marcadas y notas de la semana?'))return;
+  localStorage.removeItem('meallog');
+  renderMeals();
+}
+function resetSymptomsWeek(){
+  if(!confirm('Borrar todos los sintomas de la semana?'))return;
+  localStorage.removeItem('symptoms');
+  renderSymGrid();
+  renderSymWeek();
+}
 
 // -- SHOP ------------------------------------------------------------------
 let currentStore=0;
@@ -963,7 +1081,7 @@ function toggleShop(key){if(shopChecked.has(key))shopChecked.delete(key);else sh
 function clearAll(){shopChecked=new Set();localStorage.setItem('nutricheck','[]');updateShop();}
 
 // -- INIT ------------------------------------------------------------------
-currentDay=getTodayIdx();buildDays();renderMeals();buildExtras();buildSupl();updateShop();
+currentDay=getTodayIdx();suplDay=getTodayIdx();buildDays();renderMeals();buildExtras();buildSuplDays();buildSupl();updateShop();
 
 
 // ==============================================================================
@@ -1213,46 +1331,68 @@ function updateRemClock(){
   const n = new Date();
   el.textContent = n.getHours().toString().padStart(2,'0') + ':' + n.getMinutes().toString().padStart(2,'0');
 }
+function calcSuplTimes(bf, di){
+  function add(base, mins){
+    const [hh,mm]=base.split(':').map(Number);
+    const tot=((hh*60+mm+mins)%1440+1440)%1440;
+    return String(Math.floor(tot/60)).padStart(2,'0')+':'+String(tot%60).padStart(2,'0');
+  }
+  return [
+    add(bf,-40),  // 0: Zinc 1a - 40min before breakfast
+    add(bf,-20),  // 1: Glutamina 1a + Gelsectan 1a - 20min before breakfast
+    bf,           // 2: Desayuno
+    add(bf,20),   // 3: Mycostatin 1a - 20min after breakfast
+    add(bf,180),  // 4: Mico Neo - 3h after breakfast
+    add(di,-255), // 5: Glutamina 2a - 15min before lunch (lunch = di-4h)
+    add(di,-240), // 6: Comida - 4h before dinner
+    add(di,-220), // 7: Mycostatin 2a - 20min after lunch
+    add(di,-90),  // 8: Zinc 2a - 90min before dinner
+    add(di,-20),  // 9: Gelsectan 2a - 20min before dinner
+    di,           // 10: Cena
+    add(di,20),   // 11: Mycostatin 3a - 20min after dinner
+    add(di,120),  // 12: Jorveza - 2h after dinner
+  ];
+}
 function buildRemindTimeline(){
-  const el = document.getElementById('remind-timeline');
-  if(!el) return;
+  const el=document.getElementById('remind-timeline');
+  if(!el)return;
   updateRemClock();
-  const now = getNowMins();
-  const times = getRemTimes();
-  let html = '';
-  REMIND_SLOTS.forEach((slot, si) => {
-    const t = times[si];
-    const slotMins = timeToMins(t);
-    const nextMins = si+1 < REMIND_SLOTS.length ? timeToMins(times[si+1]) : 24*60;
-    const isNow = now >= slotMins && now < slotMins + 45;
-    const isPast = now > slotMins + 45 && !isNow;
-    let cls = 'rem-card';
-    if(isNow) cls += ' rem-now';
-    else if(isPast) cls += ' rem-past';
-    html += `<div class="${cls}">
+  const now=getNowMins();
+  const bfEl=document.getElementById('fast-breakfast');
+  const diEl=document.getElementById('fast-dinner');
+  const saved=JSON.parse(localStorage.getItem('fasttimes')||'{}');
+  const bf=(bfEl&&bfEl.value)?bfEl.value:(saved.breakfast||'09:00');
+  const di=(diEl&&diEl.value)?diEl.value:(saved.dinner||'21:00');
+  const calc=calcSuplTimes(bf,di);
+  const overrides=JSON.parse(localStorage.getItem('remtimes')||'{}');
+  const times=REMIND_SLOTS.map((s,si)=>remEditMode&&overrides[si]!==undefined?overrides[si]:(calc[si]||s.time));
+  let html='';
+  REMIND_SLOTS.forEach((slot,si)=>{
+    const t=times[si];
+    const slotMins=timeToMins(t);
+    const isNow=now>=slotMins&&now<slotMins+45;
+    const isPast=now>slotMins+45;
+    let cls='rem-card'+(isNow?' rem-now':isPast?' rem-past':'');
+    html+=`<div class="${cls}">
       <div class="rem-card-header">
         <div class="rem-icon-circle">${slot.icon}</div>
         <div class="rem-time-block">
           <div class="rem-time">${t}</div>
           <div class="rem-label">${slot.label}</div>
-          ${isNow ? '<div class="rem-now-chip">AHORA</div>' : ''}
+          ${isNow?'<div class="rem-now-chip">AHORA</div>':''}
         </div>
         <div class="rem-divider"></div>
         <div class="rem-items-col">
-          ${slot.items.map(it=>`<div class="rem-item">
-            <div class="rem-item-name">${it.name}</div>
-            <div class="rem-item-dose">${it.dose}</div>
-          </div>`).join('')}
+          ${slot.items.map(it=>`<div class="rem-item"><div class="rem-item-name">${it.name}</div><div class="rem-item-dose">${it.dose}</div></div>`).join('')}
         </div>
       </div>
-      ${remEditMode ? `<div class="rem-edit-row">
+      ${remEditMode?`<div class="rem-edit-row">
         <span style="font-size:12px;color:#8E8E93;">Hora:</span>
-        <input class="rem-time-input" type="time" value="${t}" onchange="saveRemTime(${si},this.value);buildRemindTimeline();" />
-        <button class="rem-save-chip" onclick="saveRemTime(${si},this.previousElementSibling.previousElementSibling.previousElementSibling.value||'${t}');buildRemindTimeline();">✓</button>
-      </div>` : ''}
+        <input class="rem-time-input" type="time" value="${t}" onchange="saveRemTime(${si},this.value);buildRemindTimeline();"/>
+      </div>`:''}
     </div>`;
   });
-  el.innerHTML = html;
+  el.innerHTML=html;
 }
 
 let notifTimers = [];
@@ -1396,7 +1536,8 @@ function updateFasting(){
        Para llegar a 12h: cena antes de las <b>${addMinutes(breakfast, -720)}</b> o desayuna después de las <b>${addMinutes(dinner, 720)}</b>`;
 
   // Supplement schedule note
-  note.innerHTML = `<b>📋 Horario de suplementos para hoy:</b><br/>
+  buildRemindTimeline();
+  note.innerHTML = `<b>📋 Horario estimado para hoy (ajusta en Calculadora):</b><br/>
     🌄 <b>${zinc_morning}</b> → Zinc-carnosina + Gelsectan (${gels_morning})<br/>
     🍳 <b>${breakfast}</b> → Desayuno · Buty-D · Oliovita · Finasteride · Akkermansia<br/>
     🍄 <b>${mycost_post_bf}</b> → Mycostatin 1ª<br/>
@@ -1410,11 +1551,11 @@ function updateFasting(){
 function initFasting(){ loadFastTimes(); updateFasting(); }
 initFasting();
 function exportAll(){
-  const plan = currentMenu===0?PLAN1:PLAN2;
-  const menuName = currentMenu===0?'Menú 1 — Clásico':'Menú 2 — Airfryer';
+  const plan = currentMenu===0?PLAN1:currentMenu===1?PLAN2:PLAN3;
+  const menuName = currentMenu===0?'Menú 1 — Casa':currentMenu===1?'Menú 2 — Airfryer':'Menú 3 — Fuera de casa';
   const log = JSON.parse(localStorage.getItem('meallog')||'{}');
   const symData = JSON.parse(localStorage.getItem('symptoms')||'{}');
-  const suplData = JSON.parse(localStorage.getItem('suplcheck')||'[]');
+  // (legacy suplData replaced by suplDataAll for per-day tracking)
   const today = new Date().toLocaleDateString('es-ES',{weekday:'long',year:'numeric',month:'long',day:'numeric'});
   const bar = '='.repeat(42);
 
@@ -1452,21 +1593,26 @@ function exportAll(){
     if(note) txt += `  📝 ${note}\n`;
   });
 
-  // -- SUPLEMENTACIÓN --
-  txt += `\n\n💊  SUPLEMENTACIÓN\n${'-'.repeat(42)}\n`;
-  const checkedSet = new Set(JSON.parse(localStorage.getItem('suplcheck')||'[]'));
+  // -- SUPLEMENTACIÓN POR DÍAS --
+  txt += `\n\n💊  SUPLEMENTACIÓN — ADHERENCIA SEMANAL\n${'-'.repeat(42)}\n`;
+  const suplDataAll = JSON.parse(localStorage.getItem('suplbyday')||'{}');
   const totalS = SUPLS.reduce((s,g)=>s+g.items.length,0);
-  const doneS = checkedSet.size;
-  txt += `Tomados hoy: ${doneS}/${totalS} (${Math.round(doneS/totalS*100)}%)\n\n`;
-  let si=0;
-  SUPLS.forEach(g=>{
-    txt += `${g.group.split(' ').slice(1).join(' ')}\n`;
-    g.items.forEach(it=>{
-      const k='s'+si;
-      txt += `  ${checkedSet.has(k)?'✅':'⬜'} ${it.name}\n`;
-      si++;
+  let weekDone=0, weekTotal=0;
+  DAYS.forEach((d,di)=>{
+    const dayChecked = new Set(suplDataAll['d'+di]||[]);
+    weekDone += dayChecked.size; weekTotal += totalS;
+    txt += `\n📅 ${d.toUpperCase()} — ${dayChecked.size}/${totalS}\n`;
+    let si=0;
+    SUPLS.forEach(g=>{
+      g.items.forEach(it=>{
+        const k='s'+si;
+        if(dayChecked.has(k)) txt += `  ✅ ${it.name}\n`;
+        si++;
+      });
     });
+    if(dayChecked.size===0) txt += `  (sin registro)\n`;
   });
+  txt += `\n📊 Adherencia suplementos: ${weekDone}/${weekTotal} (${Math.round(weekDone/weekTotal*100)}%)\n`;
 
   txt += `\n${bar}\nGenerado por NutriPlan · app personal de Víctor González\n${bar}`;
 
