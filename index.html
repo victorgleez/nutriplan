@@ -263,6 +263,14 @@ html,body{background:#000;color:#fff;font-family:-apple-system,'SF Pro Display',
   .train-days{display:flex;gap:6px;}
   .train-day{flex:1;padding:10px 2px;border-radius:10px;border:1.5px solid rgba(255,255,255,0.1);background:#2C2C2E;color:#8E8E93;font-size:12px;font-weight:700;cursor:pointer;transition:all .15s;text-align:center;touch-action:manipulation;}
   .train-day.training{background:#FF453A;border-color:#FF453A;color:#fff;}
+
+  .p3-row{display:grid;grid-template-columns:1fr 1fr 1fr;gap:5px;margin-top:6px;}
+  .p3-cell{position:relative;}
+  .p3-cell input{width:100%;background:#2C2C2E;border:1.5px solid rgba(255,255,255,0.08);border-radius:8px;color:#fff;font-size:13px;padding:7px 4px 7px 18px;text-align:center;outline:none;box-sizing:border-box;font-family:inherit;}
+  .p3-cell input:focus{border-color:rgba(48,209,88,0.5);}
+  .p3-cell.cheapest input{border-color:#30D158;background:rgba(48,209,88,0.12);color:#30D158;font-weight:700;}
+  .p3-cell .cur{position:absolute;left:6px;top:50%;transform:translateY(-50%);font-size:10px;color:#636366;pointer-events:none;}
+  .p3-dot{font-size:9px;font-weight:700;text-align:center;margin-bottom:2px;letter-spacing:.3px;}
 </style>
 </head>
 <body>
@@ -306,7 +314,7 @@ html,body{background:#000;color:#fff;font-family:-apple-system,'SF Pro Display',
 
 <!-- EXTRA -->
 <div id="s-extra" class="screen">
-  <div class="header"><div class="screen-title">Recetas extra</div><div class="screen-sub">Para cuando tengas más tiempo</div></div>
+  <div class="header"><div class="screen-title">Recetas extra</div><div class="screen-sub">Para cocinar algo especial · cenas con tu pareja, invitados</div></div>
   <div style="background:rgba(255,159,10,0.12);border:1px solid rgba(255,159,10,0.25);border-radius:14px;margin:10px 16px 14px;padding:11px 13px;">
     <div style="font-size:13px;color:#FF9F0A;line-height:1.6;">⭐ Más elaboradas pero 100% compatibles. Úsalas cuando quieras variar.</div>
   </div>
@@ -344,28 +352,24 @@ html,body{background:#000;color:#fff;font-family:-apple-system,'SF Pro Display',
 
 <!-- COMPRA -->
 <div id="s-shop" class="screen">
-  <div class="header"><div class="screen-title">Lista de compra</div><div class="screen-sub">Toca para marcar · toca de nuevo para desmarcar</div></div>
-  <!-- Store selector -->
-  <div class="price-store-row">
-    <button class="price-store-btn active-store" id="store-btn-0" onclick="selectStore(0)">🟢 Mercadona</button>
-    <button class="price-store-btn" id="store-btn-1" onclick="selectStore(1)">🔵 Aldi</button>
-    <button class="price-store-btn" id="store-btn-2" onclick="selectStore(2)">🔴 Lidl</button>
-  </div>
-  <!-- Total price -->
-  <div style="margin:0 16px 12px;background:#1C1C1E;border-radius:16px;overflow:hidden;">
-    <div style="display:flex;align-items:stretch;">
-      <div style="flex:1;padding:14px 16px;">
-        <div style="font-size:11px;font-weight:700;color:#636366;text-transform:uppercase;letter-spacing:.8px;margin-bottom:4px;">Total estimado</div>
-        <div id="store-name-label" style="font-size:14px;font-weight:700;color:#fff;">Mercadona</div>
+  <div class="header"><div class="screen-title">Lista de compra</div><div class="screen-sub">Precio €/kg de cada super · se guardan entre semanas</div></div>
+  <div style="margin:0 16px 12px;background:#1C1C1E;border-radius:16px;padding:12px 14px;">
+    <div style="font-size:11px;font-weight:700;color:#636366;text-transform:uppercase;letter-spacing:.8px;margin-bottom:8px;">Total estimado por super (€/kg sumados)</div>
+    <div style="display:flex;gap:8px;">
+      <div style="flex:1;text-align:center;background:#2C2C2E;border-radius:10px;padding:8px 4px;">
+        <div style="font-size:11px;color:#30D158;font-weight:700;">🟢 Mercadona</div>
+        <div id="tot-0" style="font-size:16px;font-weight:800;color:#fff;margin-top:2px;">—</div>
       </div>
-      <div style="width:1px;background:rgba(255,255,255,0.07);"></div>
-      <div style="padding:14px 16px;display:flex;align-items:center;justify-content:center;min-width:110px;">
-        <div>
-          <div style="font-size:11px;font-weight:700;color:#636366;text-transform:uppercase;letter-spacing:.8px;margin-bottom:4px;text-align:right;">Importe</div>
-          <div id="shop-total" style="font-size:24px;font-weight:800;color:#30D158;letter-spacing:-.5px;">€ 0,00</div>
-        </div>
+      <div style="flex:1;text-align:center;background:#2C2C2E;border-radius:10px;padding:8px 4px;">
+        <div style="font-size:11px;color:#6AB8FF;font-weight:700;">🔵 Aldi</div>
+        <div id="tot-1" style="font-size:16px;font-weight:800;color:#fff;margin-top:2px;">—</div>
+      </div>
+      <div style="flex:1;text-align:center;background:#2C2C2E;border-radius:10px;padding:8px 4px;">
+        <div style="font-size:11px;color:#FF8A85;font-weight:700;">🔴 Lidl</div>
+        <div id="tot-2" style="font-size:16px;font-weight:800;color:#fff;margin-top:2px;">—</div>
       </div>
     </div>
+    <div style="font-size:10.5px;color:#636366;margin-top:8px;line-height:1.4;">El más barato de cada producto se resalta en verde. Los precios se mantienen aunque reinicies la semana.</div>
   </div>
   <div class="card" style="margin:0 16px 14px;">
     <div style="padding:14px 16px;">
@@ -379,7 +383,6 @@ html,body{background:#000;color:#fff;font-family:-apple-system,'SF Pro Display',
   </div>
   <div id="shop-container" style="padding:0 16px 16px;"></div>
   <div style="height:60px;display:flex;align-items:center;justify-content:center;opacity:0.15;font-size:22px;letter-spacing:6px;padding-top:10px;">🌿 ✦ 🌿</div>
-
 </div>
 
 <!-- GUÍA -->
@@ -433,10 +436,7 @@ html,body{background:#000;color:#fff;font-family:-apple-system,'SF Pro Display',
     <div class="gnote">⚠ Con diarrea grasa activa: empieza con verduras cocidas, arroz blanco y caldos. Introduce el resto gradualmente.</div>
   </div>
   <div id="g-fuera" class="gsec">
-    <div class="gc gc-g"><div class="gt" style="color:#30D158;">✅ Pide siempre</div><div class="gi"><span>·</span><span>Pescado a la plancha, horno o vapor — sin salsas</span></div><div class="gi"><span>·</span><span>Arroz blanco o integral de guarnición</span></div><div class="gi"><span>·</span><span>Patata cocida, asada o al vapor</span></div><div class="gi"><span>·</span><span>Ensalada sin crutones ni queso — AOVE y limón aparte</span></div><div class="gi"><span>·</span><span>Pollo o pavo a la plancha, simple</span></div><div class="gi"><span>·</span><span>Verduras a la plancha o al vapor</span></div></div>
-    <div class="gc gc-a"><div class="gt" style="color:#FF9F0A;">⚠️ Aclara al pedir</div><div class="gi"><span>·</span><span>Di: "sin gluten y sin lácteos en todo"</span></div><div class="gi"><span>·</span><span>Salsas siempre aparte — pueden tener nata o gluten</span></div><div class="gi"><span>·</span><span>En japonés: tamari en vez de salsa de soja</span></div><div class="gi"><span>·</span><span>Confirma aceite de fritura no compartido con rebozados</span></div></div>
-    <div class="gc gc-r"><div class="gt" style="color:#FF453A;">❌ Evita siempre</div><div class="gi"><span>·</span><span>Rebozados o empanados</span></div><div class="gi"><span>·</span><span>Salsas cremosas: bechamel, nata, queso</span></div><div class="gi"><span>·</span><span>Pan, crutones o picatostes</span></div><div class="gi"><span>·</span><span>Postres con lácteos o harina</span></div><div class="gi"><span>·</span><span>Alcohol en cualquier forma</span></div><div class="gi"><span>·</span><span>Café y té negro — cafeína empeora la colitis</span></div><div class="gi"><span>·</span><span>Alimentos muy especiados o picantes</span></div></div>
-    <div class="gc gc-b"><div class="gt" style="color:#6AB8FF;">🍽️ Por tipo de restaurante</div><div class="gi"><span>·</span><span>Mediterráneo: pescado al horno, patata, ensalada sin queso</span></div><div class="gi"><span>·</span><span>Japonés: sashimi o tataki con tamari</span></div><div class="gi"><span>·</span><span>Asador: pollo a la brasa, patata al horno</span></div><div class="gi"><span>·</span><span>Italiano: segundo de pescado simple, evitar pasta</span></div><div class="gi"><span>·</span><span>Peruano: tiradito o ceviche sin leche de tigre cremosa</span></div></div>
+    <div class="gc gc-g"><div class="gt" style="color:#30D158;">🥡 Guía completa en el Plan</div><div class="gi"><span>·</span><span>Toda la guía de comer fuera (qué priorizar, qué evitar, frases para pedir, snacks de bolsillo y regla de oro) está ahora en <b>Plan → pestaña "Fuera"</b>, con más detalle y siempre actualizada.</span></div><div class="gi"><span>·</span><span>Se unificó ahí para no tener la información duplicada en dos sitios.</span></div></div>
   </div>
 </div>
 
@@ -568,121 +568,23 @@ function getTodayIdx(){
 const DAYS=["Lun","Mar","Mié","Jue","Vie","Sáb","Dom"];
 
 const PLAN1=[
-  // LUNES (entreno)
-  {totalKcal:3118,meals:[
-    {type:"Desayuno",e:"🌅",c:"#FF9F0A",name:"Porridge proteico de avena, arándanos y AOVE",kcal:607,mb:"🦠 Avena fibra soluble suave (no dispara metano). Arándanos para Akkermansia. Crema de cacahuete NO: uso macadamia. Proteína vegetal sube aminoácidos del desayuno.",ing:["80g copos de avena SG","300ml leche de coco para beber","100g arándanos","20g proteína de guisante (sabor neutro o vainilla)","1 cda lino molido","1 cdta AOVE crudo","canela"],steps:["Cocer la avena con la leche 5 min.","Retirar del fuego, añadir la proteína removiendo (no hervir).","Servir con arándanos, lino, canela y AOVE."]},
-    {type:"Media mañana",e:"🍊",c:"#30D158",name:"Kiwi, plátano y macadamias",kcal:342,mb:"🦠 Kiwi y plátano para energía e hidratos. Macadamia: fruto seco más seguro para EoE y calórico para superávit.",ing:["2 kiwis","1 plátano","20g nueces de macadamia"],steps:["Pelar y trocear la fruta. Acompañar con macadamias."]},
-    {type:"Comida",e:"🍽️",c:"#0A84FF",name:"Salmón al horno con arroz blanco abundante y zanahoria",kcal:1159,mb:"🦠 Salmón omega-3 (ración alta). Arroz blanco (no integral): energía sin alimentar el metano. Día de entreno = más hidrato.",ing:["220g salmón fresco","120g arroz blanco (en crudo)","200g zanahoria","2 cdas AOVE","limón","cúrcuma","jengibre"],steps:["Cocer el arroz 15 min.","Zanahoria al vapor 12 min.","Salmón al horno 180°C 15 min con cúrcuma, jengibre y limón.","AOVE crudo generoso al servir."]},
-    {type:"Post-entreno",e:"💪",c:"#FF453A",name:"Batido de proteína de guisante con plátano",kcal:277,mb:"🦠 Ventana post-entreno. Proteína de guisante: completa con arroz, hipoalergénica, sin lácteo ni soja, no alimenta sulfuros. Plátano repone glucógeno.",ing:["30g proteína de guisante (o guisante+arroz)","1 plátano","250ml leche de coco o agua","canela"],steps:["Triturar todo. Tomar en los 30-60 min tras entrenar."]},
-    {type:"Cena",e:"🌙",c:"#5E5CE6",name:"Pavo a la plancha con patata y calabacín",kcal:733,mb:"🦠 Pavo magro bajo en azufre (ración alta). Patata cocida. Calabacín digestivo. Proteína nocturna para recuperación muscular.",ing:["200g pechuga de pavo","250g patata","1 calabacín","3 cdas AOVE","orégano","sal"],steps:["Cocer la patata 20 min.","Calabacín a la plancha.","Pavo a la plancha 5 min/lado. AOVE crudo al servir."]}
-  ]},
-  // MARTES (entreno)
-  {totalKcal:3125,meals:[
-    {type:"Desayuno",e:"🌅",c:"#FF9F0A",name:"Crema de calabaza con proteína, jengibre y AOVE",kcal:510,mb:"🦠 Desayuno salado sin huevo (alivia sulfuros). Calabaza betacaroteno. Proteína de guisante sube aminoácidos. Jengibre procinético para el metano.",ing:["250g calabaza asada","150ml caldo de verduras","20g proteína de guisante neutra","2 cdas AOVE crudo","30g semillas de calabaza","jengibre","cúrcuma"],steps:["Triturar la calabaza con caldo, jengibre y cúrcuma.","Atemperar e incorporar la proteína removiendo.","Servir con AOVE y semillas."]},
-    {type:"Media mañana",e:"🍊",c:"#30D158",name:"Naranja, plátano y macadamias",kcal:383,mb:"🦠 Hidratos y vitamina C. Macadamia segura para EoE y densa en calorías.",ing:["1 naranja","1 plátano","30g nueces de macadamia"],steps:["Pelar la fruta. Acompañar con macadamias."]},
-    {type:"Comida",e:"🍽️",c:"#0A84FF",name:"Merluza en papillote con patata abundante y judía verde",kcal:1156,mb:"🦠 Merluza blanca muy digestiva (ración alta). Judía verde baja FODMAP. Papillote sin grasa extra (cuida hígado A1AT) pero AOVE crudo generoso.",ing:["250g merluza","120g arroz blanco (crudo)","250g patata","150g judía verde","3 cdas AOVE","limón","eneldo"],steps:["Cocer patata y judía 15 min.","Merluza en papel de horno con limón, eneldo y AOVE, 180°C 15 min.","AOVE crudo al servir."]},
-    {type:"Post-entreno",e:"💪",c:"#FF453A",name:"Batido de proteína con arándanos",kcal:371,mb:"🦠 Proteína guisante post-entreno. Arándanos polifenoles para Akkermansia + recuperación antioxidante.",ing:["30g proteína de guisante","80g arándanos","1 plátano","250ml leche de coco","1 cda chía"],steps:["Triturar y tomar tras entrenar."]},
-    {type:"Cena",e:"🌙",c:"#5E5CE6",name:"Pollo al horno con boniato y espinacas",kcal:705,mb:"🦠 Pollo magro (ración alta). Boniato moderado en almidón resistente. Espinacas folato. Recuperación nocturna.",ing:["200g pechuga de pollo","200g boniato","100g espinacas","3 cdas AOVE","romero","sal"],steps:["Boniato al horno 30 min.","Pollo con romero los últimos 20 min.","Espinacas salteadas con AOVE."]}
-  ]},
-  // MIÉRCOLES (descanso)
-  {totalKcal:2977,meals:[
-    {type:"Desayuno",e:"🌅",c:"#FF9F0A",name:"Pudin de chía proteico con leche de coco y fresas",kcal:416,mb:"🦠 Chía fibra soluble protectora de la mucosa. Proteína de guisante para aminoácidos. Fresas polifenoles. Sin huevo.",ing:["3 cdas chía","300ml leche de coco para beber","20g proteína de guisante vainilla","100g fresas","1 cda lino","1 cdta AOVE crudo","canela"],steps:["Noche anterior: chía + leche de coco + proteína en nevera.","Por la mañana añadir fresas, lino, canela y AOVE."]},
-    {type:"Media mañana",e:"🍊",c:"#30D158",name:"Mandarinas, plátano y macadamias",kcal:380,mb:"🦠 Cítrico bajo FODMAP. Macadamia segura EoE. Día de descanso, hidrato algo menor.",ing:["2 mandarinas","1 plátano","25g macadamias"],steps:["Pelar la fruta."]},
-    {type:"Comida",e:"🍽️",c:"#0A84FF",name:"Lubina a la plancha con arroz y calabacín",kcal:1030,mb:"🦠 Lubina blanca magra (ración alta). Arroz blanco bajo en fermentación. Calabacín suave. AOVE generoso.",ing:["250g lubina","130g arroz blanco (crudo)","1 calabacín","3 cdas AOVE","limón","perejil"],steps:["Cocer el arroz.","Calabacín a la plancha.","Lubina a la plancha 4 min/lado. AOVE al servir."]},
-    {type:"Merienda",e:"🍫",c:"#BF5AF2",name:"Yogur de coco con cacao, plátano y macadamias",kcal:399,mb:"🦠 Cacao polifenoles Akkermansia. Yogur de coco grasa suave. Macadamia para subir calorías sin alimentar sulfuros.",ing:["150g yogur de coco sin azúcar","1 cdta cacao puro 100%","1 plátano","20g macadamias","1 cdta chía"],steps:["Mezclar el yogur con cacao, plátano, macadamias y chía."]},
-    {type:"Cena",e:"🌙",c:"#5E5CE6",name:"Pavo guisado suave con zanahoria y patata",kcal:752,mb:"🦠 Guiso suave sin sofrito agresivo (tránsito lento por metano). Pavo magro + raíces. Ración proteica alta.",ing:["200g pavo en dados","250g patata","150g zanahoria","3 cdas AOVE","laurel","cúrcuma","sal"],steps:["Dorar el pavo suave con AOVE.","Añadir patata y zanahoria, laurel, cúrcuma y agua.","Cocer 25 min."]}
-  ]},
-  // JUEVES (entreno) — HUEVO 1
-  {totalKcal:3196,meals:[
-    {type:"Desayuno",e:"🌅",c:"#FF9F0A",name:"Huevos revueltos con aguacate, pan SG y plátano",kcal:651,mb:"🦠 Día de huevo (1 de 2/semana). Huevo proteína completa. Aguacate ¼ controla FODMAP. Pan SG + plátano para hidrato de día de entreno.",ing:["3 huevos","¼ aguacate","2 rebanadas de pan sin gluten","1 plátano","1 cda AOVE","cebollino","sal"],steps:["Revolver los huevos a fuego suave con AOVE.","Tostar el pan, añadir aguacate.","Acompañar con plátano y cebollino."]},
-    {type:"Media mañana",e:"🍊",c:"#30D158",name:"Kiwi, naranja y macadamias",kcal:332,mb:"🦠 Kiwi (actinidina ayuda a digerir el huevo). Vitamina C. Macadamia EoE-segura.",ing:["2 kiwis","1 naranja","25g macadamias"],steps:["Pelar y trocear la fruta."]},
-    {type:"Comida",e:"🍽️",c:"#0A84FF",name:"Salmón con quinoa abundante y zanahoria",kcal:1178,mb:"🦠 Quinoa: pseudocereal completo mejor tolerado que legumbre con IMO. Salmón omega-3 ración alta. Día entreno = más hidrato.",ing:["220g salmón","100g quinoa (crudo)","200g zanahoria","3 cdas AOVE","limón","cúrcuma"],steps:["Cocer la quinoa 15 min (lavar antes).","Zanahoria al vapor.","Salmón al horno con cúrcuma y limón 15 min."]},
-    {type:"Post-entreno",e:"💪",c:"#FF453A",name:"Batido de proteína con cacao y plátano",kcal:337,mb:"🦠 Proteína guisante post-entreno. Cacao polifenoles. Plátano triptófano (apoya Neuraxbiotic) y glucógeno.",ing:["30g proteína de guisante","1 cdta cacao puro","1 plátano","250ml leche de coco","1 cda chía"],steps:["Triturar y tomar tras entrenar."]},
-    {type:"Cena",e:"🌙",c:"#5E5CE6",name:"Merluza al horno con patata y judía verde",kcal:698,mb:"🦠 Pescado blanco ligero tras el huevo del desayuno. Judía verde baja FODMAP. Cena proteica de recuperación.",ing:["220g merluza","250g patata","150g judía verde","3 cdas AOVE","eneldo","limón"],steps:["Cocer patata y judía.","Merluza al horno con eneldo y limón 15 min."]}
-  ]},
-  // VIERNES (entreno)
-  {totalKcal:3091,meals:[
-    {type:"Desayuno",e:"🌅",c:"#FF9F0A",name:"Porridge proteico de avena con cacao y plátano",kcal:623,mb:"🦠 Avena fibra soluble + cacao polifenoles + proteína guisante. Plátano para energía de día de entreno.",ing:["80g copos de avena SG","300ml leche de coco para beber","20g proteína de guisante","1 cdta cacao puro","1 plátano","1 cda lino","canela"],steps:["Cocer la avena con leche y cacao 5 min.","Retirar del fuego e incorporar la proteína.","Servir con plátano, lino y canela."]},
-    {type:"Media mañana",e:"🍊",c:"#30D158",name:"Naranja, plátano y macadamias",kcal:383,mb:"🦠 Vitamina C + hidratos. Macadamia EoE-segura para superávit.",ing:["1 naranja","1 plátano","30g macadamias"],steps:["Pelar la fruta."]},
-    {type:"Comida",e:"🍽️",c:"#0A84FF",name:"Bacalao al horno con patata panadera y pimiento",kcal:1038,mb:"🦠 Bacalao blanco magro muy digestivo (ración alta). Patata + pimiento rojo asado bajo FODMAP. Día entreno = más hidrato.",ing:["250g bacalao fresco desalado","90g arroz blanco (crudo)","250g patata","1 pimiento rojo","3 cdas AOVE","perejil"],steps:["Patata en rodajas al horno 20 min.","Añadir pimiento y bacalao, 15 min más.","AOVE crudo y perejil al servir."]},
-    {type:"Post-entreno",e:"💪",c:"#FF453A",name:"Batido de proteína con arándanos y plátano",kcal:322,mb:"🦠 Proteína guisante + arándanos (polifenoles Akkermansia + antioxidante recuperación).",ing:["30g proteína de guisante","80g arándanos","1 plátano","250ml leche de coco"],steps:["Triturar y tomar tras entrenar."]},
-    {type:"Cena",e:"🌙",c:"#5E5CE6",name:"Pollo a la plancha con boniato y calabacín",kcal:725,mb:"🦠 Pollo magro (ración alta). Boniato moderado. Calabacín digestivo. Recuperación nocturna.",ing:["200g pollo","200g boniato","1 calabacín","3 cdas AOVE","romero","sal"],steps:["Boniato al horno 30 min.","Calabacín y pollo a la plancha con romero."]}
-  ]},
-  // SÁBADO (descanso) — HUEVO 2
-  {totalKcal:3280,meals:[
-    {type:"Desayuno",e:"🌅",c:"#FF9F0A",name:"Tortilla francesa con pan SG, tomate y aguacate",kcal:571,mb:"🦠 Día de huevo (2 de 2/semana). Tortilla francesa de 3 huevos. Tomate licopeno. Aguacate ¼ FODMAP controlado.",ing:["3 huevos","2 rebanadas de pan sin gluten","1 tomate","¼ aguacate","1 cda AOVE","sal"],steps:["Cuajar la tortilla francesa con poco AOVE.","Pan tostado con tomate y aguacate."]},
-    {type:"Media mañana",e:"🍊",c:"#30D158",name:"Fresas, plátano y macadamias",kcal:454,mb:"🦠 Fresas polifenoles bajos FODMAP. Macadamia EoE-segura.",ing:["150g fresas","1 plátano","25g macadamias","125g yogur de coco enriquecido en calcio"],steps:["Lavar y cortar la fruta."]},
-    {type:"Comida",e:"🍽️",c:"#0A84FF",name:"Dorada a la sal con patata y ensalada de canónigos",kcal:765,mb:"🦠 Dorada blanca fina (ración alta). Canónigos hoja suave baja FODMAP. AOVE crudo abundante polifenólico.",ing:["1 dorada grande (300g)","250g patata","60g canónigos","1 tomate","4 cdas AOVE","limón"],steps:["Dorada al horno 200°C 20 min.","Patata cocida.","Ensalada de canónigos y tomate con AOVE y limón."]},
-    {type:"Merienda",e:"🍫",c:"#BF5AF2",name:"Yogur de coco con cacao, arándanos y macadamias",kcal:362,mb:"🦠 Doble polifenol (cacao + arándanos) para Akkermansia. Macadamia y yogur de coco para superávit sin sulfuros.",ing:["150g yogur de coco","1 cdta cacao puro","80g arándanos","20g macadamias","1 cda chía"],steps:["Mezclar todo en un bol."]},
-    {type:"Cena",e:"🌙",c:"#5E5CE6",name:"Pavo a la plancha con arroz y zanahoria",kcal:1128,mb:"🦠 Pavo magro tras el huevo (ración alta). Arroz blanco bajo en fermentación. Zanahoria suave.",ing:["200g pavo","150g arroz blanco (crudo)","200g zanahoria","3 cdas AOVE","cúrcuma","sal"],steps:["Cocer el arroz.","Zanahoria al vapor.","Pavo a la plancha con cúrcuma."]}
-  ]},
-  // DOMINGO (descanso)
-  {totalKcal:3125,meals:[
-    {type:"Desayuno",e:"🌅",c:"#FF9F0A",name:"Porridge proteico con granada y AOVE",kcal:624,mb:"🦠 Avena suave + granada (máximo polifenol Akkermansia) + proteína guisante. AOVE crudo para hígado (A1AT).",ing:["80g copos de avena SG","300ml leche de coco para beber","20g proteína de guisante","½ granada","1 cda lino","1 cdta AOVE crudo","canela"],steps:["Cocer la avena con leche 5 min.","Retirar e incorporar la proteína.","Servir con granada, lino, canela y AOVE."]},
-    {type:"Media mañana",e:"🍊",c:"#30D158",name:"Kiwi, plátano y macadamias",kcal:414,mb:"🦠 Kiwi digestivo + macadamia EoE-segura. Hidratos para el día.",ing:["2 kiwis","1 plátano","30g macadamias"],steps:["Pelar y trocear."]},
-    {type:"Comida",e:"🍽️",c:"#0A84FF",name:"Salmón al horno con quinoa y verduras asadas",kcal:994,mb:"🦠 Salmón omega-3 (ración alta) + quinoa (bien tolerada con IMO) + verduras suaves (calabacín, zanahoria, pimiento, sin crucíferas por los sulfuros).",ing:["220g salmón","70g quinoa (crudo)","1 calabacín","1 zanahoria","½ pimiento rojo","2 cdas AOVE","cúrcuma","limón"],steps:["Cocer la quinoa.","Verduras al horno 200°C 25 min.","Salmón al horno con cúrcuma y limón 15 min."]},
-    {type:"Merienda",e:"🍫",c:"#BF5AF2",name:"Yogur de coco con cacao, plátano y macadamias",kcal:399,mb:"🦠 Cacao polifenoles + plátano triptófano (eje intestino-cerebro, Neuraxbiotic). Macadamia para superávit.",ing:["150g yogur de coco","1 cdta cacao puro","1 plátano","20g macadamias","1 cdta chía"],steps:["Mezclar todo."]},
-    {type:"Cena",e:"🌙",c:"#5E5CE6",name:"Merluza en papillote con patata y calabacín",kcal:694,mb:"🦠 Pescado blanco ligero para cerrar la semana. Papillote fácil digestión nocturna. Ración proteica de recuperación.",ing:["220g merluza","250g patata","1 calabacín","3 cdas AOVE","eneldo","limón"],steps:["Cocer la patata.","Merluza y calabacín en papillote con eneldo y limón 15 min."]}
-  ]}
+  {totalKcal:3566,meals:[{type: "Desayuno", e: "🌅", c: "#FF9F0A", name: "Porridge proteico de avena con arándanos", kcal: 600, mb: "🦠 Avena = fibra soluble suave que no dispara el metano (IMO). Arándanos para Akkermansia. Proteína de guisante para los aminoácidos.", ing: ["70g copos de avena SG", "300ml bebida de coco enriquecida en calcio", "20g proteína de guisante", "100g arándanos", "1 cda lino molido", "1 cdta AOVE crudo", "canela"], steps: ["Cocer la avena con la bebida de coco 5 min.", "Retirar del fuego e incorporar la proteína removiendo (sin hervir).", "Servir con arándanos, lino, canela y AOVE."]},{type: "Media mañana", e: "🍊", c: "#30D158", name: "Plátano, kiwi y macadamias", kcal: 342, mb: "🦠 Fruta de bajo FODMAP + macadamia (el fruto seco más seguro para la EoE). Energía e hidratos entre comidas.", ing: ["1 plátano", "2 kiwis", "20g nueces de macadamia"], steps: ["Pelar y trocear la fruta. Acompañar con las macadamias o semillas."]},{type: "Comida", e: "🍽️", c: "#0A84FF", name: "Salmón al horno con arroz blanco y zanahoria", kcal: 1087, mb: "🦠 Salmón omega-3 antiinflamatorio. Arroz blanco (no integral): menos fermentable, ideal con IMO+. Zanahoria fibra suave.", ing: ["220g salmón fresco", "100g arroz blanco (en crudo)", "200g zanahoria", "2 cdas AOVE", "limón", "cúrcuma", "jengibre"], steps: ["Cocer el arroz 15 min.", "Zanahoria al vapor 12 min.", "Salmón al horno 180°C 15 min con cúrcuma, jengibre y limón.", "AOVE crudo al servir."]},{type: "Post-entreno", e: "💪", c: "#FF453A", name: "Batido de proteína de guisante con plátano", kcal: 304, mb: "🦠 Ventana post-entreno. Proteína de guisante: completa, hipoalergénica, sin lácteo ni soja, no alimenta sulfuros. Plátano repone glucógeno.", ing: ["30g proteína de guisante", "1 plátano", "250ml bebida de coco", "canela"], steps: ["Triturar todo. Tomar en los 30-60 min tras entrenar."]},{type: "Merienda", e: "🍫", c: "#BF5AF2", name: "Yogur de coco con cacao, plátano y macadamias", kcal: 400, mb: "🦠 Cacao puro y arándanos/granada: polifenoles diarios para estimular Akkermansia. Yogur de coco enriquecido en calcio.", ing: ["150g yogur de coco enriquecido en calcio", "1 cdta cacao puro 100%", "1 plátano", "20g nueces de macadamia", "1 cdta chía"], steps: ["Mezclar el yogur con el cacao, el plátano, las macadamias y la chía."]},{type: "Cena", e: "🌙", c: "#5E5CE6", name: "Pavo a la plancha con arroz y calabacín", kcal: 833, mb: "🦠 Pavo magro. Arroz blanco bajo en fermentación. Calabacín digestivo. Cena de recuperación.", ing: ["200g pechuga de pavo", "80g arroz blanco (crudo)", "1 calabacín", "3 cdas AOVE", "orégano", "sal"], steps: ["Cocer el arroz.", "Calabacín a la plancha.", "Pavo a la plancha 5 min/lado."]}]},
+  {totalKcal:3207,meals:[{type: "Desayuno", e: "🌅", c: "#FF9F0A", name: "Pudin de chía proteico con fresas", kcal: 405, mb: "🦠 Chía: fibra soluble que protege la mucosa sin fermentar agresivamente. Fresas polifenoles bajos en FODMAP. Sin huevo (alivia sulfuros).", ing: ["3 cdas semillas de chía", "300ml bebida de coco enriquecida en calcio", "20g proteína de guisante", "100g fresas", "1 cda lino molido", "canela"], steps: ["La noche anterior: mezclar chía + bebida de coco + proteína. Nevera.", "Por la mañana añadir fresas troceadas, lino y canela."]},{type: "Media mañana", e: "🍊", c: "#30D158", name: "Naranja, plátano y macadamias", kcal: 312, mb: "🦠 Fruta de bajo FODMAP + macadamia (el fruto seco más seguro para la EoE). Energía e hidratos entre comidas.", ing: ["1 naranja", "1 plátano", "20g nueces de macadamia"], steps: ["Pelar y trocear la fruta. Acompañar con las macadamias o semillas."]},{type: "Comida", e: "🍽️", c: "#0A84FF", name: "Merluza en papillote con patata y judía verde", kcal: 1152, mb: "🦠 Merluza blanca muy digestiva, proteína baja en azufre. Judía verde baja FODMAP. Papillote sin grasa extra (cuida el hígado).", ing: ["250g merluza", "120g arroz blanco (crudo)", "250g patata", "150g judía verde", "3 cdas AOVE", "limón", "eneldo"], steps: ["Cocer patata y judía 15 min, y el arroz 15 min.", "Merluza en papel de horno con limón, eneldo y AOVE 180°C 15 min."]},{type: "Post-entreno", e: "💪", c: "#FF453A", name: "Batido de proteína de guisante con plátano", kcal: 304, mb: "🦠 Ventana post-entreno. Proteína de guisante: completa, hipoalergénica, sin lácteo ni soja, no alimenta sulfuros. Plátano repone glucógeno.", ing: ["30g proteína de guisante", "1 plátano", "250ml bebida de coco", "canela"], steps: ["Triturar todo. Tomar en los 30-60 min tras entrenar."]},{type: "Merienda", e: "🍫", c: "#BF5AF2", name: "Batido de cacao, arándanos y coco", kcal: 290, mb: "🦠 Cacao puro y arándanos/granada: polifenoles diarios para estimular Akkermansia. Yogur de coco enriquecido en calcio.", ing: ["1 cdta cacao puro 100%", "80g arándanos", "1 plátano", "250ml bebida de coco enriquecida en calcio", "1 cda chía"], steps: ["Triturar todo. Servir frío."]},{type: "Cena", e: "🌙", c: "#5E5CE6", name: "Pollo a la plancha con boniato y zanahoria", kcal: 744, mb: "🦠 Pollo magro. Boniato y zanahoria: betacarotenos para la mucosa intestinal.", ing: ["200g pollo", "200g boniato", "150g zanahoria", "3 cdas AOVE", "cúrcuma", "sal"], steps: ["Boniato al horno 30 min.", "Zanahoria al vapor.", "Pollo a la plancha con cúrcuma."]}]},
+  {totalKcal:3005,meals:[{type: "Desayuno", e: "🌅", c: "#FF9F0A", name: "Porridge proteico de avena con arándanos", kcal: 600, mb: "🦠 Avena = fibra soluble suave que no dispara el metano (IMO). Arándanos para Akkermansia. Proteína de guisante para los aminoácidos.", ing: ["70g copos de avena SG", "300ml bebida de coco enriquecida en calcio", "20g proteína de guisante", "100g arándanos", "1 cda lino molido", "1 cdta AOVE crudo", "canela"], steps: ["Cocer la avena con la bebida de coco 5 min.", "Retirar del fuego e incorporar la proteína removiendo (sin hervir).", "Servir con arándanos, lino, canela y AOVE."]},{type: "Media mañana", e: "🍊", c: "#30D158", name: "Kiwi, plátano y semillas de calabaza", kcal: 338, mb: "🦠 Fruta de bajo FODMAP + macadamia (el fruto seco más seguro para la EoE). Energía e hidratos entre comidas.", ing: ["2 kiwis", "1 plátano", "25g semillas de calabaza"], steps: ["Pelar y trocear la fruta. Acompañar con las macadamias o semillas."]},{type: "Comida", e: "🍽️", c: "#0A84FF", name: "Pollo al horno con boniato y calabacín", kcal: 748, mb: "🦠 Pollo magro. Boniato moderado en almidón resistente (sin excederse por el IMO). Calabacín muy digestivo.", ing: ["220g pechuga de pollo", "200g boniato", "1 calabacín", "3 cdas AOVE", "romero", "sal"], steps: ["Boniato al horno 200°C 30 min.", "Pollo con romero los últimos 20 min.", "Calabacín a la plancha 4 min/lado."]},{type: "Post-entreno", e: "💪", c: "#FF453A", name: "Batido de proteína de guisante con plátano", kcal: 304, mb: "🦠 Ventana post-entreno. Proteína de guisante: completa, hipoalergénica, sin lácteo ni soja, no alimenta sulfuros. Plátano repone glucógeno.", ing: ["30g proteína de guisante", "1 plátano", "250ml bebida de coco", "canela"], steps: ["Triturar todo. Tomar en los 30-60 min tras entrenar."]},{type: "Merienda", e: "🍫", c: "#BF5AF2", name: "Yogur de coco con granada y macadamias", kcal: 354, mb: "🦠 Cacao puro y arándanos/granada: polifenoles diarios para estimular Akkermansia. Yogur de coco enriquecido en calcio.", ing: ["150g yogur de coco enriquecido en calcio", "½ granada (semillas)", "20g nueces de macadamia", "1 cdta chía"], steps: ["Mezclar el yogur con la granada, las macadamias y la chía."]},{type: "Cena", e: "🌙", c: "#5E5CE6", name: "Merluza a la plancha con patata y espinacas", kcal: 661, mb: "🦠 Pescado blanco ligero para la noche. Espinacas folato. Patata con almidón resistente moderado.", ing: ["200g merluza", "250g patata", "150g espinacas", "3 cdas AOVE", "limón", "sal"], steps: ["Cocer la patata 20 min.", "Merluza a la plancha 3-4 min/lado.", "Espinacas salteadas con AOVE. Limón al servir."]}]},
+  {totalKcal:3064,meals:[{type: "Desayuno", e: "🌅", c: "#FF9F0A", name: "Huevos revueltos con aguacate y pan SG", kcal: 534, mb: "🦠 Día de huevo (solo 2/semana por los sulfuros y la EoE). Aguacate en ¼ controla el FODMAP. Pan SG tostado.", ing: ["3 huevos", "¼ aguacate", "2 rebanadas de pan sin gluten", "1 cda AOVE", "cebollino", "sal"], steps: ["Revolver los huevos a fuego suave con AOVE.", "Tostar el pan, añadir aguacate laminado.", "Cebollino por encima."]},{type: "Media mañana", e: "🍊", c: "#30D158", name: "Naranja, kiwi y macadamias", kcal: 296, mb: "🦠 Fruta de bajo FODMAP + macadamia (el fruto seco más seguro para la EoE). Energía e hidratos entre comidas.", ing: ["1 naranja", "2 kiwis", "20g nueces de macadamia"], steps: ["Pelar y trocear la fruta. Acompañar con las macadamias o semillas."]},{type: "Comida", e: "🍽️", c: "#0A84FF", name: "Pavo al horno con quinoa y zanahoria", kcal: 971, mb: "🦠 Pavo magro bajo en azufre. Quinoa: pseudocereal completo mejor tolerado que la legumbre con IMO+.", ing: ["220g pechuga de pavo", "100g quinoa (en crudo)", "200g zanahoria", "3 cdas AOVE", "cúrcuma", "ajo en polvo", "limón"], steps: ["Cocer la quinoa 15 min (lavarla antes).", "Zanahoria al vapor.", "Pavo al horno con cúrcuma y ajo 25 min a 180°C."]},{type: "Post-entreno", e: "💪", c: "#FF453A", name: "Batido de proteína de guisante con plátano", kcal: 304, mb: "🦠 Ventana post-entreno. Proteína de guisante: completa, hipoalergénica, sin lácteo ni soja, no alimenta sulfuros. Plátano repone glucógeno.", ing: ["30g proteína de guisante", "1 plátano", "250ml bebida de coco", "canela"], steps: ["Triturar todo. Tomar en los 30-60 min tras entrenar."]},{type: "Merienda", e: "🍫", c: "#BF5AF2", name: "Batido de cacao, arándanos y coco", kcal: 290, mb: "🦠 Cacao puro y arándanos/granada: polifenoles diarios para estimular Akkermansia. Yogur de coco enriquecido en calcio.", ing: ["1 cdta cacao puro 100%", "80g arándanos", "1 plátano", "250ml bebida de coco enriquecida en calcio", "1 cda chía"], steps: ["Triturar todo. Servir frío."]},{type: "Cena", e: "🌙", c: "#5E5CE6", name: "Pescado blanco en papillote con patata y calabacín", kcal: 669, mb: "🦠 Pescado blanco ligero (lo que haya). Papillote fácil de digerir por la noche, sin grasa extra.", ing: ["200g pescado blanco", "250g patata", "1 calabacín", "3 cdas AOVE", "eneldo", "limón"], steps: ["Cocer la patata.", "Pescado y calabacín en papillote con eneldo y limón 15 min a 180°C."]}]},
+  {totalKcal:3168,meals:[{type: "Desayuno", e: "🌅", c: "#FF9F0A", name: "Pudin de chía proteico con fresas", kcal: 405, mb: "🦠 Chía: fibra soluble que protege la mucosa sin fermentar agresivamente. Fresas polifenoles bajos en FODMAP. Sin huevo (alivia sulfuros).", ing: ["3 cdas semillas de chía", "300ml bebida de coco enriquecida en calcio", "20g proteína de guisante", "100g fresas", "1 cda lino molido", "canela"], steps: ["La noche anterior: mezclar chía + bebida de coco + proteína. Nevera.", "Por la mañana añadir fresas troceadas, lino y canela."]},{type: "Media mañana", e: "🍊", c: "#30D158", name: "Plátano, fresas y macadamias", kcal: 282, mb: "🦠 Fruta de bajo FODMAP + macadamia (el fruto seco más seguro para la EoE). Energía e hidratos entre comidas.", ing: ["1 plátano", "100g fresas", "20g nueces de macadamia"], steps: ["Pelar y trocear la fruta. Acompañar con las macadamias o semillas."]},{type: "Comida", e: "🍽️", c: "#0A84FF", name: "Pescado blanco al horno con patata y pimiento", kcal: 1033, mb: "🦠 Lubina, dorada o bacalao (lo que haya fresco): blanco magro y digestivo. Pimiento rojo asado bajo FODMAP con polifenoles.", ing: ["250g pescado blanco (lubina/dorada/bacalao)", "90g arroz blanco (crudo)", "250g patata", "1 pimiento rojo", "3 cdas AOVE", "perejil", "limón"], steps: ["Patata en rodajas al horno 20 min.", "Añadir pescado y pimiento 15 min más a 180°C.", "AOVE crudo y perejil al servir."]},{type: "Post-entreno", e: "💪", c: "#FF453A", name: "Batido de proteína de guisante con plátano", kcal: 304, mb: "🦠 Ventana post-entreno. Proteína de guisante: completa, hipoalergénica, sin lácteo ni soja, no alimenta sulfuros. Plátano repone glucógeno.", ing: ["30g proteína de guisante", "1 plátano", "250ml bebida de coco", "canela"], steps: ["Triturar todo. Tomar en los 30-60 min tras entrenar."]},{type: "Merienda", e: "🍫", c: "#BF5AF2", name: "Yogur de coco con cacao, plátano y macadamias", kcal: 400, mb: "🦠 Cacao puro y arándanos/granada: polifenoles diarios para estimular Akkermansia. Yogur de coco enriquecido en calcio.", ing: ["150g yogur de coco enriquecido en calcio", "1 cdta cacao puro 100%", "1 plátano", "20g nueces de macadamia", "1 cdta chía"], steps: ["Mezclar el yogur con el cacao, el plátano, las macadamias y la chía."]},{type: "Cena", e: "🌙", c: "#5E5CE6", name: "Pollo a la plancha con boniato y zanahoria", kcal: 744, mb: "🦠 Pollo magro. Boniato y zanahoria: betacarotenos para la mucosa intestinal.", ing: ["200g pollo", "200g boniato", "150g zanahoria", "3 cdas AOVE", "cúrcuma", "sal"], steps: ["Boniato al horno 30 min.", "Zanahoria al vapor.", "Pollo a la plancha con cúrcuma."]}]},
+  {totalKcal:3235,meals:[{type: "Desayuno", e: "🌅", c: "#FF9F0A", name: "Huevos revueltos con aguacate y pan SG", kcal: 534, mb: "🦠 Día de huevo (solo 2/semana por los sulfuros y la EoE). Aguacate en ¼ controla el FODMAP. Pan SG tostado.", ing: ["3 huevos", "¼ aguacate", "2 rebanadas de pan sin gluten", "1 cda AOVE", "cebollino", "sal"], steps: ["Revolver los huevos a fuego suave con AOVE.", "Tostar el pan, añadir aguacate laminado.", "Cebollino por encima."]},{type: "Media mañana", e: "🍊", c: "#30D158", name: "Fresas, plátano y semillas", kcal: 295, mb: "🦠 Fruta de bajo FODMAP + macadamia (el fruto seco más seguro para la EoE). Energía e hidratos entre comidas.", ing: ["150g fresas", "1 plátano", "25g semillas de calabaza"], steps: ["Pelar y trocear la fruta. Acompañar con las macadamias o semillas."]},{type: "Comida", e: "🍽️", c: "#0A84FF", name: "Salmón al horno con arroz blanco y zanahoria", kcal: 1087, mb: "🦠 Salmón omega-3 antiinflamatorio. Arroz blanco (no integral): menos fermentable, ideal con IMO+. Zanahoria fibra suave.", ing: ["220g salmón fresco", "100g arroz blanco (en crudo)", "200g zanahoria", "2 cdas AOVE", "limón", "cúrcuma", "jengibre"], steps: ["Cocer el arroz 15 min.", "Zanahoria al vapor 12 min.", "Salmón al horno 180°C 15 min con cúrcuma, jengibre y limón.", "AOVE crudo al servir."]},{type: "Post-entreno", e: "💪", c: "#FF453A", name: "Batido de proteína de guisante con plátano", kcal: 304, mb: "🦠 Ventana post-entreno. Proteína de guisante: completa, hipoalergénica, sin lácteo ni soja, no alimenta sulfuros. Plátano repone glucógeno.", ing: ["30g proteína de guisante", "1 plátano", "250ml bebida de coco", "canela"], steps: ["Triturar todo. Tomar en los 30-60 min tras entrenar."]},{type: "Merienda", e: "🍫", c: "#BF5AF2", name: "Yogur de coco con granada y macadamias", kcal: 354, mb: "🦠 Cacao puro y arándanos/granada: polifenoles diarios para estimular Akkermansia. Yogur de coco enriquecido en calcio.", ing: ["150g yogur de coco enriquecido en calcio", "½ granada (semillas)", "20g nueces de macadamia", "1 cdta chía"], steps: ["Mezclar el yogur con la granada, las macadamias y la chía."]},{type: "Cena", e: "🌙", c: "#5E5CE6", name: "Merluza a la plancha con patata y espinacas", kcal: 661, mb: "🦠 Pescado blanco ligero para la noche. Espinacas folato. Patata con almidón resistente moderado.", ing: ["200g merluza", "250g patata", "150g espinacas", "3 cdas AOVE", "limón", "sal"], steps: ["Cocer la patata 20 min.", "Merluza a la plancha 3-4 min/lado.", "Espinacas salteadas con AOVE. Limón al servir."]}]},
+  {totalKcal:3512,meals:[{type: "Desayuno", e: "🌅", c: "#FF9F0A", name: "Porridge proteico de avena con arándanos", kcal: 600, mb: "🦠 Avena = fibra soluble suave que no dispara el metano (IMO). Arándanos para Akkermansia. Proteína de guisante para los aminoácidos.", ing: ["70g copos de avena SG", "300ml bebida de coco enriquecida en calcio", "20g proteína de guisante", "100g arándanos", "1 cda lino molido", "1 cdta AOVE crudo", "canela"], steps: ["Cocer la avena con la bebida de coco 5 min.", "Retirar del fuego e incorporar la proteína removiendo (sin hervir).", "Servir con arándanos, lino, canela y AOVE."]},{type: "Media mañana", e: "🍊", c: "#30D158", name: "Plátano, kiwi y macadamias", kcal: 342, mb: "🦠 Fruta de bajo FODMAP + macadamia (el fruto seco más seguro para la EoE). Energía e hidratos entre comidas.", ing: ["1 plátano", "2 kiwis", "20g nueces de macadamia"], steps: ["Pelar y trocear la fruta. Acompañar con las macadamias o semillas."]},{type: "Comida", e: "🍽️", c: "#0A84FF", name: "Pescado blanco al horno con patata y pimiento", kcal: 1033, mb: "🦠 Lubina, dorada o bacalao (lo que haya fresco): blanco magro y digestivo. Pimiento rojo asado bajo FODMAP con polifenoles.", ing: ["250g pescado blanco (lubina/dorada/bacalao)", "90g arroz blanco (crudo)", "250g patata", "1 pimiento rojo", "3 cdas AOVE", "perejil", "limón"], steps: ["Patata en rodajas al horno 20 min.", "Añadir pescado y pimiento 15 min más a 180°C.", "AOVE crudo y perejil al servir."]},{type: "Post-entreno", e: "💪", c: "#FF453A", name: "Batido de proteína de guisante con plátano", kcal: 304, mb: "🦠 Ventana post-entreno. Proteína de guisante: completa, hipoalergénica, sin lácteo ni soja, no alimenta sulfuros. Plátano repone glucógeno.", ing: ["30g proteína de guisante", "1 plátano", "250ml bebida de coco", "canela"], steps: ["Triturar todo. Tomar en los 30-60 min tras entrenar."]},{type: "Merienda", e: "🍫", c: "#BF5AF2", name: "Yogur de coco con cacao, plátano y macadamias", kcal: 400, mb: "🦠 Cacao puro y arándanos/granada: polifenoles diarios para estimular Akkermansia. Yogur de coco enriquecido en calcio.", ing: ["150g yogur de coco enriquecido en calcio", "1 cdta cacao puro 100%", "1 plátano", "20g nueces de macadamia", "1 cdta chía"], steps: ["Mezclar el yogur con el cacao, el plátano, las macadamias y la chía."]},{type: "Cena", e: "🌙", c: "#5E5CE6", name: "Pavo a la plancha con arroz y calabacín", kcal: 833, mb: "🦠 Pavo magro. Arroz blanco bajo en fermentación. Calabacín digestivo. Cena de recuperación.", ing: ["200g pechuga de pavo", "80g arroz blanco (crudo)", "1 calabacín", "3 cdas AOVE", "orégano", "sal"], steps: ["Cocer el arroz.", "Calabacín a la plancha.", "Pavo a la plancha 5 min/lado."]}]},
 ];
 
 const PLAN2=[
-  // LUNES (entreno)
-  {totalKcal:3147,meals:[
-    {type:"⚡ Desayuno",e:"⚡",c:"#FF9F0A",name:"Bowl proteico de avena, arándanos y macadamias",kcal:687,mb:"🦠 2 min sin cocinar. Avena fibra suave + proteína guisante + arándanos. Macadamia para superávit.",ing:["60g copos de avena SG","300ml leche de coco para beber","20g proteína de guisante","100g arándanos","25g macadamias","1 cda lino","canela"],steps:["Mezclar todo en un bol. Listo, o dejar 5 min para ablandar la avena."]},
-    {type:"🍊 Media mañana",e:"🍊",c:"#30D158",name:"Kiwi, plátano y macadamias",kcal:405,mb:"🦠 Sin preparación. Hidratos + macadamia EoE-segura.",ing:["2 kiwis","1 plátano","30g macadamias"],steps:["Pelar y comer."]},
-    {type:"⚡ Comida",e:"⚡",c:"#0A84FF",name:"Salmón airfryer con arroz en vaso y zanahoria",kcal:1024,mb:"🦠 Salmón airfryer 10 min. Arroz en vaso 2 min. Ración alta de proteína y omega-3. Día entreno = más hidrato.",ing:["220g salmón","2 vasos de arroz blanco precocido","150g zanahoria","2 cdas AOVE","limón","cúrcuma"],steps:["Salmón al airfryer 180°C 10 min con cúrcuma.","Arroz al microondas 2 min.","Zanahoria rallada con AOVE y limón."]},
-    {type:"💪 Post-entreno",e:"💪",c:"#FF453A",name:"Batido de proteína con plátano",kcal:298,mb:"🦠 Proteína guisante post-entreno (sin lácteo ni soja). Plátano repone glucógeno.",ing:["30g proteína de guisante","1 plátano","250ml leche de coco","canela"],steps:["Triturar y tomar en los 30-60 min tras entrenar."]},
-    {type:"⚡ Cena",e:"⚡",c:"#5E5CE6",name:"Pavo y calabacín airfryer con patata",kcal:733,mb:"🦠 Una tanda airfryer 15 min. Pavo magro ración alta + calabacín digestivo. Recuperación nocturna.",ing:["200g pavo en filetes","1 calabacín","250g patata en gajos","3 cdas AOVE","orégano","sal"],steps:["Patata airfryer 200°C 12 min.","Añadir pavo y calabacín 8 min más. AOVE al servir."]}
-  ]},
-  // MARTES (entreno)
-  {totalKcal:3068,meals:[
-    {type:"⚡ Desayuno",e:"⚡",c:"#FF9F0A",name:"Tostadas SG con aguacate, tomate y batido proteico",kcal:526,mb:"🦠 5 min. Sin huevo (alivia sulfuros). Aguacate ¼ FODMAP. Batido de proteína aparte para subir aminoácidos.",ing:["3 rebanadas de pan sin gluten","¼ aguacate","1 tomate","20g proteína de guisante","200ml leche de coco","1 cdta AOVE crudo"],steps:["Tostar el pan, aplastar aguacate, tomate y AOVE.","Batido: proteína + leche de coco triturados."]},
-    {type:"🍊 Media mañana",e:"🍊",c:"#30D158",name:"Naranja, plátano y macadamias",kcal:382,mb:"🦠 Sin preparación. Hidratos + macadamia segura EoE.",ing:["1 naranja","1 plátano","30g macadamias"],steps:["Pelar y comer."]},
-    {type:"⚡ Comida",e:"⚡",c:"#0A84FF",name:"Merluza airfryer con patata y judía verde",kcal:1048,mb:"🦠 Merluza airfryer 10 min. Pescado blanco ración alta. Judía verde baja FODMAP. AOVE generoso.",ing:["250g merluza","2 vasos de arroz blanco precocido","250g patata en gajos","150g judía verde","3 cdas AOVE","limón","eneldo"],steps:["Patata airfryer 12 min.","Añadir merluza 8 min.","Judía al microondas 4 min."]},
-    {type:"💪 Post-entreno",e:"💪",c:"#FF453A",name:"Batido de proteína con arándanos",kcal:344,mb:"🦠 Proteína guisante + arándanos (polifenoles Akkermansia + recuperación).",ing:["30g proteína de guisante","80g arándanos","1 plátano","250ml leche de coco"],steps:["Triturar y tomar tras entrenar."]},
-    {type:"⚡ Cena",e:"⚡",c:"#5E5CE6",name:"Pollo y boniato airfryer",kcal:768,mb:"🦠 Una tanda airfryer. Pollo magro ración alta + boniato moderado. Recuperación.",ing:["200g pollo en tiras","300g boniato en gajos","3 cdas AOVE","romero","sal"],steps:["Boniato airfryer 12 min.","Añadir pollo con romero 10 min más."]}
-  ]},
-  // MIÉRCOLES (descanso)
-  {totalKcal:3126,meals:[
-    {type:"⚡ Desayuno",e:"⚡",c:"#FF9F0A",name:"Pudin de chía proteico con fresas",kcal:401,mb:"🦠 Hecho la noche anterior. Chía protectora + proteína guisante + fresas polifenoles.",ing:["3 cdas chía","300ml leche de coco para beber","20g proteína de guisante","100g fresas","1 cda lino","canela"],steps:["Noche anterior: chía + leche de coco + proteína.","Por la mañana añadir fresas, lino y canela."]},
-    {type:"🍊 Media mañana",e:"🍊",c:"#30D158",name:"Mandarinas, plátano y macadamias",kcal:378,mb:"🦠 Sin preparación. Día de descanso, hidrato algo menor.",ing:["2 mandarinas","1 plátano","25g macadamias"],steps:["Pelar y comer."]},
-    {type:"⚡ Comida",e:"⚡",c:"#0A84FF",name:"Lubina airfryer con arroz en vaso y calabacín",kcal:1043,mb:"🦠 Lubina airfryer 10 min. Arroz en vaso. Calabacín al vapor. Ración alta, completa en 15 min.",ing:["250g lubina","3 vasos de arroz blanco precocido","1 calabacín","3 cdas AOVE","limón","perejil"],steps:["Lubina airfryer 180°C 10 min.","Arroz al microondas.","Calabacín al vapor 4 min. AOVE al servir."]},
-    {type:"🍫 Merienda",e:"🍫",c:"#BF5AF2",name:"Yogur de coco con cacao, plátano y macadamias",kcal:398,mb:"🦠 Cacao polifenoles + macadamia para superávit en día de descanso.",ing:["150g yogur de coco","1 cdta cacao puro","1 plátano","20g macadamias","1 cdta chía"],steps:["Mezclar todo."]},
-    {type:"⚡ Cena",e:"⚡",c:"#5E5CE6",name:"Pavo y zanahoria airfryer con patata",kcal:906,mb:"🦠 Una tanda airfryer. Pavo magro ración alta + raíces. Bajo en fermentación.",ing:["200g pavo","450g patata en gajos","150g zanahoria","3 cdas AOVE","cúrcuma","sal"],steps:["Patata y zanahoria airfryer 12 min.","Añadir pavo 8 min más."]}
-  ]},
-  // JUEVES (entreno) — HUEVO 1
-  {totalKcal:3095,meals:[
-    {type:"⚡ Desayuno",e:"⚡",c:"#FF9F0A",name:"Huevos airfryer con pan SG, aguacate y plátano",kcal:604,mb:"🦠 Día huevo (1 de 2). Huevos airfryer 8 min. Aguacate ¼ FODMAP. Plátano para hidrato de entreno.",ing:["3 huevos","2 rebanadas de pan sin gluten","¼ aguacate","1 plátano","1 cdta AOVE","sal"],steps:["Huevos en molde, airfryer 180°C 8 min.","Pan tostado con aguacate. Plátano aparte."]},
-    {type:"🍊 Media mañana",e:"🍊",c:"#30D158",name:"Kiwi, naranja y macadamias",kcal:397,mb:"🦠 Kiwi ayuda a digerir el huevo. Macadamia EoE-segura.",ing:["2 kiwis","1 naranja","35g macadamias"],steps:["Pelar y comer."]},
-    {type:"⚡ Comida",e:"⚡",c:"#0A84FF",name:"Salmón airfryer con quinoa en vaso y zanahoria",kcal:1089,mb:"🦠 Salmón airfryer 10 min. Quinoa en vaso. Omega-3 ración alta. Día entreno = más hidrato.",ing:["220g salmón","2 vasos de quinoa precocida","150g zanahoria","3 cdas AOVE","cúrcuma","limón"],steps:["Salmón airfryer 180°C 10 min.","Quinoa al microondas.","Zanahoria rallada con AOVE y limón."]},
-    {type:"💪 Post-entreno",e:"💪",c:"#FF453A",name:"Batido de proteína con cacao y plátano",kcal:309,mb:"🦠 Proteína guisante + cacao polifenoles + plátano (triptófano y glucógeno).",ing:["30g proteína de guisante","1 cdta cacao puro","1 plátano","250ml leche de coco"],steps:["Triturar y tomar tras entrenar."]},
-    {type:"⚡ Cena",e:"⚡",c:"#5E5CE6",name:"Merluza airfryer con patata y judía",kcal:696,mb:"🦠 Pescado blanco ligero tras el huevo. Una tanda airfryer. Recuperación.",ing:["220g merluza","250g patata en gajos","150g judía verde","3 cdas AOVE","limón"],steps:["Patata airfryer 12 min.","Merluza 8 min. Judía microondas 4 min."]}
-  ]},
-  // VIERNES (entreno)
-  {totalKcal:3135,meals:[
-    {type:"⚡ Desayuno",e:"⚡",c:"#FF9F0A",name:"Bowl de avena proteico con cacao y plátano",kcal:567,mb:"🦠 2 min. Avena fibra suave + cacao polifenoles + proteína guisante. Plátano energía entreno.",ing:["60g copos de avena SG","300ml leche de coco para beber","20g proteína de guisante","1 cdta cacao puro","1 plátano","1 cda lino","canela"],steps:["Mezclar todo, calentar 1 min o tomar frío."]},
-    {type:"🍊 Media mañana",e:"🍊",c:"#30D158",name:"Naranja, plátano y macadamias",kcal:382,mb:"🦠 Vitamina C + hidratos + macadamia EoE-segura.",ing:["1 naranja","1 plátano","30g macadamias"],steps:["Pelar y comer."]},
-    {type:"⚡ Comida",e:"⚡",c:"#0A84FF",name:"Bacalao airfryer con patata y pimiento",kcal:1031,mb:"🦠 Bacalao airfryer 12 min. Blanco magro ración alta. Pimiento rojo bajo FODMAP. Día entreno = más hidrato.",ing:["250g bacalao fresco","2 vasos de arroz blanco precocido","250g patata en gajos","1 pimiento rojo","3 cdas AOVE","perejil"],steps:["Patata y pimiento airfryer 12 min.","Añadir bacalao 10 min. AOVE y perejil."]},
-    {type:"💪 Post-entreno",e:"💪",c:"#FF453A",name:"Batido de proteína con arándanos y plátano",kcal:344,mb:"🦠 Proteína guisante + arándanos (polifenoles + recuperación antioxidante).",ing:["30g proteína de guisante","80g arándanos","1 plátano","250ml leche de coco"],steps:["Triturar y tomar tras entrenar."]},
-    {type:"⚡ Cena",e:"⚡",c:"#5E5CE6",name:"Pollo y calabacín airfryer con boniato",kcal:811,mb:"🦠 Una tanda. Pollo magro ración alta + boniato moderado + calabacín digestivo.",ing:["200g pollo","300g boniato en gajos","1 calabacín","3 cdas AOVE","romero"],steps:["Boniato airfryer 12 min.","Pollo y calabacín 10 min más."]}
-  ]},
-  // SÁBADO (descanso) — HUEVO 2
-  {totalKcal:3062,meals:[
-    {type:"⚡ Desayuno",e:"⚡",c:"#FF9F0A",name:"Tortilla francesa con tomate, pan SG y aguacate",kcal:566,mb:"🦠 Día huevo (2 de 2). Tortilla de 3 huevos en sartén 3 min. Tomate licopeno. Aguacate ¼ FODMAP.",ing:["3 huevos","2 rebanadas de pan sin gluten","1 tomate","¼ aguacate","1 cda AOVE","sal"],steps:["Tortilla francesa 3 min.","Pan tostado con tomate y aguacate."]},
-    {type:"🍊 Media mañana",e:"🍊",c:"#30D158",name:"Fresas, plátano y macadamias",kcal:395,mb:"🦠 Polifenoles bajos FODMAP + macadamia EoE-segura.",ing:["150g fresas","1 plátano","25g macadamias","200ml leche de coco enriquecida en calcio"],steps:["Lavar y cortar."]},
-    {type:"⚡ Comida",e:"⚡",c:"#0A84FF",name:"Dorada airfryer con patata y canónigos",kcal:853,mb:"🦠 Dorada airfryer 15 min. Blanca fina ración alta. Canónigos hoja suave + AOVE polifenólico.",ing:["1 dorada grande (300g)","250g patata en gajos","60g canónigos","4 cdas AOVE","limón"],steps:["Patata airfryer 12 min.","Dorada 12 min.","Ensalada de canónigos con AOVE y limón."]},
-    {type:"🍫 Merienda",e:"🍫",c:"#BF5AF2",name:"Yogur de coco con cacao, arándanos y macadamias",kcal:363,mb:"🦠 Doble polifenol + macadamia para superávit en descanso.",ing:["150g yogur de coco","1 cdta cacao puro","80g arándanos","20g macadamias","1 cda chía"],steps:["Mezclar todo."]},
-    {type:"⚡ Cena",e:"⚡",c:"#5E5CE6",name:"Pavo airfryer con arroz en vaso y zanahoria",kcal:885,mb:"🦠 Pavo magro ración alta tras huevo. Arroz en vaso bajo en fermentación. 12 min.",ing:["200g pavo","2 vasos de arroz precocido","150g zanahoria","3 cdas AOVE","cúrcuma"],steps:["Pavo y zanahoria airfryer 12 min.","Arroz al microondas 2 min."]}
-  ]},
-  // DOMINGO (descanso)
-  {totalKcal:3089,meals:[
-    {type:"⚡ Desayuno",e:"⚡",c:"#FF9F0A",name:"Pudin de chía proteico con granada",kcal:433,mb:"🦠 Noche anterior. Chía protectora + proteína guisante + granada (polifenoles Akkermansia).",ing:["3 cdas chía","300ml leche de coco para beber","20g proteína de guisante","½ granada","canela","1 cdta AOVE crudo"],steps:["Noche anterior: chía + leche + proteína.","Añadir granada, canela y AOVE."]},
-    {type:"🍊 Media mañana",e:"🍊",c:"#30D158",name:"Kiwi, plátano y macadamias",kcal:477,mb:"🦠 Kiwi digestivo + macadamia EoE-segura.",ing:["2 kiwis","1 plátano","40g macadamias"],steps:["Pelar y comer."]},
-    {type:"⚡ Comida",e:"⚡",c:"#0A84FF",name:"Salmón airfryer con quinoa y verduras",kcal:1089,mb:"🦠 Salmón airfryer + quinoa en vaso + verduras suaves airfryer (sin crucíferas por sulfuros). Ración alta.",ing:["220g salmón","2 vasos de quinoa precocida","1 calabacín","½ pimiento rojo","3 cdas AOVE","cúrcuma","limón"],steps:["Verduras airfryer 12 min.","Salmón 10 min.","Quinoa microondas 2 min."]},
-    {type:"🍫 Merienda",e:"🍫",c:"#BF5AF2",name:"Yogur de coco con cacao, plátano y macadamias",kcal:398,mb:"🦠 Cacao + plátano triptófano (Neuraxbiotic) + macadamia superávit.",ing:["150g yogur de coco","1 cdta cacao puro","1 plátano","20g macadamias","1 cdta chía"],steps:["Mezclar todo."]},
-    {type:"⚡ Cena",e:"⚡",c:"#5E5CE6",name:"Merluza airfryer con patata y calabacín",kcal:692,mb:"🦠 Pescado blanco ligero para cerrar. Una tanda airfryer. Recuperación nocturna.",ing:["220g merluza","250g patata en gajos","1 calabacín","3 cdas AOVE","eneldo","limón"],steps:["Patata airfryer 12 min.","Merluza y calabacín 8 min con eneldo y limón."]}
-  ]}
+  {totalKcal:3509,meals:[{type: "⚡ Desayuno", e: "⚡", c: "#FF9F0A", name: "Bowl exprés de avena, arándanos y proteína", kcal: 630, mb: "🦠 2 min sin cocinar. Avena fibra soluble suave. Arándanos polifenoles. Proteína de guisante para aminoácidos.", ing: ["60g copos de avena SG", "300ml bebida de coco enriquecida en calcio", "20g proteína de guisante", "100g arándanos", "15g nueces de macadamia", "1 cda lino", "canela"], steps: ["Mezclar todo en un bol. Listo, o dejar 5 min para que la avena ablande."]},{type: "🍊 Media mañana", e: "🍊", c: "#30D158", name: "Plátano, kiwi y macadamias", kcal: 342, mb: "🦠 Sin preparación. Fruta baja FODMAP + macadamia segura para la EoE.", ing: ["1 plátano", "2 kiwis", "20g nueces de macadamia"], steps: ["Pelar y comer."]},{type: "⚡ Comida", e: "⚡", c: "#0A84FF", name: "Salmón airfryer con arroz en vaso y zanahoria", kcal: 996, mb: "🦠 Salmón airfryer 10 min. Arroz en vaso 2 min. Omega-3 + arroz blanco bajo en fermentación. 12 min total.", ing: ["220g salmón", "2 vasos de arroz blanco precocido", "150g zanahoria", "2 cdas AOVE", "limón", "cúrcuma"], steps: ["Salmón al airfryer 180°C 10 min con cúrcuma.", "Arroz al microondas 2 min.", "Zanahoria rallada con AOVE y limón."]},{type: "💪 Post-entreno", e: "💪", c: "#FF453A", name: "Batido de proteína de guisante con plátano", kcal: 304, mb: "🦠 Post-entreno. Proteína de guisante sin lácteo ni soja. Plátano repone glucógeno.", ing: ["30g proteína de guisante", "1 plátano", "250ml bebida de coco", "canela"], steps: ["Triturar y tomar tras entrenar."]},{type: "🍫 Merienda", e: "🍫", c: "#BF5AF2", name: "Yogur de coco con cacao, plátano y macadamias", kcal: 400, mb: "🦠 Cacao y arándanos/granada: polifenoles para Akkermansia. Yogur de coco enriquecido en calcio.", ing: ["150g yogur de coco enriquecido en calcio", "1 cdta cacao puro 100%", "1 plátano", "20g nueces de macadamia", "1 cdta chía"], steps: ["Mezclar todo en un bol."]},{type: "⚡ Cena", e: "⚡", c: "#5E5CE6", name: "Pavo airfryer con arroz en vaso y calabacín", kcal: 837, mb: "🦠 Pavo magro. Arroz en vaso bajo en fermentación. 14 min total.", ing: ["200g pavo", "2 vasos de arroz blanco precocido", "1 calabacín", "3 cdas AOVE", "orégano"], steps: ["Pavo y calabacín airfryer 12 min.", "Arroz al microondas 2 min."]}]},
+  {totalKcal:3046,meals:[{type: "⚡ Desayuno", e: "⚡", c: "#FF9F0A", name: "Pudin de chía exprés con fresas", kcal: 405, mb: "🦠 Hecho la noche anterior, 2 min. Chía protectora de la mucosa. Fresas polifenoles. Sin huevo.", ing: ["3 cdas chía", "300ml bebida de coco enriquecida en calcio", "20g proteína de guisante", "100g fresas", "1 cda lino", "canela"], steps: ["Noche anterior: chía + bebida de coco + proteína en nevera.", "Por la mañana añadir fresas y canela."]},{type: "🍊 Media mañana", e: "🍊", c: "#30D158", name: "Naranja, plátano y macadamias", kcal: 312, mb: "🦠 Sin preparación. Fruta baja FODMAP + macadamia segura para la EoE.", ing: ["1 naranja", "1 plátano", "20g nueces de macadamia"], steps: ["Pelar y comer."]},{type: "⚡ Comida", e: "⚡", c: "#0A84FF", name: "Merluza airfryer con patata y judía verde", kcal: 1011, mb: "🦠 Merluza airfryer 10 min. Pescado blanco digestivo. Judía verde baja FODMAP. 15 min total.", ing: ["250g merluza", "2 vasos de arroz blanco precocido", "250g patata en gajos", "150g judía verde", "3 cdas AOVE", "limón", "eneldo"], steps: ["Patata airfryer 200°C 12 min.", "Añadir merluza con limón y eneldo 8 min.", "Judía y arroz al microondas."]},{type: "💪 Post-entreno", e: "💪", c: "#FF453A", name: "Batido de proteína de guisante con plátano", kcal: 304, mb: "🦠 Post-entreno. Proteína de guisante sin lácteo ni soja. Plátano repone glucógeno.", ing: ["30g proteína de guisante", "1 plátano", "250ml bebida de coco", "canela"], steps: ["Triturar y tomar tras entrenar."]},{type: "🍫 Merienda", e: "🍫", c: "#BF5AF2", name: "Batido de cacao, arándanos y coco", kcal: 290, mb: "🦠 Cacao y arándanos/granada: polifenoles para Akkermansia. Yogur de coco enriquecido en calcio.", ing: ["1 cdta cacao puro 100%", "80g arándanos", "1 plátano", "250ml bebida de coco enriquecida en calcio", "1 cda chía"], steps: ["Triturar todo."]},{type: "⚡ Cena", e: "⚡", c: "#5E5CE6", name: "Pollo y calabacín al airfryer con boniato", kcal: 724, mb: "🦠 Una tanda. Pollo magro + boniato moderado + calabacín digestivo.", ing: ["200g pollo", "200g boniato en gajos", "1 calabacín", "3 cdas AOVE", "romero"], steps: ["Boniato airfryer 12 min.", "Pollo y calabacín 10 min más."]}]},
+  {totalKcal:3044,meals:[{type: "⚡ Desayuno", e: "⚡", c: "#FF9F0A", name: "Bowl exprés de avena, arándanos y proteína", kcal: 630, mb: "🦠 2 min sin cocinar. Avena fibra soluble suave. Arándanos polifenoles. Proteína de guisante para aminoácidos.", ing: ["60g copos de avena SG", "300ml bebida de coco enriquecida en calcio", "20g proteína de guisante", "100g arándanos", "15g nueces de macadamia", "1 cda lino", "canela"], steps: ["Mezclar todo en un bol. Listo, o dejar 5 min para que la avena ablande."]},{type: "🍊 Media mañana", e: "🍊", c: "#30D158", name: "Kiwi, plátano y semillas", kcal: 338, mb: "🦠 Sin preparación. Fruta baja FODMAP + macadamia segura para la EoE.", ing: ["2 kiwis", "1 plátano", "25g semillas de calabaza"], steps: ["Pelar y comer."]},{type: "⚡ Comida", e: "⚡", c: "#0A84FF", name: "Pollo y boniato al airfryer", kcal: 749, mb: "🦠 Una tanda airfryer. Pollo magro + boniato moderado. 22 min total.", ing: ["220g pollo en tiras", "250g boniato en gajos", "3 cdas AOVE", "romero", "sal"], steps: ["Boniato airfryer 200°C 12 min.", "Añadir pollo con romero 10 min más."]},{type: "💪 Post-entreno", e: "💪", c: "#FF453A", name: "Batido de proteína de guisante con plátano", kcal: 304, mb: "🦠 Post-entreno. Proteína de guisante sin lácteo ni soja. Plátano repone glucógeno.", ing: ["30g proteína de guisante", "1 plátano", "250ml bebida de coco", "canela"], steps: ["Triturar y tomar tras entrenar."]},{type: "🍫 Merienda", e: "🍫", c: "#BF5AF2", name: "Yogur de coco con granada y macadamias", kcal: 354, mb: "🦠 Cacao y arándanos/granada: polifenoles para Akkermansia. Yogur de coco enriquecido en calcio.", ing: ["150g yogur de coco enriquecido en calcio", "½ granada", "20g nueces de macadamia", "1 cdta chía"], steps: ["Mezclar el yogur con la granada, las macadamias y la chía."]},{type: "⚡ Cena", e: "⚡", c: "#5E5CE6", name: "Merluza airfryer con patata y calabacín", kcal: 669, mb: "🦠 Pescado blanco ligero. Una tanda airfryer, 20 min. Cena de fácil digestión.", ing: ["200g merluza", "250g patata en gajos", "1 calabacín", "3 cdas AOVE", "eneldo", "limón"], steps: ["Patata airfryer 12 min.", "Merluza y calabacín 8 min con eneldo y limón."]}]},
+  {totalKcal:2931,meals:[{type: "⚡ Desayuno", e: "⚡", c: "#FF9F0A", name: "Huevos al airfryer con aguacate y pan SG", kcal: 490, mb: "🦠 Día de huevo (2/semana). Huevos al airfryer 8 min sin vigilar. Aguacate ¼ FODMAP controlado.", ing: ["3 huevos", "¼ aguacate", "2 rebanadas de pan sin gluten", "1 cdta AOVE", "sal"], steps: ["Cascar los huevos en un molde, airfryer 180°C 8 min.", "Tostar el pan, añadir aguacate."]},{type: "🍊 Media mañana", e: "🍊", c: "#30D158", name: "Naranja, kiwi y macadamias", kcal: 296, mb: "🦠 Sin preparación. Fruta baja FODMAP + macadamia segura para la EoE.", ing: ["1 naranja", "2 kiwis", "20g nueces de macadamia"], steps: ["Pelar y comer."]},{type: "⚡ Comida", e: "⚡", c: "#0A84FF", name: "Pavo airfryer con quinoa en vaso y zanahoria", kcal: 882, mb: "🦠 Pavo airfryer 12 min. Quinoa en vaso. Pavo magro bajo en azufre. 14 min total.", ing: ["220g pavo", "2 vasos de quinoa precocida", "150g zanahoria", "3 cdas AOVE", "cúrcuma", "limón"], steps: ["Pavo y zanahoria al airfryer 200°C 12 min.", "Quinoa al microondas 2 min.", "AOVE y limón al servir."]},{type: "💪 Post-entreno", e: "💪", c: "#FF453A", name: "Batido de proteína de guisante con plátano", kcal: 304, mb: "🦠 Post-entreno. Proteína de guisante sin lácteo ni soja. Plátano repone glucógeno.", ing: ["30g proteína de guisante", "1 plátano", "250ml bebida de coco", "canela"], steps: ["Triturar y tomar tras entrenar."]},{type: "🍫 Merienda", e: "🍫", c: "#BF5AF2", name: "Batido de cacao, arándanos y coco", kcal: 290, mb: "🦠 Cacao y arándanos/granada: polifenoles para Akkermansia. Yogur de coco enriquecido en calcio.", ing: ["1 cdta cacao puro 100%", "80g arándanos", "1 plátano", "250ml bebida de coco enriquecida en calcio", "1 cda chía"], steps: ["Triturar todo."]},{type: "⚡ Cena", e: "⚡", c: "#5E5CE6", name: "Pescado blanco airfryer con patata y verdura", kcal: 669, mb: "🦠 Pescado blanco ligero (lo que haya). Una tanda airfryer. Cena suave.", ing: ["200g pescado blanco", "250g patata en gajos", "1 calabacín", "3 cdas AOVE", "limón"], steps: ["Patata airfryer 12 min.", "Pescado y calabacín 8 min con limón."]}]},
+  {totalKcal:3116,meals:[{type: "⚡ Desayuno", e: "⚡", c: "#FF9F0A", name: "Pudin de chía exprés con fresas", kcal: 405, mb: "🦠 Hecho la noche anterior, 2 min. Chía protectora de la mucosa. Fresas polifenoles. Sin huevo.", ing: ["3 cdas chía", "300ml bebida de coco enriquecida en calcio", "20g proteína de guisante", "100g fresas", "1 cda lino", "canela"], steps: ["Noche anterior: chía + bebida de coco + proteína en nevera.", "Por la mañana añadir fresas y canela."]},{type: "🍊 Media mañana", e: "🍊", c: "#30D158", name: "Plátano, fresas y macadamias", kcal: 282, mb: "🦠 Sin preparación. Fruta baja FODMAP + macadamia segura para la EoE.", ing: ["1 plátano", "100g fresas", "20g nueces de macadamia"], steps: ["Pelar y comer."]},{type: "⚡ Comida", e: "⚡", c: "#0A84FF", name: "Pescado blanco airfryer con patata y pimiento", kcal: 1001, mb: "🦠 Lubina, dorada o bacalao al airfryer 12 min. Pimiento rojo bajo FODMAP. 15 min total.", ing: ["250g pescado blanco", "2 vasos de arroz blanco precocido", "250g patata en gajos", "1 pimiento rojo", "3 cdas AOVE", "perejil"], steps: ["Patata y pimiento airfryer 12 min.", "Añadir pescado 10 min.", "Arroz al microondas. AOVE y perejil."]},{type: "💪 Post-entreno", e: "💪", c: "#FF453A", name: "Batido de proteína de guisante con plátano", kcal: 304, mb: "🦠 Post-entreno. Proteína de guisante sin lácteo ni soja. Plátano repone glucógeno.", ing: ["30g proteína de guisante", "1 plátano", "250ml bebida de coco", "canela"], steps: ["Triturar y tomar tras entrenar."]},{type: "🍫 Merienda", e: "🍫", c: "#BF5AF2", name: "Yogur de coco con cacao, plátano y macadamias", kcal: 400, mb: "🦠 Cacao y arándanos/granada: polifenoles para Akkermansia. Yogur de coco enriquecido en calcio.", ing: ["150g yogur de coco enriquecido en calcio", "1 cdta cacao puro 100%", "1 plátano", "20g nueces de macadamia", "1 cdta chía"], steps: ["Mezclar todo en un bol."]},{type: "⚡ Cena", e: "⚡", c: "#5E5CE6", name: "Pollo y calabacín al airfryer con boniato", kcal: 724, mb: "🦠 Una tanda. Pollo magro + boniato moderado + calabacín digestivo.", ing: ["200g pollo", "200g boniato en gajos", "1 calabacín", "3 cdas AOVE", "romero"], steps: ["Boniato airfryer 12 min.", "Pollo y calabacín 10 min más."]}]},
+  {totalKcal:3108,meals:[{type: "⚡ Desayuno", e: "⚡", c: "#FF9F0A", name: "Huevos al airfryer con aguacate y pan SG", kcal: 490, mb: "🦠 Día de huevo (2/semana). Huevos al airfryer 8 min sin vigilar. Aguacate ¼ FODMAP controlado.", ing: ["3 huevos", "¼ aguacate", "2 rebanadas de pan sin gluten", "1 cdta AOVE", "sal"], steps: ["Cascar los huevos en un molde, airfryer 180°C 8 min.", "Tostar el pan, añadir aguacate."]},{type: "🍊 Media mañana", e: "🍊", c: "#30D158", name: "Fresas, plátano y semillas", kcal: 295, mb: "🦠 Sin preparación. Fruta baja FODMAP + macadamia segura para la EoE.", ing: ["150g fresas", "1 plátano", "25g semillas de calabaza"], steps: ["Pelar y comer."]},{type: "⚡ Comida", e: "⚡", c: "#0A84FF", name: "Salmón airfryer con arroz en vaso y zanahoria", kcal: 996, mb: "🦠 Salmón airfryer 10 min. Arroz en vaso 2 min. Omega-3 + arroz blanco bajo en fermentación. 12 min total.", ing: ["220g salmón", "2 vasos de arroz blanco precocido", "150g zanahoria", "2 cdas AOVE", "limón", "cúrcuma"], steps: ["Salmón al airfryer 180°C 10 min con cúrcuma.", "Arroz al microondas 2 min.", "Zanahoria rallada con AOVE y limón."]},{type: "💪 Post-entreno", e: "💪", c: "#FF453A", name: "Batido de proteína de guisante con plátano", kcal: 304, mb: "🦠 Post-entreno. Proteína de guisante sin lácteo ni soja. Plátano repone glucógeno.", ing: ["30g proteína de guisante", "1 plátano", "250ml bebida de coco", "canela"], steps: ["Triturar y tomar tras entrenar."]},{type: "🍫 Merienda", e: "🍫", c: "#BF5AF2", name: "Yogur de coco con granada y macadamias", kcal: 354, mb: "🦠 Cacao y arándanos/granada: polifenoles para Akkermansia. Yogur de coco enriquecido en calcio.", ing: ["150g yogur de coco enriquecido en calcio", "½ granada", "20g nueces de macadamia", "1 cdta chía"], steps: ["Mezclar el yogur con la granada, las macadamias y la chía."]},{type: "⚡ Cena", e: "⚡", c: "#5E5CE6", name: "Merluza airfryer con patata y calabacín", kcal: 669, mb: "🦠 Pescado blanco ligero. Una tanda airfryer, 20 min. Cena de fácil digestión.", ing: ["200g merluza", "250g patata en gajos", "1 calabacín", "3 cdas AOVE", "eneldo", "limón"], steps: ["Patata airfryer 12 min.", "Merluza y calabacín 8 min con eneldo y limón."]}]},
+  {totalKcal:3514,meals:[{type: "⚡ Desayuno", e: "⚡", c: "#FF9F0A", name: "Bowl exprés de avena, arándanos y proteína", kcal: 630, mb: "🦠 2 min sin cocinar. Avena fibra soluble suave. Arándanos polifenoles. Proteína de guisante para aminoácidos.", ing: ["60g copos de avena SG", "300ml bebida de coco enriquecida en calcio", "20g proteína de guisante", "100g arándanos", "15g nueces de macadamia", "1 cda lino", "canela"], steps: ["Mezclar todo en un bol. Listo, o dejar 5 min para que la avena ablande."]},{type: "🍊 Media mañana", e: "🍊", c: "#30D158", name: "Plátano, kiwi y macadamias", kcal: 342, mb: "🦠 Sin preparación. Fruta baja FODMAP + macadamia segura para la EoE.", ing: ["1 plátano", "2 kiwis", "20g nueces de macadamia"], steps: ["Pelar y comer."]},{type: "⚡ Comida", e: "⚡", c: "#0A84FF", name: "Pescado blanco airfryer con patata y pimiento", kcal: 1001, mb: "🦠 Lubina, dorada o bacalao al airfryer 12 min. Pimiento rojo bajo FODMAP. 15 min total.", ing: ["250g pescado blanco", "2 vasos de arroz blanco precocido", "250g patata en gajos", "1 pimiento rojo", "3 cdas AOVE", "perejil"], steps: ["Patata y pimiento airfryer 12 min.", "Añadir pescado 10 min.", "Arroz al microondas. AOVE y perejil."]},{type: "💪 Post-entreno", e: "💪", c: "#FF453A", name: "Batido de proteína de guisante con plátano", kcal: 304, mb: "🦠 Post-entreno. Proteína de guisante sin lácteo ni soja. Plátano repone glucógeno.", ing: ["30g proteína de guisante", "1 plátano", "250ml bebida de coco", "canela"], steps: ["Triturar y tomar tras entrenar."]},{type: "🍫 Merienda", e: "🍫", c: "#BF5AF2", name: "Yogur de coco con cacao, plátano y macadamias", kcal: 400, mb: "🦠 Cacao y arándanos/granada: polifenoles para Akkermansia. Yogur de coco enriquecido en calcio.", ing: ["150g yogur de coco enriquecido en calcio", "1 cdta cacao puro 100%", "1 plátano", "20g nueces de macadamia", "1 cdta chía"], steps: ["Mezclar todo en un bol."]},{type: "⚡ Cena", e: "⚡", c: "#5E5CE6", name: "Pavo airfryer con arroz en vaso y calabacín", kcal: 837, mb: "🦠 Pavo magro. Arroz en vaso bajo en fermentación. 14 min total.", ing: ["200g pavo", "2 vasos de arroz blanco precocido", "1 calabacín", "3 cdas AOVE", "orégano"], steps: ["Pavo y calabacín airfryer 12 min.", "Arroz al microondas 2 min."]}]},
 ];
 
 const PLAN3=[
@@ -706,9 +608,12 @@ const PLAN3=[
 ];
 
 const EXTRAS=[
-  {name:"Curry de lentejas rojas · espinacas y arroz",kcal:870,tiempo:"45 min",desc:"Lentejas rojas: sin piel, sin remojo, muy digestivas.",mb:"🦠 Lentejas rojas fermentan lentamente y producen butirato que nutre el Faecalibacterium prausnitzii.",ing:["80g lentejas rojas","120g arroz integral","200g espinacas","300ml leche de coco","1 zanahoria","1 cdta cúrcuma","1 cdta jengibre en polvo","2 cdas AOVE"],steps:["Cocer arroz 35 min.","AOVE + cúrcuma + jengibre 1 min.","Añadir lentejas, zanahoria en dados y leche de coco. Cocer 20-25 min.","Espinacas los últimos 3 min. Servir sobre el arroz."]},
-  {name:"Salmón en papillote · verduras y patata",kcal:820,tiempo:"40 min",desc:"El papillote mantiene todo el jugo y se ensucia mínimo.",mb:"🦠 Papillote conserva todos los omega-3 sin oxidarlos. Patata cocida desarrolla almidón resistente prebiótico.",ing:["200g salmón fresco","200g patata","1 calabacín","1 zanahoria","1 limón","2 cdas AOVE","eneldo","sal"],steps:["Cocer patata aparte 20 min.","Papel de aluminio: salmón en el centro.","Rodear con calabacín y zanahoria en juliana. AOVE + limón + eneldo.","Cerrar bien. Hornear 180°C, 20-22 min."]},
-  {name:"Pollo asado · patatas al horno y ensalada mediterránea",kcal:920,tiempo:"60 min",desc:"Clásico de fin de semana. El horno hace el trabajo.",mb:"🦠 El ajo asado pierde su efecto FODMAP y potencia su alicina antibacteriana contra E. coli Biovare.",ing:["250g muslo pollo con hueso","300g patatas","2 tomates","1 pepino","30g aceitunas negras","AOVE","orégano","1 limón","sal"],steps:["Pollo y patatas en dados en bandeja. AOVE + orégano + sal.","Hornear 180°C, 45-50 min, dar vuelta a mitad.","Ensalada: tomate + pepino + aceitunas + AOVE + limón."]}
+  {name:"Salmón en costra de pistacho · puré de boniato y espárragos",kcal:780,tiempo:"35 min",desc:"Plato de restaurante, fácil de bordar. Para impresionar sin complicarte.",mb:"🦠 Salmón omega-3 antiinflamatorio. Boniato con betacaroteno para la mucosa. Pistacho en costra: textura y fiesta sin gluten ni lácteo.",ing:["2 lomos de salmón (180g c/u)","30g pistachos sin sal picados","2 boniatos medianos","1 manojo de espárragos verdes","3 cdas AOVE","1 limón","sal, pimienta, eneldo"],steps:["Hornear los boniatos enteros 200°C 35 min, o cocer pelados 20 min.","Picar los pistachos y cubrir el salmón presionando. Hornear 180°C 14 min.","Saltear los espárragos en AOVE 5 min.","Triturar el boniato con AOVE, sal y un toque de limón hasta puré.","Emplatar: puré de base, salmón encima, espárragos al lado."]},
+  {name:"Lubina a la sal con verduritas al horno",kcal:680,tiempo:"40 min",desc:"Espectacular para una cena especial y casi sin esfuerzo. La sal hace el trabajo.",mb:"🦠 Lubina blanca magra y digestiva. Cocción a la sal sin grasa añadida, ideal para cuidar el hígado. Verduras suaves bajas en FODMAP.",ing:["1 lubina entera limpia (600-800g)","2 kg de sal gruesa","1 calabacín","1 zanahoria","1 pimiento rojo","1 boniato","4 cdas AOVE","romero, tomillo"],steps:["Precalentar horno a 200°C.","Cama de sal en una bandeja, colocar la lubina, cubrir con más sal humedecida.","Hornear 25-30 min (unos 25 min/kg).","Aparte: verduras en bastones con AOVE y hierbas, al horno 30 min.","Romper la costra de sal en la mesa: efecto garantizado."]},
+  {name:"Risotto de calabaza con arroz arborio (sin lácteo)",kcal:720,tiempo:"35 min",desc:"Cremoso sin nata ni queso. Romántico y reconfortante.",mb:"🦠 Cremosidad lograda con el almidón del arroz y leche de coco, sin lácteos. Calabaza betacaroteno. Arroz blanco bajo en fermentación para tu IMO.",ing:["160g arroz arborio","400g calabaza en dados","1 l caldo de verduras caliente","150ml leche de coco","3 cdas AOVE","1 cdta cúrcuma","cebollino, sal"],steps:["Sofreír suave la calabaza en AOVE 5 min.","Añadir el arroz y nacararlo 2 min.","Ir añadiendo caldo caliente cazo a cazo, removiendo, 18 min.","A media cocción, la calabaza se deshace y da cremosidad.","Fuera del fuego, añadir leche de coco y cúrcuma. Reposar 2 min. Cebollino al servir."]},
+  {name:"Pollo al horno con limón, miel y romero · patatas",kcal:760,tiempo:"50 min",desc:"Aromático y jugoso, de los que llenan la cocina de olor a domingo.",mb:"🦠 Pollo magro. Un toque mínimo de miel (poca, por el azúcar) glasea sin disparar la cándida. Patata con almidón resistente.",ing:["4 contramuslos de pollo sin piel","600g patatas","1 limón","1 cdta de miel","3 cdas AOVE","2 ramas de romero","ajo en polvo, sal, pimienta"],steps:["Patatas en gajos en la bandeja con AOVE, sal y romero.","Pollo encima, untado con AOVE, zumo de limón, la miel y ajo en polvo.","Hornear 200°C 45-50 min, regando con su jugo a media cocción.","Dejar reposar 5 min antes de servir."]},
+  {name:"Tartar de salmón y aguacate con mango",kcal:520,tiempo:"20 min",desc:"Entrante fresco y elegante, sin cocinar. Perfecto para empezar una cena especial.",mb:"🦠 Salmón crudo de calidad (congelado antes 48h por anisakis): omega-3 puro. Aguacate prebiótico. Mango en poca cantidad por el FODMAP.",ing:["200g salmón fresco (congelado 48h previo)","1 aguacate","½ mango pequeño","1 lima","2 cdas AOVE","cebollino, sésamo, sal","tamari sin gluten (opcional)"],steps:["Cortar el salmón en dados pequeños (debe haber estado congelado 48h).","Picar el aguacate y el mango en dados similares.","Aliñar con zumo de lima, AOVE, un toque de tamari y sal.","Montar con un aro: salmón abajo, aguacate, mango. Sésamo y cebollino encima."]},
+  {name:"Merluza rellena de gambas y espinacas al horno",kcal:640,tiempo:"40 min",desc:"Plato de celebración que parece de chef. Suave para tu sistema.",mb:"🦠 Merluza blanca digestiva. Nota: las gambas son marisco, ocasional y en poca cantidad — si notas que te sientan mal, sustituye por más espinaca y zanahoria.",ing:["2 lomos gruesos de merluza","100g gambas peladas (opcional)","150g espinacas","1 zanahoria","3 cdas AOVE","100ml caldo de pescado","limón, eneldo, sal"],steps:["Saltear espinacas y zanahoria rallada en AOVE 4 min. Añadir las gambas 2 min.","Abrir los lomos de merluza y rellenar con el salteado.","Colocar en fuente con el caldo, limón y eneldo.","Hornear 180°C 18-20 min. Regar con el jugo al servir."]}
 ];
 
 const SHOPPING_CATS=[
@@ -720,22 +625,20 @@ const SHOPPING_CATS=[
     "Dorada — 2 piezas",
     "Pechuga de pollo — 800 g",
     "Pechuga de pavo — 800 g",
-    "Huevos camperos — media docena (solo jue+sáb)"
+    "Huevos camperos — media docena"
   ]},
   {cat:"💪 Proteína en polvo",items:[
-    "Proteína de guisante aislada (o guisante+arroz) — 1 bote",
-    "Sabor neutro o vainilla, sin edulcorantes problemáticos",
-    "Verificar: sin lactosa, sin soja, sin gluten"
+    "Proteína de guisante aislada sin lactosa/soja/gluten — 1 bote (sabor neutro o vainilla)"
   ]},
   {cat:"🌾 Hidratos",items:[
     "Arroz blanco — 1 kg",
-    "Arroz blanco en vaso precocido — 6 vasos (menú rápido)",
+    "Arroz blanco en vaso precocido — 6 vasos",
     "Quinoa — 500 g",
-    "Quinoa en vaso precocida — 4 vasos (menú rápido)",
-    "Copos de avena SIN GLUTEN certificada — 750 g",
+    "Quinoa en vaso precocida — 4 vasos",
+    "Copos de avena sin gluten certificada — 750 g",
     "Patata — 3 kg",
     "Boniato — 1,5 kg",
-    "Pan sin gluten — 1 paquete (solo días huevo)"
+    "Pan sin gluten — 1 paquete"
   ]},
   {cat:"🥦 Verduras",items:[
     "Zanahoria — 1,5 kg",
@@ -748,7 +651,7 @@ const SHOPPING_CATS=[
     "Tomate — 1 kg"
   ]},
   {cat:"🍓 Fruta",items:[
-    "Plátano — 18-20 unidades (clave para superávit y post-entreno)",
+    "Plátano — 18-20 unidades",
     "Arándanos — 600 g (fresco o congelado)",
     "Fresas — 400 g",
     "Granada — 3 unidades",
@@ -758,32 +661,30 @@ const SHOPPING_CATS=[
     "Aguacate — 4 unidades"
   ]},
   {cat:"🥥 Grasas y semillas",items:[
-    "AOVE (aceite oliva virgen extra) — 1,5 L (uso generoso)",
-    "Nueces de macadamia — 400 g (fruto seco más seguro para EoE)",
+    "AOVE aceite oliva virgen extra — 1,5 L",
+    "Nueces de macadamia — 400 g",
     "Semillas de calabaza — 250 g",
     "Semillas de lino molido — 250 g",
     "Semillas de chía — 250 g",
     "Semillas de girasol — 100 g"
   ]},
   {cat:"🥛 Sustitutos sin lácteo",items:[
-    "Leche de coco para beber ENRIQUECIDA EN CALCIO (brick) — 8-10 unidades",
-    "Yogur de coco ENRIQUECIDO EN CALCIO sin azúcar — 7-8 unidades",
-    "⚠️ CLAVE: que ponga 'enriquecido/a en calcio' (~120mg/100ml). Sin esta versión tu calcio diario se queda corto al no tomar lácteos",
-    "Verificar también: sin azúcares añadidos"
+    "Bebida de coco enriquecida en calcio sin azúcar — 8-10 bricks",
+    "Yogur de coco enriquecido en calcio sin azúcar — 7-8 unidades"
   ]},
   {cat:"🧂 Condimentos",items:[
     "Cúrcuma en polvo",
     "Jengibre fresco — 1 raíz",
     "Canela de Ceilán",
-    "Orégano · Romero · Eneldo · Perejil · Laurel",
+    "Orégano, romero, eneldo, perejil, laurel",
     "Limón — 12 unidades",
     "Sal",
     "Cacao puro 100% en polvo — 1 bote"
   ]},
   {cat:"🍘 Snacks permitidos",items:[
-    "Tortitas de maíz (NO las de arroz con cacahuete) — 2 paquetes",
+    "Tortitas de maíz (no las de arroz con cacahuete) — 2 paquetes",
     "Chocolate negro 85%+ sin leche — 1 tableta",
-    "Dátiles — paquete pequeño (ocasional)"
+    "Dátiles — paquete pequeño"
   ]}
 ];
 
@@ -791,28 +692,33 @@ const SUPLS=[
   {group:"🌄 Al levantarte — en ayunas",sub:"Solo agua · esperar 30-40 min antes de desayunar",items:[
     {pill:"💊 Suplemento",pc:"rgba(10,132,255,0.2)",ptx:"#6AB8FF",name:"Zinc-carnosina PepZin GI",dose:"1 cápsula · con agua · en ayunas estricto<br/>Nunca junto a la Akkermansia (necesita ayunas)"},
     {pill:"💊 Prescrito",pc:"rgba(48,209,88,0.18)",ptx:"#70D080",name:"Miconeo GYB",dose:"1 cápsula · en ayunas"},
-    {pill:"💊 Prescrito",pc:"rgba(48,209,88,0.18)",ptx:"#70D080",name:"Neuraxbiotic Zen",dose:"1 cápsula · en ayunas<br/>Psicobiótico — eje intestino-cerebro"}
+    {pill:"💊 Prescrito",pc:"rgba(48,209,88,0.18)",ptx:"#70D080",name:"Neuraxbiotic Zen",dose:"1 cápsula · en ayunas<br/>Psicobiótico — eje intestino-cerebro (pauta 1-0-0)"},
+    {pill:"💊 Prescrito",pc:"rgba(48,209,88,0.18)",ptx:"#70D080",name:"L-Glutamina ZE 877 — 1ª toma",dose:"1 cápsula · en ayunas, antes del desayuno (pauta 1-1-0)"}
   ]},
-  {group:"🍳 Con el desayuno",sub:"Con alimento · probiótico alterna día par/impar",items:[
-    {pill:"💊 Día IMPAR",pc:"rgba(255,159,10,0.18)",ptx:"#FFB340",name:"Biome Balance",dose:"1 cápsula · con alimento<br/><b style='color:#FFB340'>Solo días IMPARES (1,3,5...)</b> — alterna con Vivomixx",alt:"odd"},
-    {pill:"💊 Día PAR",pc:"rgba(94,92,230,0.2)",ptx:"#A8A6FF",name:"Vivomixx Neo 9",dose:"1 cápsula · con alimento<br/><b style='color:#A8A6FF'>Solo días PARES (2,4,6...)</b> — alterna con Biome Balance",alt:"even"},
-    {pill:"💊 Prescrito",pc:"rgba(48,209,88,0.18)",ptx:"#70D080",name:"Akkermansia Metagenics",dose:"1 comprimido · con alimento<br/>Siempre con comida, nunca en ayunas"}
+  {group:"🍳 Con el desayuno",sub:"Con alimento",items:[
+    {pill:"💊 Prescrito",pc:"rgba(48,209,88,0.18)",ptx:"#70D080",name:"Akkermansia Metagenics",dose:"1 comprimido · con alimento<br/>Siempre con comida, nunca en ayunas"},
+    {pill:"💊 Prescrito",pc:"rgba(255,214,10,0.18)",ptx:"#FFD60A",name:"Eubiotics Buty-D — extra si diarrea",dose:"Solo si hay diarrea ese día: 1 cápsula aquí (pauta 1-1-0 los días de diarrea)"}
   ]},
   {group:"⏱ Antes de comer — ayunas",sub:"15-20 min antes de comer",items:[
-    {pill:"💊 Prescrito",pc:"rgba(48,209,88,0.18)",ptx:"#70D080",name:"L-Glutamina ZE 877",dose:"1 cápsula · en ayunas antes de comer<br/>Regenera el epitelio intestinal"}
+    {pill:"💊 Prescrito",pc:"rgba(48,209,88,0.18)",ptx:"#70D080",name:"L-Glutamina ZE 877 — 2ª toma",dose:"1 cápsula · en ayunas antes de comer (pauta 1-1-0)"}
   ]},
-  {group:"🍽️ Con la comida",sub:"Con alimento",items:[
-    {pill:"💊 Prescrito",pc:"rgba(48,209,88,0.18)",ptx:"#70D080",name:"Eubiotics Buty-D",dose:"1 cápsula · con alimento<br/><b style='color:#FFD60A'>Si diarrea ese día: añadir 1 cápsula también en el desayuno</b>"}
+  {group:"🍽️ Con la comida",sub:"Con alimento · el probiótico alterna día par/impar",items:[
+    {pill:"💊 Día IMPAR",pc:"rgba(255,159,10,0.18)",ptx:"#FFB340",name:"Biome Balance",dose:"1 cápsula · con la comida<br/><b style=\'color:#FFB340\'>Solo días IMPARES (1,3,5...)</b> — alterna con Vivomixx",alt:"odd"},
+    {pill:"💊 Día PAR",pc:"rgba(94,92,230,0.2)",ptx:"#A8A6FF",name:"Vivomixx Neo 9",dose:"1 cápsula · con la comida<br/><b style=\'color:#A8A6FF\'>Solo días PARES (2,4,6...)</b> — alterna con Biome Balance",alt:"even"},
+    {pill:"💊 Prescrito",pc:"rgba(48,209,88,0.18)",ptx:"#70D080",name:"Eubiotics Buty-D",dose:"1 cápsula · con la comida (pauta 0-1-0)"},
+    {pill:"💊 Fármaco",pc:"rgba(142,142,147,0.2)",ptx:"#C7C7CC",name:"Finasteride",dose:"1 comprimido · con la comida (sin interacción, encaja aquí)"}
+  ]},
+  {group:"🦷 Después de comer",sub:"Justo al terminar la comida",items:[
+    {pill:"💊 Fármaco",pc:"rgba(255,69,58,0.2)",ptx:"#FF8A85",name:"Jorveza 0,5mg",dose:"Después de comer:<br/>① Disolver lentamente en la boca<br/>② Esperar 30 min sin comer, beber ni enjuagarse<br/>③ Enjuague oral y escupir<br/>Así no pasas la noche sin enjuagar (reduce la cándida)"}
   ]},
   {group:"🌿 Media tarde ~17-18h — ayunas",sub:"Mín. 2h después de comer · 2h antes de cenar",items:[
-    {pill:"💊 Suplemento",pc:"rgba(10,132,255,0.2)",ptx:"#6AB8FF",name:"Zinc-carnosina PepZin GI — 2ª toma",dose:"1 cápsula · en ayunas<br/>Bien separado de comida y cena"}
+    {pill:"💊 Suplemento",pc:"rgba(10,132,255,0.2)",ptx:"#6AB8FF",name:"Zinc-carnosina PepZin GI — 2ª toma",dose:"1 cápsula · en ayunas (pauta 1-0-1)<br/>Bien separado de comida y cena"}
   ]},
   {group:"🌙 Con la cena",sub:"Con alimento",items:[
-    {pill:"💊 Prescrito",pc:"rgba(48,209,88,0.18)",ptx:"#70D080",name:"NPRO Lactoferrina",dose:"1 cápsula · con alimento<br/>Lactoferrina — quela hierro libre, antimicrobiana y antifúngica"}
+    {pill:"💊 Prescrito",pc:"rgba(48,209,88,0.18)",ptx:"#70D080",name:"NPRO Lactoferrina",dose:"1 cápsula · con la cena (pauta 0-0-1)<br/>Lactoferrina — quela hierro libre, antimicrobiana y antifúngica"}
   ]},
-  {group:"🌑 Antes de dormir",sub:"Mínimo 2h después de cenar",items:[
-    {pill:"💊 Fármaco",pc:"rgba(255,69,58,0.2)",ptx:"#FF8A85",name:"Jorveza 0,5mg",dose:"① Disolver lentamente en la boca<br/>② Esperar 30 min sin comer, beber ni enjuagarse<br/>③ Enjuague oral y escupir (elimina restos de corticoide)"},
-    {pill:"💊 Fármaco",pc:"rgba(255,69,58,0.2)",ptx:"#FF8A85",name:"Mycostatin",dose:"Mientras dure el tratamiento de candidiasis<br/>Después del enjuague del Jorveza"}
+  {group:"🌑 Antes de dormir",sub:"Mientras dure la candidiasis",items:[
+    {pill:"💊 Fármaco",pc:"rgba(255,69,58,0.2)",ptx:"#FF8A85",name:"Mycostatin",dose:"Mientras dure el tratamiento de candidiasis<br/>Enjuague bucal y tragar"}
   ]}
 ];
 
@@ -1189,6 +1095,41 @@ function updateTotal(){
   const el=document.getElementById('shop-total');
   if(el)el.textContent='€ '+total.toFixed(2).replace('.',',');
 }
+function getPrice3(key,store){
+  const all=JSON.parse(localStorage.getItem('shopprices')||'{}');
+  return (all[key]&&all[key][store]!==undefined)?all[key][store]:'';
+}
+function savePrice3(key,store,val){
+  const all=JSON.parse(localStorage.getItem('shopprices')||'{}');
+  if(!all[key])all[key]={};
+  if(val===''||val===null)delete all[key][store];
+  else all[key][store]=parseFloat(val);
+  localStorage.setItem('shopprices',JSON.stringify(all));
+  updateStoreTotals();
+  // Update cheapest highlight live without full re-render
+  highlightCheapest(key);
+}
+function highlightCheapest(key){
+  const vals=[0,1,2].map(s=>{const v=getPrice3(key,s);return v===''?null:parseFloat(v);});
+  const valid=vals.filter(v=>v!==null&&!isNaN(v));
+  const min=valid.length?Math.min(...valid):null;
+  [0,1,2].forEach(s=>{
+    const cell=document.getElementById('pc-'+key+'-'+s);
+    if(cell){
+      if(min!==null&&vals[s]===min&&valid.length>1)cell.classList.add('cheapest');
+      else cell.classList.remove('cheapest');
+    }
+  });
+}
+function updateStoreTotals(){
+  const all=JSON.parse(localStorage.getItem('shopprices')||'{}');
+  const totals=[0,0,0];
+  Object.values(all).forEach(p=>{[0,1,2].forEach(s=>{if(p[s]!==undefined)totals[s]+=p[s];});});
+  [0,1,2].forEach(s=>{
+    const el=document.getElementById('tot-'+s);
+    if(el)el.textContent=totals[s]>0?('€'+totals[s].toFixed(2)+'/kg'):'—';
+  });
+}
 function updateShop(){
   const total=SHOPPING_CATS.reduce((s,c)=>s+c.items.length,0);
   const done=SHOPPING_CATS.reduce((s,c)=>s+c.items.filter((_,i)=>shopChecked.has(c.cat+'-'+i)).length,0);
@@ -1196,33 +1137,36 @@ function updateShop(){
   document.getElementById('prog-fill').style.width=Math.round(done/total*100)+'%';
   const badge=document.getElementById('shop-badge');
   if(badge)badge.style.display=done>0?'block':'none';
+  const stores=['🟢','🔵','🔴'];
   document.getElementById('shop-container').innerHTML=SHOPPING_CATS.map(cat=>{
     const cd=cat.items.filter((_,i)=>shopChecked.has(cat.cat+'-'+i)).length;
     return`<div class="card" style="margin-bottom:12px;">
       <div style="padding:13px 16px 0;display:flex;justify-content:space-between;"><div style="font-size:15px;font-weight:700;">${cat.cat}</div><div style="font-size:12px;font-weight:600;color:${cd===cat.items.length?'#30D158':'#8E8E93'};">${cd}/${cat.items.length}</div></div>
-      <div style="padding:3px 16px 8px;">
+      <div style="padding:3px 16px 10px;">
       ${cat.items.map((item,i)=>{
         const key=cat.cat+'-'+i;
         const t=shopChecked.has(key);
-        const pv=getPrice(key);
-        return`<div style="${i<cat.items.length-1?'border-bottom:1px solid rgba(255,255,255,0.07);':''}padding:2px 0;">
-          <button class="check-btn" style="padding-bottom:4px;" onclick="toggleShop('${key}')">
-            <div class="check-box ${t?'tb':'ub'}">${t?'<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#000" stroke-width="3" stroke-linecap="round"><path d="M20 6L9 17l-5-5"/></svg>':''}</div>
+        return`<div style="${i<cat.items.length-1?'border-bottom:1px solid rgba(255,255,255,0.07);':''}padding:6px 0 8px;">
+          <button class="check-btn" style="padding-bottom:2px;" onclick="toggleShop('${key}')">
+            <div class="check-box ${t?'tb':'ub'}">${t?'<svg width=\"13\" height=\"13\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"#000\" stroke-width=\"3\" stroke-linecap=\"round\"><path d=\"M20 6L9 17l-5-5\"/></svg>':''}</div>
             <span class="cl${t?' done':''}">${item}</span>
           </button>
-          <div class="price-row">
-            <span class="price-label">💶 Precio:</span>
-            <input class="price-input" type="number" min="0" step="0.01" placeholder="0,00" value="${pv}"
-              oninput="savePrice('${key}',this.value)"
-              onclick="event.stopPropagation()"/>
-            <span class="price-label">€</span>
+          <div class="p3-row">
+            ${[0,1,2].map(s=>`<div class="p3-cell" id="pc-${key}-${s}">
+              <div class="p3-dot" style="color:${['#30D158','#6AB8FF','#FF8A85'][s]};">${stores[s]}</div>
+              <div style="position:relative;"><span class="cur">€</span>
+              <input type="number" min="0" step="0.01" inputmode="decimal" placeholder="kg" value="${getPrice3(key,s)}"
+                oninput="savePrice3('${key}',${s},this.value)" onclick="event.stopPropagation()"/></div>
+            </div>`).join('')}
           </div>
         </div>`;
       }).join('')}
       </div>
     </div>`;
-  }).join('')+`<div style="background:rgba(255,214,10,0.07);border:1px solid rgba(255,214,10,0.18);border-radius:14px;padding:12px 13px;margin-top:4px;"><div style="font-size:12.5px;color:#FFD60A;line-height:1.6;">⚠️ Avena con espiga tachada (SG certificada). Botes arroz/quinoa: sin sal ni aceite. Leche de arroz sin azúcares.</div></div>`;
-  updateTotal();
+  }).join('');
+  // Apply cheapest highlights + totals after render
+  SHOPPING_CATS.forEach(cat=>cat.items.forEach((_,i)=>highlightCheapest(cat.cat+'-'+i)));
+  updateStoreTotals();
 }
 function toggleShop(key){if(shopChecked.has(key))shopChecked.delete(key);else shopChecked.add(key);localStorage.setItem('nutricheck',JSON.stringify([...shopChecked]));updateShop();}
 function clearAll(){shopChecked=new Set();localStorage.setItem('nutricheck','[]');updateShop();}
@@ -1458,29 +1402,34 @@ function exportSymptoms(){
 // ==============================================================================
 const REMIND_SLOTS = [
   { time:'07:00', label:'Al levantarte', icon:'🌄', items:[
-    {name:'Zinc-carnosina PepZin GI', dose:'1 cápsula · en ayunas con agua'},
-    {name:'Miconeo GYB', dose:'1 cápsula · en ayunas'},
-    {name:'Neuraxbiotic Zen', dose:'1 cápsula · en ayunas'},
+    {name:'Zinc-carnosina PepZin GI', dose:'1 cáp · ayunas'},
+    {name:'Miconeo GYB', dose:'1 cáp · ayunas'},
+    {name:'Neuraxbiotic Zen', dose:'1 cáp · ayunas'},
+    {name:'L-Glutamina ZE 877 (1ª)', dose:'1 cáp · antes del desayuno'},
   ]},
-  { time:'07:30', label:'Desayuno', icon:'🍳', items:[
-    {name:'Probiótico del día', dose:'IMPAR: Biome Balance · PAR: Vivomixx Neo 9 · con alimento'},
-    {name:'Akkermansia Metagenics', dose:'1 comprimido · con alimento'},
+  { time:'07:45', label:'Desayuno', icon:'🍳', items:[
+    {name:'Akkermansia Metagenics', dose:'1 comp · con alimento'},
+    {name:'Buty-D extra', dose:'Solo si diarrea ese día'},
   ]},
   { time:'13:45', label:'Antes de comer', icon:'⏱', items:[
-    {name:'L-Glutamina ZE 877', dose:'1 cápsula · en ayunas, 15-20 min antes de comer'},
+    {name:'L-Glutamina ZE 877 (2ª)', dose:'1 cáp · ayunas, antes de comer'},
   ]},
   { time:'14:00', label:'Comida', icon:'🍽️', items:[
-    {name:'Eubiotics Buty-D', dose:'1 cápsula · con alimento · (+1 en desayuno si diarrea)'},
+    {name:'Probiótico del día', dose:'IMPAR: Biome Balance · PAR: Vivomixx · con alimento'},
+    {name:'Eubiotics Buty-D', dose:'1 cáp · con la comida'},
+    {name:'Finasteride', dose:'1 comp · con la comida'},
+  ]},
+  { time:'14:30', label:'Después de comer', icon:'🦷', items:[
+    {name:'Jorveza 0,5mg', dose:'Disolver, 30 min sin nada, enjuagar y escupir'},
   ]},
   { time:'17:30', label:'Media tarde', icon:'🌿', items:[
-    {name:'Zinc-carnosina PepZin GI (2ª)', dose:'1 cápsula · en ayunas · 2h tras comer, 2h antes de cenar'},
+    {name:'Zinc-carnosina (2ª)', dose:'1 cáp · ayunas · 2h tras comer, 2h antes de cenar'},
   ]},
   { time:'21:00', label:'Cena', icon:'🌙', items:[
-    {name:'NPRO Lactoferrina', dose:'1 cápsula · con alimento'},
+    {name:'NPRO Lactoferrina', dose:'1 cáp · con la cena'},
   ]},
   { time:'23:00', label:'Antes de dormir', icon:'🌑', items:[
-    {name:'Jorveza 0,5mg', dose:'Disolver lentamente · esperar 30 min · enjuagar y escupir'},
-    {name:'Mycostatin', dose:'Mientras dure tratamiento candidiasis · tras enjuague Jorveza'},
+    {name:'Mycostatin', dose:'Mientras dure candidiasis · enjuague y tragar'},
   ]},
 ];
 
@@ -1516,13 +1465,14 @@ function calcSuplTimes(bf, di){
     return String(Math.floor(tot/60)).padStart(2,'0')+':'+String(tot%60).padStart(2,'0');
   }
   return [
-    add(bf,-40),   // 0: Al levantarte (Zinc + Miconeo + Neuraxbiotic) - 40min before breakfast
-    bf,            // 1: Desayuno (probiótico + Akkermansia)
-    add(di,-255),  // 2: Antes de comer (Glutamina) - 15min before lunch
-    add(di,-240),  // 3: Comida (Buty-D)
-    add(di,-180),  // 4: Media tarde (Zinc 2ª) - 3h before dinner
-    di,            // 5: Cena (NPRO Lactoferrina)
-    add(di,120),   // 6: Antes de dormir (Jorveza + Mycostatin)
+    add(bf,-30),   // 0: Al levantarte
+    bf,            // 1: Desayuno (Akkermansia)
+    add(di,-15),   // 2: Antes de comer (Glutamina 2ª)
+    di,            // 3: Comida (probiótico, Buty-D, Finasteride)
+    add(di,30),    // 4: Después de comer (Jorveza)
+    add(di,210),   // 5: Media tarde (Zinc 2ª) ~3.5h tras comer
+    add(di,420),   // 6: Cena
+    add(di,540),   // 7: Antes de dormir (Mycostatin)
   ];
 }
 function buildRemindTimeline(){
@@ -1710,13 +1660,14 @@ function updateFasting(){
   // Supplement schedule note
   buildRemindTimeline();
   note.innerHTML = `<b>📋 Horario estimado para hoy (ajusta en Calculadora):</b><br/>
-    🌄 <b>${zinc_morning}</b> → Zinc-carnosina + Miconeo GYB + Neuraxbiotic Zen<br/>
-    🍳 <b>${breakfast}</b> → Desayuno · Probiótico del día (Biome/Vivomixx) · Akkermansia<br/>
-    ⏱ <b>${glut_lunch}</b> → L-Glutamina (antes de comer)<br/>
-    🍽️ Comida → Eubiotics Buty-D<br/>
-    🌿 <b>17:30</b> → Zinc-carnosina 2ª toma (en ayunas)<br/>
+    🌄 <b>${zinc_morning}</b> → Zinc + Miconeo + Neuraxbiotic + L-Glutamina<br/>
+    🍳 <b>${breakfast}</b> → Desayuno · Akkermansia<br/>
+    ⏱ <b>${glut_lunch}</b> → L-Glutamina 2ª (antes de comer)<br/>
+    🍽️ Comida → Probiótico del día · Buty-D · Finasteride<br/>
+    🦷 Después de comer → Jorveza (disolver, 30 min, enjuagar)<br/>
+    🌿 <b>17:30</b> → Zinc-carnosina 2ª (ayunas)<br/>
     🌙 <b>${dinner}</b> → Cena · NPRO Lactoferrina<br/>
-    🌑 <b>${jorveza}</b> → Jorveza · Mycostatin`;
+    🌑 Antes de dormir → Mycostatin`;
 }
 
 
