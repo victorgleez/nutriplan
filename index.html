@@ -277,6 +277,15 @@ html,body{background:#000;color:#fff;font-family:-apple-system,'SF Pro Display',
   .custom-add button{background:#30D158;border:none;border-radius:10px;color:#000;font-size:20px;font-weight:700;width:46px;flex-shrink:0;cursor:pointer;}
   .custom-add button:active{opacity:.7;}
   .cust-del{background:none;border:none;color:#FF453A;font-size:17px;cursor:pointer;padding:0 6px;flex-shrink:0;}
+
+  .qty-row{display:flex;align-items:center;gap:7px;margin-top:6px;}
+  .qty-lab{font-size:11px;color:#636366;font-weight:600;}
+  .qty-in{width:64px;background:#2C2C2E;border:1.5px solid rgba(255,255,255,0.1);border-radius:8px;color:#fff;font-size:13px;padding:6px 8px;text-align:center;outline:none;font-family:inherit;}
+  .qty-in:focus{border-color:rgba(48,209,88,0.5);}
+  .qty-unit{font-size:11.5px;color:#8E8E93;font-weight:600;}
+  .qty-sub{margin-left:auto;font-size:13px;font-weight:700;color:#30D158;}
+
+  .cost-hint{font-size:10.5px;color:#636366;margin-top:4px;line-height:1.4;}
 </style>
 </head>
 <body>
@@ -362,7 +371,7 @@ html,body{background:#000;color:#fff;font-family:-apple-system,'SF Pro Display',
 
 <!-- COMPRA -->
 <div id="s-shop" class="screen">
-  <div class="header"><div class="screen-title">Lista de compra</div><div class="screen-sub">Precio €/kg de cada super · se guardan entre semanas</div></div>
+  <div class="header"><div class="screen-title">Lista de compra</div><div class="screen-sub">Pon precio y cantidad · la app calcula el coste de cada plato</div></div>
   <div style="margin:0 16px 12px;background:#1C1C1E;border-radius:16px;padding:12px 14px;">
     <div style="font-size:11px;font-weight:700;color:#636366;text-transform:uppercase;letter-spacing:.8px;margin-bottom:8px;">Total estimado por super (€/kg sumados)</div>
     <div style="display:flex;gap:8px;">
@@ -379,7 +388,7 @@ html,body{background:#000;color:#fff;font-family:-apple-system,'SF Pro Display',
         <div id="tot-2" style="font-size:16px;font-weight:800;color:#fff;margin-top:2px;">—</div>
       </div>
     </div>
-    <div style="font-size:10.5px;color:#636366;margin-top:8px;line-height:1.4;">El más barato de cada producto se resalta en verde. Los precios se mantienen aunque reinicies la semana.</div>
+    <div style="font-size:10.5px;color:#636366;margin-top:8px;line-height:1.4;">Pon el precio por kg (o por unidad) de cada super y la cantidad que compras: el total es cantidad × precio. El más barato se resalta en verde. Con estos precios la pestaña Plan calcula lo que cuesta cada plato. Aceite y especias no se cuentan (los tienes en casa); si un plato lleva algo sin precio, verás un <b>*</b>.</div>
   </div>
   <div class="card" style="margin:0 16px 14px;">
     <div style="padding:14px 16px;">
@@ -593,58 +602,171 @@ const EXTRAS_DIA=[
 
 const SHOPPING_CATS=[
   {cat:"🥚 Proteína barata",items:[
-    "Huevos — 2,5 docenas",
-    "Contramuslo de pollo sin piel — 2 kg",
-    "Pavo en filetes o dados — 600 g",
-    "Carne picada de ternera 5% grasa — 600 g",
-    "Merluza congelada en lomos — 1 kg",
-    "Atún al natural en lata — 14 latas",
-    "Jamón serrano en tacos (mejor sin nitritos) — 250 g"
+    {id:"huevo",name:"Huevos",qty:30,unit:"ud"},
+    {id:"pollo",name:"Contramuslo de pollo sin piel",qty:2,unit:"kg"},
+    {id:"pavo",name:"Pavo en filetes o dados",qty:0.6,unit:"kg"},
+    {id:"ternera",name:"Carne picada de ternera 5% grasa",qty:0.6,unit:"kg"},
+    {id:"merluza",name:"Merluza congelada en lomos",qty:1,unit:"kg"},
+    {id:"atun",name:"Atún al natural en lata",qty:14,unit:"ud",conv:{"g": 52}},
+    {id:"jamon",name:"Jamón serrano en tacos (mejor sin nitritos)",qty:0.25,unit:"kg"}
   ]},
   {cat:"🍝 Pasta y arroz",items:[
-    "Pasta sin gluten de maíz o arroz (NO de legumbre) — 1,5 kg",
-    "Arroz blanco — 1,5 kg",
-    "Arroz blanco en vaso precocido — 5 vasos",
-    "Tomate triturado — 6 briks",
-    "Lentejas cocidas en bote — 1 bote",
-    "Guisantes congelados — 1 kg"
+    {id:"pastasg",name:"Pasta sin gluten de maíz o arroz (NO de legumbre)",qty:1.5,unit:"kg"},
+    {id:"arroz",name:"Arroz blanco",qty:1.5,unit:"kg"},
+    {id:"arrozvaso",name:"Arroz blanco en vaso precocido",qty:5,unit:"ud",conv:{"g": 125}},
+    {id:"tomatetrit",name:"Tomate triturado",qty:6,unit:"ud",conv:{"g": 400}},
+    {id:"lentejas",name:"Lentejas cocidas en bote",qty:1,unit:"ud",conv:{"g": 400}},
+    {id:"guisantes",name:"Guisantes congelados",qty:1,unit:"kg"}
   ]},
   {cat:"🥔 Hidratos",items:[
-    "Patata — 5 kg",
-    "Boniato — 1 kg",
-    "Copos de avena sin gluten certificada — 1 kg",
-    "Pan sin gluten — 3 paquetes"
+    {id:"patata",name:"Patata",qty:5,unit:"kg",conv:{"g":200}},
+    {id:"boniato",name:"Boniato",qty:1,unit:"kg",conv:{"g":200}},
+    {id:"avena",name:"Copos de avena sin gluten certificada",qty:1,unit:"kg"},
+    {id:"pansg",name:"Pan sin gluten (paquete)",qty:3,unit:"ud",conv:{"reb": 12}}
   ]},
   {cat:"🥦 Verduras",items:[
-    "Zanahoria — 2 kg",
-    "Calabacín — 6 unidades",
-    "Tomate — 1,5 kg",
-    "Pimiento rojo — 2 unidades",
-    "Canónigos o lechuga — 2 bolsas"
+    {id:"zanahoria",name:"Zanahoria",qty:2,unit:"kg",conv:{"g":80}},
+    {id:"calabacin",name:"Calabacín",qty:6,unit:"ud",conv:{"g": 250}},
+    {id:"tomate",name:"Tomate",qty:1.5,unit:"kg",conv:{"g":150}},
+    {id:"pimiento",name:"Pimiento rojo",qty:2,unit:"ud",conv:{"g": 120}},
+    {id:"lechuga",name:"Canónigos o lechuga (bolsa)",qty:2,unit:"ud"}
   ]},
   {cat:"🍌 Fruta",items:[
-    "Plátano — 25 unidades",
-    "Naranja — 10 unidades",
-    "Kiwi — 6 unidades",
-    "Fresas — 300 g",
-    "Aguacate — 3 unidades"
+    {id:"platano",name:"Plátano",qty:25,unit:"ud",conv:{"g": 120}},
+    {id:"naranja",name:"Naranja",qty:10,unit:"ud",conv:{"g": 130}},
+    {id:"kiwi",name:"Kiwi",qty:6,unit:"ud",conv:{"g": 75}},
+    {id:"fresas",name:"Fresas",qty:0.3,unit:"kg",conv:{"g":150}},
+    {id:"aguacate",name:"Aguacate",qty:3,unit:"ud",conv:{"g": 200}}
   ]},
   {cat:"🥜 Grasas baratas",items:[
-    "Crema de cacahuete 100% sin azúcar — 1 bote grande",
-    "Cacahuetes tostados sin sal — 500 g",
-    "Almendras tostadas — 400 g",
-    "Semillas de calabaza — 250 g"
+    {id:"cremacacahuete",name:"Crema de cacahuete 100% sin azúcar (bote)",qty:1,unit:"ud",conv:{"g": 350}},
+    {id:"cacahuetes",name:"Cacahuetes tostados sin sal",qty:0.5,unit:"kg"},
+    {id:"almendras",name:"Almendras tostadas",qty:0.4,unit:"kg"},
+    {id:"semillas",name:"Semillas de calabaza",qty:0.25,unit:"kg"}
   ]},
   {cat:"🥛 Sustitutos sin lácteo",items:[
-    "Bebida de coco enriquecida en calcio sin azúcar — 10 bricks",
-    "Yogur de coco enriquecido en calcio sin azúcar — 6 unidades"
+    {id:"bebidacoco",name:"Bebida de coco enriquecida en calcio sin azúcar (brick 1L)",qty:10,unit:"ud",conv:{"ml": 1000}},
+    {id:"yogurcoco",name:"Yogur de coco enriquecido en calcio sin azúcar",qty:6,unit:"ud",conv:{"g": 125}}
   ]},
   {cat:"🍫 Despensa",items:[
-    "Cacao puro 100% en polvo — 1 bote",
-    "Chocolate negro 85%+ sin leche — 2 tabletas",
-    "Tortitas de maíz — 2 paquetes"
-  ]}
+    {id:"cacao",name:"Cacao puro 100% en polvo (bote)",qty:1,unit:"ud",conv:{"g": 250}},
+    {id:"chocolate",name:"Chocolate negro 85%+ sin leche (tableta)",qty:2,unit:"ud",conv:{"g": 100}},
+    {id:"tortitas",name:"Tortitas de maíz (paquete)",qty:2,unit:"ud"}
+  ]},
 ];
+
+// ============ MOTOR DE COSTES ============
+// Traduce "250g contramuslo de pollo" -> {id:'pollo', qty:0.25} en la unidad del producto
+const ING_MAP=[
+  {k:['contramuslo','pollo'],id:'pollo'},
+  {k:['carne picada','ternera'],id:'ternera'},
+  {k:['pavo'],id:'pavo'},
+  {k:['merluza'],id:'merluza'},
+  {k:['jamón serrano','jamon serrano'],id:'jamon'},
+  {k:['lata de atún','latas de atún','atún'],id:'atun'},
+  {k:['huevo'],id:'huevo'},
+  {k:['pasta sin gluten'],id:'pastasg'},
+  {k:['arroz blanco precocido','vaso de arroz','vasos de arroz','arroz precocido'],id:'arrozvaso'},
+  {k:['arroz blanco','arroz'],id:'arroz'},
+  {k:['tomate triturado'],id:'tomatetrit'},
+  {k:['lenteja'],id:'lentejas'},
+  {k:['guisante'],id:'guisantes'},
+  {k:['patata'],id:'patata'},
+  {k:['boniato'],id:'boniato'},
+  {k:['avena'],id:'avena'},
+  {k:['pan sin gluten','rebanada'],id:'pansg'},
+  {k:['zanahoria'],id:'zanahoria'},
+  {k:['calabacín','calabacin'],id:'calabacin'},
+  {k:['pimiento'],id:'pimiento'},
+  {k:['canónigos','lechuga'],id:'lechuga'},
+  {k:['tomate'],id:'tomate'},
+  {k:['plátano','platano'],id:'platano'},
+  {k:['naranja'],id:'naranja'},
+  {k:['kiwi'],id:'kiwi'},
+  {k:['fresas'],id:'fresas'},
+  {k:['aguacate'],id:'aguacate'},
+  {k:['crema de cacahuete'],id:'cremacacahuete'},
+  {k:['cacahuetes'],id:'cacahuetes'},
+  {k:['almendras'],id:'almendras'},
+  {k:['semillas de calabaza'],id:'semillas'},
+  {k:['bebida de coco'],id:'bebidacoco'},
+  {k:['yogur de coco'],id:'yogurcoco'},
+  {k:['cacao'],id:'cacao'},
+  {k:['chocolate'],id:'chocolate'},
+  {k:['tortitas'],id:'tortitas'},
+];
+function findShopItem(id){
+  for(const c of SHOPPING_CATS){ const it=c.items.find(x=>x.id===id); if(it) return {item:it,cat:c.cat}; }
+  return null;
+}
+// Devuelve {id, qty} en la unidad de compra del producto, o null si no se puede mapear
+function parseIngredient(str){
+  const s=str.toLowerCase();
+  if(s.includes('opcional')) return null;
+  let hit=null;
+  for(const m of ING_MAP){ if(m.k.some(k=>s.includes(k))){ hit=m; break; } }
+  if(!hit) return null;
+  const found=findShopItem(hit.id); if(!found) return null;
+  const it=found.item;
+  // Extraer número inicial (admite 1,5 / ½)
+  let numMatch=s.match(/(\d+[.,]?\d*)/);
+  let n = numMatch ? parseFloat(numMatch[1].replace(',','.')) : 1;
+  if(s.includes('½')||s.includes('media ')) n=0.5;
+  if(s.includes('¼')) n=0.25;
+  const isG  = /\d+\s*g\b/.test(s);
+  const isMl = /\d+\s*ml\b/.test(s);
+  const isCda= /\bcdas?\b|\bcucharada/.test(s);
+  const isCdta=/\bcdta/.test(s);
+  let grams=null, ml=null, units=null;
+  if(isG) grams=n;
+  else if(isMl) ml=n;
+  else if(isCda) grams=n*10;
+  else if(isCdta) grams=n*5;
+  else units=n;
+  if(it.unit==='kg'){
+    if(grams!=null) return {id:it.id, qty:grams/1000};
+    if(ml!=null)    return {id:it.id, qty:ml/1000};
+    if(units!=null && it.conv && it.conv.g) return {id:it.id, qty:units*it.conv.g/1000};
+    return null;
+  }
+  // unit === 'ud'
+  if(units!=null && !it.conv) return {id:it.id, qty:units};
+  if(it.conv){
+    if(grams!=null && it.conv.g)  return {id:it.id, qty:grams/it.conv.g};
+    if(ml!=null    && it.conv.ml) return {id:it.id, qty:ml/it.conv.ml};
+    if(units!=null && it.conv.reb) return {id:it.id, qty:units/it.conv.reb};
+    if(units!=null) return {id:it.id, qty:units};
+  }
+  if(units!=null) return {id:it.id, qty:units};
+  return null;
+}
+// Precio unitario más barato entre los 3 supers (null si no hay ninguno)
+function bestPrice(id){
+  const all=JSON.parse(localStorage.getItem('shopprices')||'{}');
+  const p=all[id]; if(!p) return null;
+  const vals=[0,1,2].map(s=>p[s]).filter(v=>typeof v==='number'&&!isNaN(v));
+  return vals.length?Math.min(...vals):null;
+}
+// Coste de una comida: {cost, known, total}
+function mealCost(meal){
+  let cost=0, known=0, total=0;
+  (meal.ing||[]).forEach(str=>{
+    const p=parseIngredient(str);
+    if(!p) return;
+    total++;
+    const pr=bestPrice(p.id);
+    if(pr==null) return;
+    known++; cost+=p.qty*pr;
+  });
+  return {cost, known, total};
+}
+function dayCost(meals){
+  let cost=0, known=0, total=0;
+  meals.forEach(m=>{ const c=mealCost(m); cost+=c.cost; known+=c.known; total+=c.total; });
+  return {cost, known, total};
+}
+function fmtEur(n){ return '€'+n.toFixed(2); }
+
 
 const SUPLS=[
   {group:"🌄 Al levantarte — en ayunas",sub:"Solo agua · esperar 30-40 min antes de desayunar",items:[
@@ -804,7 +926,9 @@ function renderMeals(){
     const kcal=meals.reduce((s,m)=>s+(m.kcal||0),0);
     const prot=meals.reduce((s,m)=>s+(m.prot||0),0);
     const trainTag=training?' · 💪':'';
-    document.getElementById('kcal-val').innerHTML=kcal+' kcal <span style="font-size:15px;color:#6AB8FF;font-weight:700;">· '+prot+'g proteína</span>'+trainTag;
+    const dc=dayCost(meals);
+    const costTag = dc.known>0 ? ' <span style="font-size:15px;color:#FFB340;font-weight:700;">· '+fmtEur(dc.cost)+'</span>' : '';
+    document.getElementById('kcal-val').innerHTML=kcal+' kcal <span style="font-size:15px;color:#6AB8FF;font-weight:700;">· '+prot+'g proteína</span>'+costTag+trainTag;
     document.getElementById('meals-container').innerHTML=meals.map((m,i)=>mealHTML(m,day.meals.indexOf(m))).join('');
   }
 }
@@ -850,7 +974,7 @@ function mealHTML(m,i){
     <div class="meal-top">
       <div class="meal-icon" style="background:${m.c}22;">${m.e}</div>
       <div style="flex:1;min-width:0;"><div class="meal-type" style="color:${m.c};">${m.type}</div><div class="meal-name" style="${done?'text-decoration:line-through;color:#636366;':''}">${m.name}</div></div>
-      <div style="flex-shrink:0;text-align:right;"><div class="meal-kcal-val">${m.kcal}</div><div class="meal-kcal-lab">kcal</div>${m.prot?`<div style="font-size:11px;color:#6AB8FF;font-weight:700;margin-top:3px;">${m.prot}g prot</div>`:''}</div>
+      <div style="flex-shrink:0;text-align:right;"><div class="meal-kcal-val">${m.kcal}</div><div class="meal-kcal-lab">kcal</div>${m.prot?`<div style="font-size:11px;color:#6AB8FF;font-weight:700;margin-top:3px;">${m.prot}g prot</div>`:''}${(()=>{const c=mealCost(m);return c.known>0?`<div style="font-size:11px;color:#FFB340;font-weight:700;margin-top:3px;">${fmtEur(c.cost)}${c.known<c.total?'*':''}</div>`:'';})()}</div>
     </div>
     <div class="meal-footer">
       <div class="mb-badge">${m.mb}</div>
@@ -1017,6 +1141,18 @@ function resetMealsWeek(){
 }
 
 // -- SHOP ------------------------------------------------------------------
+
+function getQty(id,def){
+  const q=JSON.parse(localStorage.getItem('shopqty')||'{}');
+  return (q[id]!==undefined&&q[id]!=='')?q[id]:def;
+}
+function saveQty(id,val){
+  const q=JSON.parse(localStorage.getItem('shopqty')||'{}');
+  if(val===''||val===null) delete q[id]; else q[id]=parseFloat(val);
+  localStorage.setItem('shopqty',JSON.stringify(q));
+  updateStoreTotals(); updateShop();
+}
+
 function getPrice3(key,store){
   const all=JSON.parse(localStorage.getItem('shopprices')||'{}');
   return (all[key]&&all[key][store]!==undefined)?all[key][store]:'';
@@ -1046,10 +1182,19 @@ function highlightCheapest(key){
 function updateStoreTotals(){
   const all=JSON.parse(localStorage.getItem('shopprices')||'{}');
   const totals=[0,0,0];
-  Object.values(all).forEach(p=>{[0,1,2].forEach(s=>{if(p[s]!==undefined)totals[s]+=p[s];});});
+  SHOPPING_CATS.forEach(c=>c.items.forEach(it=>{
+    const q=parseFloat(getQty(it.id,it.qty))||0;
+    const p=all[it.id]; if(!p) return;
+    [0,1,2].forEach(s=>{ if(typeof p[s]==='number') totals[s]+=p[s]*q; });
+  }));
+  getCustomItems().forEach((ci,i)=>{
+    const key='CUSTOM-'+i; const q=parseFloat(getQty(key,1))||0;
+    const p=all[key]; if(!p) return;
+    [0,1,2].forEach(s=>{ if(typeof p[s]==='number') totals[s]+=p[s]*q; });
+  });
   [0,1,2].forEach(s=>{
     const el=document.getElementById('tot-'+s);
-    if(el)el.textContent=totals[s]>0?('€'+totals[s].toFixed(2)+'/kg'):'—';
+    if(el) el.textContent=totals[s]>0?('€'+totals[s].toFixed(2)):'—';
   });
 }
 
@@ -1086,7 +1231,8 @@ function customShopHTML(){
     <div style="font-size:11.5px;color:#8E8E93;margin-top:3px;line-height:1.45;">Cosas que se acaban o compras de vez en cuando: proteína en polvo, suplementos, especias, papel de horno...</div></div>
     <div style="padding:6px 16px 12px;">
     ${a.length? a.map((it,i)=>{
-      const key='CUSTOM-'+i; const t=shopChecked.has(key);
+      const key='CUSTOM-'+i; const t=shopChecked.has(key); const q=getQty(key,1);
+      const sub=itemSubtotal(key,q);
       return `<div style="border-bottom:1px solid rgba(255,255,255,0.07);padding:6px 0 8px;">
         <div style="display:flex;align-items:center;">
           <button class="check-btn" style="padding-bottom:2px;flex:1;" onclick="toggleShop('${key}')">
@@ -1095,17 +1241,23 @@ function customShopHTML(){
           </button>
           <button class="cust-del" onclick="removeCustomItem(${i})">&times;</button>
         </div>
+        <div class="qty-row">
+          <span class="qty-lab">Cantidad</span>
+          <input class="qty-in" type="number" min="0" step="0.1" inputmode="decimal" value="${q}" oninput="saveQty('${key}',this.value)"/>
+          <span class="qty-unit">ud</span>
+          <span class="qty-sub">${sub!=null?fmtEur(sub):''}</span>
+        </div>
         <div class="p3-row">
           ${[0,1,2].map(s=>`<div class="p3-cell" id="pc-${key}-${s}">
             <div class="p3-dot" style="color:${['#30D158','#6AB8FF','#FF8A85'][s]};">${stores[s]}</div>
             <div style="position:relative;"><span class="cur">&euro;</span>
-            <input type="number" min="0" step="0.01" inputmode="decimal" placeholder="kg" value="${getPrice3(key,s)}" oninput="savePrice3('${key}',${s},this.value)"/></div>
+            <input type="number" min="0" step="0.01" inputmode="decimal" placeholder="/ud" value="${getPrice3(key,s)}" oninput="savePrice3('${key}',${s},this.value)"/></div>
           </div>`).join('')}
         </div>
       </div>`;
     }).join('') : '<div style="font-size:12.5px;color:#636366;padding:8px 0;">Aún no has añadido nada.</div>'}
     <div class="custom-add">
-      <input id="cust-input" type="text" placeholder="Añadir producto..." onkeydown="if(event.key==='Enter')addCustomItem()"/>
+      <input id="cust-input" type="text" placeholder="Añadir producto..." onkeydown="if(event.key===\'Enter\')addCustomItem()"/>
       <button onclick="addCustomItem()">+</button>
     </div>
     </div>
@@ -1114,31 +1266,37 @@ function customShopHTML(){
 
 function updateShop(){
   const total=SHOPPING_CATS.reduce((s,c)=>s+c.items.length,0);
-  const done=SHOPPING_CATS.reduce((s,c)=>s+c.items.filter((_,i)=>shopChecked.has(c.cat+'-'+i)).length,0);
+  const done=SHOPPING_CATS.reduce((s,c)=>s+c.items.filter(it=>shopChecked.has(it.id)).length,0);
   document.getElementById('prog-count').textContent=done+'/'+total;
   document.getElementById('prog-fill').style.width=Math.round(done/total*100)+'%';
   const badge=document.getElementById('shop-badge');
   if(badge)badge.style.display=done>0?'block':'none';
   const stores=['🟢','🔵','🔴'];
   document.getElementById('shop-container').innerHTML=SHOPPING_CATS.map(cat=>{
-    const cd=cat.items.filter((_,i)=>shopChecked.has(cat.cat+'-'+i)).length;
+    const cd=cat.items.filter(it=>shopChecked.has(it.id)).length;
     return`<div class="card" style="margin-bottom:12px;">
       <div style="padding:13px 16px 0;display:flex;justify-content:space-between;"><div style="font-size:15px;font-weight:700;">${cat.cat}</div><div style="font-size:12px;font-weight:600;color:${cd===cat.items.length?'#30D158':'#8E8E93'};">${cd}/${cat.items.length}</div></div>
       <div style="padding:3px 16px 10px;">
-      ${cat.items.map((item,i)=>{
-        const key=cat.cat+'-'+i;
-        const t=shopChecked.has(key);
-        return`<div style="${i<cat.items.length-1?'border-bottom:1px solid rgba(255,255,255,0.07);':''}padding:6px 0 8px;">
+      ${cat.items.map(it=>{
+        const key=it.id; const t=shopChecked.has(key);
+        const q=getQty(it.id,it.qty);
+        const sub=itemSubtotal(it.id,q);
+        return`<div style="border-bottom:1px solid rgba(255,255,255,0.07);padding:6px 0 8px;">
           <button class="check-btn" style="padding-bottom:2px;" onclick="toggleShop('${key}')">
             <div class="check-box ${t?'tb':'ub'}">${t?'<svg width=\"13\" height=\"13\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"#000\" stroke-width=\"3\" stroke-linecap=\"round\"><path d=\"M20 6L9 17l-5-5\"/></svg>':''}</div>
-            <span class="cl${t?' done':''}">${item}</span>
+            <span class="cl${t?' done':''}">${it.name}</span>
           </button>
+          <div class="qty-row">
+            <span class="qty-lab">Cantidad</span>
+            <input class="qty-in" type="number" min="0" step="0.1" inputmode="decimal" value="${q}" onclick="event.stopPropagation()" oninput="saveQty('${it.id}',this.value)"/>
+            <span class="qty-unit">${it.unit}</span>
+            <span class="qty-sub">${sub!=null?fmtEur(sub):''}</span>
+          </div>
           <div class="p3-row">
             ${[0,1,2].map(s=>`<div class="p3-cell" id="pc-${key}-${s}">
               <div class="p3-dot" style="color:${['#30D158','#6AB8FF','#FF8A85'][s]};">${stores[s]}</div>
-              <div style="position:relative;"><span class="cur">€</span>
-              <input type="number" min="0" step="0.01" inputmode="decimal" placeholder="kg" value="${getPrice3(key,s)}"
-                oninput="savePrice3('${key}',${s},this.value)" onclick="event.stopPropagation()"/></div>
+              <div style="position:relative;"><span class="cur">&euro;</span>
+              <input type="number" min="0" step="0.01" inputmode="decimal" placeholder="/${it.unit}" value="${getPrice3(key,s)}" onclick="event.stopPropagation()" oninput="savePrice3('${key}',${s},this.value)"/></div>
             </div>`).join('')}
           </div>
         </div>`;
@@ -1146,10 +1304,13 @@ function updateShop(){
       </div>
     </div>`;
   }).join('')+customShopHTML();
-  // Apply cheapest highlights + totals after render
-  SHOPPING_CATS.forEach(cat=>cat.items.forEach((_,i)=>highlightCheapest(cat.cat+'-'+i)));
+  SHOPPING_CATS.forEach(cat=>cat.items.forEach(it=>highlightCheapest(it.id)));
   getCustomItems().forEach((_,i)=>highlightCheapest('CUSTOM-'+i));
   updateStoreTotals();
+}
+function itemSubtotal(id,q){
+  const p=bestPrice(id); if(p==null) return null;
+  const qq=parseFloat(q)||0; return p*qq;
 }
 function toggleShop(key){if(shopChecked.has(key))shopChecked.delete(key);else shopChecked.add(key);localStorage.setItem('nutricheck',JSON.stringify([...shopChecked]));updateShop();}
 function clearAll(){shopChecked=new Set();localStorage.setItem('nutricheck','[]');updateShop();}
