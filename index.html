@@ -37,9 +37,7 @@ html,body{background:#000;color:#fff;font-family:-apple-system,'SF Pro Display',
   .price-store-row{display:flex;gap:8px;margin:0 16px 10px;}
   .price-store-btn{flex:1;padding:9px;border-radius:10px;border:1px solid rgba(255,255,255,0.1);background:transparent;color:#8E8E93;font-size:12.5px;font-weight:600;cursor:pointer;transition:all .15s;}
   .price-store-btn.active-store{background:#30D158;color:#000;border-color:#30D158;}
-  
-  
-  
+
   .meal-track{border-top:1px solid rgba(255,255,255,0.07);padding:10px 16px 14px;display:flex;flex-direction:column;gap:8px;}
   .meal-track-row{display:flex;align-items:center;gap:10px;}
   .meal-done-btn{display:flex;align-items:center;gap:8px;background:none;border:none;cursor:pointer;padding:0;flex-shrink:0;}
@@ -271,6 +269,14 @@ html,body{background:#000;color:#fff;font-family:-apple-system,'SF Pro Display',
   .p3-cell.cheapest input{border-color:#30D158;background:rgba(48,209,88,0.12);color:#30D158;font-weight:700;}
   .p3-cell .cur{position:absolute;left:6px;top:50%;transform:translateY(-50%);font-size:10px;color:#636366;pointer-events:none;}
   .p3-dot{font-size:9px;font-weight:700;text-align:center;margin-bottom:2px;letter-spacing:.3px;}
+
+  .custom-add{display:flex;gap:7px;margin-top:10px;}
+  .custom-add input{flex:1;background:#2C2C2E;border:1.5px solid rgba(255,255,255,0.1);border-radius:10px;color:#fff;font-size:13.5px;padding:10px 12px;outline:none;font-family:inherit;box-sizing:border-box;}
+  .custom-add input:focus{border-color:rgba(48,209,88,0.5);}
+  .custom-add input::placeholder{color:#48484A;}
+  .custom-add button{background:#30D158;border:none;border-radius:10px;color:#000;font-size:20px;font-weight:700;width:46px;flex-shrink:0;cursor:pointer;}
+  .custom-add button:active{opacity:.7;}
+  .cust-del{background:none;border:none;color:#FF453A;font-size:17px;cursor:pointer;padding:0 6px;flex-shrink:0;}
 </style>
 </head>
 <body>
@@ -281,8 +287,8 @@ html,body{background:#000;color:#fff;font-family:-apple-system,'SF Pro Display',
 <div id="s-plan" class="screen active">
   <div class="header"><div class="screen-title">Plan semanal</div><div class="screen-sub" id="plan-week-sub">Sin gluten · Sin lácteos · Sin alcohol · Sin soja</div></div>
   <div class="menu-toggle">
-    <button class="menu-btn active" onclick="switchMenu(0,this)">🍳 Casa</button>
-    <button class="menu-btn" onclick="switchMenu(1,this)">⚡ Rápido</button>
+    <button class="menu-btn active" onclick="switchMenu(0,this)">🍲 Tupper</button>
+    <button class="menu-btn" onclick="switchMenu(1,this)">⚡ Airfryer</button>
     <button class="menu-btn" onclick="switchMenu(2,this)">🥡 Fuera</button>
   </div>
   <div style="padding:0 16px;">
@@ -314,9 +320,13 @@ html,body{background:#000;color:#fff;font-family:-apple-system,'SF Pro Display',
 
 <!-- EXTRA -->
 <div id="s-extra" class="screen">
-  <div class="header"><div class="screen-title">Recetas extra</div><div class="screen-sub">Para cocinar algo especial · cenas con tu pareja, invitados</div></div>
-  <div style="background:rgba(255,159,10,0.12);border:1px solid rgba(255,159,10,0.25);border-radius:14px;margin:10px 16px 14px;padding:11px 13px;">
-    <div style="font-size:13px;color:#FF9F0A;line-height:1.6;">⭐ Más elaboradas pero 100% compatibles. Úsalas cuando quieras variar.</div>
+  <div class="header"><div class="screen-title">Recetas extra</div><div class="screen-sub">Platos compatibles para variar el día a día o cocinar especial</div></div>
+  <div class="menu-tabs" style="margin:10px 16px 12px;">
+    <button class="menu-btn active" id="ex-tab-0" onclick="switchExtra(0)">🍴 Día a día</button>
+    <button class="menu-btn" id="ex-tab-1" onclick="switchExtra(1)">✨ Para invitados</button>
+  </div>
+  <div id="extra-note" style="background:rgba(255,159,10,0.12);border:1px solid rgba(255,159,10,0.25);border-radius:14px;margin:0 16px 14px;padding:11px 13px;">
+    <div id="extra-note-txt" style="font-size:13px;color:#FF9F0A;line-height:1.6;">🍴 Platos sencillos y compatibles para sumar variedad: ensaladas, hummus, guacamole, gazpacho... Toca para ver ingredientes y pasos.</div>
   </div>
   <div id="extras-container" style="padding:0 16px;"></div>
   <div style="height:60px;display:flex;align-items:center;justify-content:center;opacity:0.15;font-size:22px;letter-spacing:6px;padding-top:10px;">🌿 ✦ 🌿</div>
@@ -440,48 +450,6 @@ html,body{background:#000;color:#fff;font-family:-apple-system,'SF Pro Display',
   </div>
 </div>
 
-
-<!-- SÍNTOMAS -->
-<div id="s-sintomas" class="screen">
-  <div class="header"><div class="screen-title">Síntomas diarios</div><div class="screen-sub">Registra cómo estás cada día</div></div>
-  <div style="padding:0 16px;">
-    <div class="sym-day-row" id="sym-day-row"></div>
-    <div class="sym-sec-title">Estado general</div>
-    <div class="sym-grid" id="sym-grid-general"></div>
-    <div class="sym-sec-title">Digestión</div>
-    <div class="sym-grid" id="sym-grid-digestion"></div>
-    <div class="sym-sec-title">Esófago</div>
-    <div class="sym-grid" id="sym-grid-esofago"></div>
-    <div class="sym-sec-title">Notas adicionales</div>
-    <textarea class="sym-note" id="sym-note-txt" rows="3" placeholder="Cualquier síntoma adicional, medicación extra, situación especial del día..."></textarea>
-    <div class="grat-card">
-      <div class="grat-title">🌻 Diario de gratitud</div>
-      <div class="grat-sub">Una línea sobre algo bueno de hoy. El estado de ánimo influye en el eje intestino-cerebro y en la inflamación.</div>
-      <textarea class="grat-input" id="grat-txt" rows="2" placeholder="Hoy agradezco..."></textarea>
-    </div>
-    <div class="sym-sec-title">Consistencia heces (escala Bristol)</div>
-    <div class="bristol-row" id="bristol-row"></div>
-    <div class="bristol-legend">1-2 duras · 3-4 ideal · 5 blanda · 6-7 líquida. Tu objetivo: 3-4.</div>
-    <div class="sym-sec-title">¿Tomaste el Jorveza anoche?</div>
-    <div class="jorveza-toggle">
-      <button class="jor-btn jor-yes" id="jor-yes" onclick="setJorveza(true)">✅ Sí lo tomé</button>
-      <button class="jor-btn jor-no" id="jor-no" onclick="setJorveza(false)">❌ No / sin stock</button>
-    </div>
-    <div class="sym-sec-title">Piel</div>
-    <div class="sym-grid" id="sym-grid-piel"></div>
-    <button onclick="clearSymDay()" style="background:none;border:none;color:#636366;font-size:12px;cursor:pointer;text-decoration:underline;margin-top:10px;display:block;">Borrar registro de hoy</button>
-    <div class="sym-sec-title" style="margin-top:22px;">Resumen de la semana</div>
-    <div id="sym-week-summary"></div>
-    <button class="reset-meal-btn" onclick="resetSymptomsWeek()" style="margin-top:14px;">🔄 Restaurar todos los síntomas de la semana</button>
-    <button onclick="exportSymptoms()" style="display:flex;align-items:center;justify-content:center;gap:8px;margin:4px 0 16px;background:linear-gradient(135deg,#1A1A3A,#0D0D20);border:1px solid rgba(94,92,230,0.4);border-radius:12px;padding:13px;color:#A8A6FF;font-size:14px;font-weight:700;cursor:pointer;width:100%;">
-      <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
-      Exportar síntomas de la semana
-    </button>
-  </div>
-  <div style="height:60px;display:flex;align-items:center;justify-content:center;opacity:0.15;font-size:22px;letter-spacing:6px;padding-top:10px;">🌿 ✦ 🌿</div>
-
-</div>
-
 <!-- RECORDATORIOS -->
 <div id="s-remind" class="screen">
   <div class="header"><div class="screen-title">Avisos</div><div class="screen-sub">Horario de suplementos · toca para editar horas</div></div>
@@ -549,10 +517,7 @@ html,body{background:#000;color:#fff;font-family:-apple-system,'SF Pro Display',
     <svg width="19" height="19" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" viewBox="0 0 24 24"><path d="M12 22c5.523 0 10-4.477 10-10S17.523 2 12 2 2 6.477 2 12s4.477 10 10 10z"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
     <span class="tab-label">Guía</span>
   </button>
-  <button class="tab" onclick="showTab('sintomas',this)">
-    <svg width="19" height="19" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" viewBox="0 0 24 24"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>
-    <span class="tab-label">Síntomas</span>
-  </button>
+  
   <button class="tab" onclick="showTab('remind',this)">
     <svg width="19" height="19" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" viewBox="0 0 24 24"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
     <span class="tab-label">Calc.</span>
@@ -568,23 +533,23 @@ function getTodayIdx(){
 const DAYS=["Lun","Mar","Mié","Jue","Vie","Sáb","Dom"];
 
 const PLAN1=[
-  {totalKcal:3566,meals:[{type: "Desayuno", e: "🌅", c: "#FF9F0A", name: "Porridge proteico de avena con arándanos", kcal: 600, mb: "🦠 Avena = fibra soluble suave que no dispara el metano (IMO). Arándanos para Akkermansia. Proteína de guisante para los aminoácidos.", ing: ["70g copos de avena SG", "300ml bebida de coco enriquecida en calcio", "20g proteína de guisante", "100g arándanos", "1 cda lino molido", "1 cdta AOVE crudo", "canela"], steps: ["Cocer la avena con la bebida de coco 5 min.", "Retirar del fuego e incorporar la proteína removiendo (sin hervir).", "Servir con arándanos, lino, canela y AOVE."]},{type: "Media mañana", e: "🍊", c: "#30D158", name: "Plátano, kiwi y macadamias", kcal: 342, mb: "🦠 Fruta de bajo FODMAP + macadamia (el fruto seco más seguro para la EoE). Energía e hidratos entre comidas.", ing: ["1 plátano", "2 kiwis", "20g nueces de macadamia"], steps: ["Pelar y trocear la fruta. Acompañar con las macadamias o semillas."]},{type: "Comida", e: "🍽️", c: "#0A84FF", name: "Salmón al horno con arroz blanco y zanahoria", kcal: 1087, mb: "🦠 Salmón omega-3 antiinflamatorio. Arroz blanco (no integral): menos fermentable, ideal con IMO+. Zanahoria fibra suave.", ing: ["220g salmón fresco", "100g arroz blanco (en crudo)", "200g zanahoria", "2 cdas AOVE", "limón", "cúrcuma", "jengibre"], steps: ["Cocer el arroz 15 min.", "Zanahoria al vapor 12 min.", "Salmón al horno 180°C 15 min con cúrcuma, jengibre y limón.", "AOVE crudo al servir."]},{type: "Post-entreno", e: "💪", c: "#FF453A", name: "Batido de proteína de guisante con plátano", kcal: 304, mb: "🦠 Ventana post-entreno. Proteína de guisante: completa, hipoalergénica, sin lácteo ni soja, no alimenta sulfuros. Plátano repone glucógeno.", ing: ["30g proteína de guisante", "1 plátano", "250ml bebida de coco", "canela"], steps: ["Triturar todo. Tomar en los 30-60 min tras entrenar."]},{type: "Merienda", e: "🍫", c: "#BF5AF2", name: "Yogur de coco con cacao, plátano y macadamias", kcal: 400, mb: "🦠 Cacao puro y arándanos/granada: polifenoles diarios para estimular Akkermansia. Yogur de coco enriquecido en calcio.", ing: ["150g yogur de coco enriquecido en calcio", "1 cdta cacao puro 100%", "1 plátano", "20g nueces de macadamia", "1 cdta chía"], steps: ["Mezclar el yogur con el cacao, el plátano, las macadamias y la chía."]},{type: "Cena", e: "🌙", c: "#5E5CE6", name: "Pavo a la plancha con arroz y calabacín", kcal: 833, mb: "🦠 Pavo magro. Arroz blanco bajo en fermentación. Calabacín digestivo. Cena de recuperación.", ing: ["200g pechuga de pavo", "80g arroz blanco (crudo)", "1 calabacín", "3 cdas AOVE", "orégano", "sal"], steps: ["Cocer el arroz.", "Calabacín a la plancha.", "Pavo a la plancha 5 min/lado."]}]},
-  {totalKcal:3207,meals:[{type: "Desayuno", e: "🌅", c: "#FF9F0A", name: "Pudin de chía proteico con fresas", kcal: 405, mb: "🦠 Chía: fibra soluble que protege la mucosa sin fermentar agresivamente. Fresas polifenoles bajos en FODMAP. Sin huevo (alivia sulfuros).", ing: ["3 cdas semillas de chía", "300ml bebida de coco enriquecida en calcio", "20g proteína de guisante", "100g fresas", "1 cda lino molido", "canela"], steps: ["La noche anterior: mezclar chía + bebida de coco + proteína. Nevera.", "Por la mañana añadir fresas troceadas, lino y canela."]},{type: "Media mañana", e: "🍊", c: "#30D158", name: "Naranja, plátano y macadamias", kcal: 312, mb: "🦠 Fruta de bajo FODMAP + macadamia (el fruto seco más seguro para la EoE). Energía e hidratos entre comidas.", ing: ["1 naranja", "1 plátano", "20g nueces de macadamia"], steps: ["Pelar y trocear la fruta. Acompañar con las macadamias o semillas."]},{type: "Comida", e: "🍽️", c: "#0A84FF", name: "Merluza en papillote con patata y judía verde", kcal: 1152, mb: "🦠 Merluza blanca muy digestiva, proteína baja en azufre. Judía verde baja FODMAP. Papillote sin grasa extra (cuida el hígado).", ing: ["250g merluza", "120g arroz blanco (crudo)", "250g patata", "150g judía verde", "3 cdas AOVE", "limón", "eneldo"], steps: ["Cocer patata y judía 15 min, y el arroz 15 min.", "Merluza en papel de horno con limón, eneldo y AOVE 180°C 15 min."]},{type: "Post-entreno", e: "💪", c: "#FF453A", name: "Batido de proteína de guisante con plátano", kcal: 304, mb: "🦠 Ventana post-entreno. Proteína de guisante: completa, hipoalergénica, sin lácteo ni soja, no alimenta sulfuros. Plátano repone glucógeno.", ing: ["30g proteína de guisante", "1 plátano", "250ml bebida de coco", "canela"], steps: ["Triturar todo. Tomar en los 30-60 min tras entrenar."]},{type: "Merienda", e: "🍫", c: "#BF5AF2", name: "Batido de cacao, arándanos y coco", kcal: 290, mb: "🦠 Cacao puro y arándanos/granada: polifenoles diarios para estimular Akkermansia. Yogur de coco enriquecido en calcio.", ing: ["1 cdta cacao puro 100%", "80g arándanos", "1 plátano", "250ml bebida de coco enriquecida en calcio", "1 cda chía"], steps: ["Triturar todo. Servir frío."]},{type: "Cena", e: "🌙", c: "#5E5CE6", name: "Pollo a la plancha con boniato y zanahoria", kcal: 744, mb: "🦠 Pollo magro. Boniato y zanahoria: betacarotenos para la mucosa intestinal.", ing: ["200g pollo", "200g boniato", "150g zanahoria", "3 cdas AOVE", "cúrcuma", "sal"], steps: ["Boniato al horno 30 min.", "Zanahoria al vapor.", "Pollo a la plancha con cúrcuma."]}]},
-  {totalKcal:3005,meals:[{type: "Desayuno", e: "🌅", c: "#FF9F0A", name: "Porridge proteico de avena con arándanos", kcal: 600, mb: "🦠 Avena = fibra soluble suave que no dispara el metano (IMO). Arándanos para Akkermansia. Proteína de guisante para los aminoácidos.", ing: ["70g copos de avena SG", "300ml bebida de coco enriquecida en calcio", "20g proteína de guisante", "100g arándanos", "1 cda lino molido", "1 cdta AOVE crudo", "canela"], steps: ["Cocer la avena con la bebida de coco 5 min.", "Retirar del fuego e incorporar la proteína removiendo (sin hervir).", "Servir con arándanos, lino, canela y AOVE."]},{type: "Media mañana", e: "🍊", c: "#30D158", name: "Kiwi, plátano y semillas de calabaza", kcal: 338, mb: "🦠 Fruta de bajo FODMAP + macadamia (el fruto seco más seguro para la EoE). Energía e hidratos entre comidas.", ing: ["2 kiwis", "1 plátano", "25g semillas de calabaza"], steps: ["Pelar y trocear la fruta. Acompañar con las macadamias o semillas."]},{type: "Comida", e: "🍽️", c: "#0A84FF", name: "Pollo al horno con boniato y calabacín", kcal: 748, mb: "🦠 Pollo magro. Boniato moderado en almidón resistente (sin excederse por el IMO). Calabacín muy digestivo.", ing: ["220g pechuga de pollo", "200g boniato", "1 calabacín", "3 cdas AOVE", "romero", "sal"], steps: ["Boniato al horno 200°C 30 min.", "Pollo con romero los últimos 20 min.", "Calabacín a la plancha 4 min/lado."]},{type: "Post-entreno", e: "💪", c: "#FF453A", name: "Batido de proteína de guisante con plátano", kcal: 304, mb: "🦠 Ventana post-entreno. Proteína de guisante: completa, hipoalergénica, sin lácteo ni soja, no alimenta sulfuros. Plátano repone glucógeno.", ing: ["30g proteína de guisante", "1 plátano", "250ml bebida de coco", "canela"], steps: ["Triturar todo. Tomar en los 30-60 min tras entrenar."]},{type: "Merienda", e: "🍫", c: "#BF5AF2", name: "Yogur de coco con granada y macadamias", kcal: 354, mb: "🦠 Cacao puro y arándanos/granada: polifenoles diarios para estimular Akkermansia. Yogur de coco enriquecido en calcio.", ing: ["150g yogur de coco enriquecido en calcio", "½ granada (semillas)", "20g nueces de macadamia", "1 cdta chía"], steps: ["Mezclar el yogur con la granada, las macadamias y la chía."]},{type: "Cena", e: "🌙", c: "#5E5CE6", name: "Merluza a la plancha con patata y espinacas", kcal: 661, mb: "🦠 Pescado blanco ligero para la noche. Espinacas folato. Patata con almidón resistente moderado.", ing: ["200g merluza", "250g patata", "150g espinacas", "3 cdas AOVE", "limón", "sal"], steps: ["Cocer la patata 20 min.", "Merluza a la plancha 3-4 min/lado.", "Espinacas salteadas con AOVE. Limón al servir."]}]},
-  {totalKcal:3064,meals:[{type: "Desayuno", e: "🌅", c: "#FF9F0A", name: "Huevos revueltos con aguacate y pan SG", kcal: 534, mb: "🦠 Día de huevo (solo 2/semana por los sulfuros y la EoE). Aguacate en ¼ controla el FODMAP. Pan SG tostado.", ing: ["3 huevos", "¼ aguacate", "2 rebanadas de pan sin gluten", "1 cda AOVE", "cebollino", "sal"], steps: ["Revolver los huevos a fuego suave con AOVE.", "Tostar el pan, añadir aguacate laminado.", "Cebollino por encima."]},{type: "Media mañana", e: "🍊", c: "#30D158", name: "Naranja, kiwi y macadamias", kcal: 296, mb: "🦠 Fruta de bajo FODMAP + macadamia (el fruto seco más seguro para la EoE). Energía e hidratos entre comidas.", ing: ["1 naranja", "2 kiwis", "20g nueces de macadamia"], steps: ["Pelar y trocear la fruta. Acompañar con las macadamias o semillas."]},{type: "Comida", e: "🍽️", c: "#0A84FF", name: "Pavo al horno con quinoa y zanahoria", kcal: 971, mb: "🦠 Pavo magro bajo en azufre. Quinoa: pseudocereal completo mejor tolerado que la legumbre con IMO+.", ing: ["220g pechuga de pavo", "100g quinoa (en crudo)", "200g zanahoria", "3 cdas AOVE", "cúrcuma", "ajo en polvo", "limón"], steps: ["Cocer la quinoa 15 min (lavarla antes).", "Zanahoria al vapor.", "Pavo al horno con cúrcuma y ajo 25 min a 180°C."]},{type: "Post-entreno", e: "💪", c: "#FF453A", name: "Batido de proteína de guisante con plátano", kcal: 304, mb: "🦠 Ventana post-entreno. Proteína de guisante: completa, hipoalergénica, sin lácteo ni soja, no alimenta sulfuros. Plátano repone glucógeno.", ing: ["30g proteína de guisante", "1 plátano", "250ml bebida de coco", "canela"], steps: ["Triturar todo. Tomar en los 30-60 min tras entrenar."]},{type: "Merienda", e: "🍫", c: "#BF5AF2", name: "Batido de cacao, arándanos y coco", kcal: 290, mb: "🦠 Cacao puro y arándanos/granada: polifenoles diarios para estimular Akkermansia. Yogur de coco enriquecido en calcio.", ing: ["1 cdta cacao puro 100%", "80g arándanos", "1 plátano", "250ml bebida de coco enriquecida en calcio", "1 cda chía"], steps: ["Triturar todo. Servir frío."]},{type: "Cena", e: "🌙", c: "#5E5CE6", name: "Pescado blanco en papillote con patata y calabacín", kcal: 669, mb: "🦠 Pescado blanco ligero (lo que haya). Papillote fácil de digerir por la noche, sin grasa extra.", ing: ["200g pescado blanco", "250g patata", "1 calabacín", "3 cdas AOVE", "eneldo", "limón"], steps: ["Cocer la patata.", "Pescado y calabacín en papillote con eneldo y limón 15 min a 180°C."]}]},
-  {totalKcal:3168,meals:[{type: "Desayuno", e: "🌅", c: "#FF9F0A", name: "Pudin de chía proteico con fresas", kcal: 405, mb: "🦠 Chía: fibra soluble que protege la mucosa sin fermentar agresivamente. Fresas polifenoles bajos en FODMAP. Sin huevo (alivia sulfuros).", ing: ["3 cdas semillas de chía", "300ml bebida de coco enriquecida en calcio", "20g proteína de guisante", "100g fresas", "1 cda lino molido", "canela"], steps: ["La noche anterior: mezclar chía + bebida de coco + proteína. Nevera.", "Por la mañana añadir fresas troceadas, lino y canela."]},{type: "Media mañana", e: "🍊", c: "#30D158", name: "Plátano, fresas y macadamias", kcal: 282, mb: "🦠 Fruta de bajo FODMAP + macadamia (el fruto seco más seguro para la EoE). Energía e hidratos entre comidas.", ing: ["1 plátano", "100g fresas", "20g nueces de macadamia"], steps: ["Pelar y trocear la fruta. Acompañar con las macadamias o semillas."]},{type: "Comida", e: "🍽️", c: "#0A84FF", name: "Pescado blanco al horno con patata y pimiento", kcal: 1033, mb: "🦠 Lubina, dorada o bacalao (lo que haya fresco): blanco magro y digestivo. Pimiento rojo asado bajo FODMAP con polifenoles.", ing: ["250g pescado blanco (lubina/dorada/bacalao)", "90g arroz blanco (crudo)", "250g patata", "1 pimiento rojo", "3 cdas AOVE", "perejil", "limón"], steps: ["Patata en rodajas al horno 20 min.", "Añadir pescado y pimiento 15 min más a 180°C.", "AOVE crudo y perejil al servir."]},{type: "Post-entreno", e: "💪", c: "#FF453A", name: "Batido de proteína de guisante con plátano", kcal: 304, mb: "🦠 Ventana post-entreno. Proteína de guisante: completa, hipoalergénica, sin lácteo ni soja, no alimenta sulfuros. Plátano repone glucógeno.", ing: ["30g proteína de guisante", "1 plátano", "250ml bebida de coco", "canela"], steps: ["Triturar todo. Tomar en los 30-60 min tras entrenar."]},{type: "Merienda", e: "🍫", c: "#BF5AF2", name: "Yogur de coco con cacao, plátano y macadamias", kcal: 400, mb: "🦠 Cacao puro y arándanos/granada: polifenoles diarios para estimular Akkermansia. Yogur de coco enriquecido en calcio.", ing: ["150g yogur de coco enriquecido en calcio", "1 cdta cacao puro 100%", "1 plátano", "20g nueces de macadamia", "1 cdta chía"], steps: ["Mezclar el yogur con el cacao, el plátano, las macadamias y la chía."]},{type: "Cena", e: "🌙", c: "#5E5CE6", name: "Pollo a la plancha con boniato y zanahoria", kcal: 744, mb: "🦠 Pollo magro. Boniato y zanahoria: betacarotenos para la mucosa intestinal.", ing: ["200g pollo", "200g boniato", "150g zanahoria", "3 cdas AOVE", "cúrcuma", "sal"], steps: ["Boniato al horno 30 min.", "Zanahoria al vapor.", "Pollo a la plancha con cúrcuma."]}]},
-  {totalKcal:3235,meals:[{type: "Desayuno", e: "🌅", c: "#FF9F0A", name: "Huevos revueltos con aguacate y pan SG", kcal: 534, mb: "🦠 Día de huevo (solo 2/semana por los sulfuros y la EoE). Aguacate en ¼ controla el FODMAP. Pan SG tostado.", ing: ["3 huevos", "¼ aguacate", "2 rebanadas de pan sin gluten", "1 cda AOVE", "cebollino", "sal"], steps: ["Revolver los huevos a fuego suave con AOVE.", "Tostar el pan, añadir aguacate laminado.", "Cebollino por encima."]},{type: "Media mañana", e: "🍊", c: "#30D158", name: "Fresas, plátano y semillas", kcal: 295, mb: "🦠 Fruta de bajo FODMAP + macadamia (el fruto seco más seguro para la EoE). Energía e hidratos entre comidas.", ing: ["150g fresas", "1 plátano", "25g semillas de calabaza"], steps: ["Pelar y trocear la fruta. Acompañar con las macadamias o semillas."]},{type: "Comida", e: "🍽️", c: "#0A84FF", name: "Salmón al horno con arroz blanco y zanahoria", kcal: 1087, mb: "🦠 Salmón omega-3 antiinflamatorio. Arroz blanco (no integral): menos fermentable, ideal con IMO+. Zanahoria fibra suave.", ing: ["220g salmón fresco", "100g arroz blanco (en crudo)", "200g zanahoria", "2 cdas AOVE", "limón", "cúrcuma", "jengibre"], steps: ["Cocer el arroz 15 min.", "Zanahoria al vapor 12 min.", "Salmón al horno 180°C 15 min con cúrcuma, jengibre y limón.", "AOVE crudo al servir."]},{type: "Post-entreno", e: "💪", c: "#FF453A", name: "Batido de proteína de guisante con plátano", kcal: 304, mb: "🦠 Ventana post-entreno. Proteína de guisante: completa, hipoalergénica, sin lácteo ni soja, no alimenta sulfuros. Plátano repone glucógeno.", ing: ["30g proteína de guisante", "1 plátano", "250ml bebida de coco", "canela"], steps: ["Triturar todo. Tomar en los 30-60 min tras entrenar."]},{type: "Merienda", e: "🍫", c: "#BF5AF2", name: "Yogur de coco con granada y macadamias", kcal: 354, mb: "🦠 Cacao puro y arándanos/granada: polifenoles diarios para estimular Akkermansia. Yogur de coco enriquecido en calcio.", ing: ["150g yogur de coco enriquecido en calcio", "½ granada (semillas)", "20g nueces de macadamia", "1 cdta chía"], steps: ["Mezclar el yogur con la granada, las macadamias y la chía."]},{type: "Cena", e: "🌙", c: "#5E5CE6", name: "Merluza a la plancha con patata y espinacas", kcal: 661, mb: "🦠 Pescado blanco ligero para la noche. Espinacas folato. Patata con almidón resistente moderado.", ing: ["200g merluza", "250g patata", "150g espinacas", "3 cdas AOVE", "limón", "sal"], steps: ["Cocer la patata 20 min.", "Merluza a la plancha 3-4 min/lado.", "Espinacas salteadas con AOVE. Limón al servir."]}]},
-  {totalKcal:3512,meals:[{type: "Desayuno", e: "🌅", c: "#FF9F0A", name: "Porridge proteico de avena con arándanos", kcal: 600, mb: "🦠 Avena = fibra soluble suave que no dispara el metano (IMO). Arándanos para Akkermansia. Proteína de guisante para los aminoácidos.", ing: ["70g copos de avena SG", "300ml bebida de coco enriquecida en calcio", "20g proteína de guisante", "100g arándanos", "1 cda lino molido", "1 cdta AOVE crudo", "canela"], steps: ["Cocer la avena con la bebida de coco 5 min.", "Retirar del fuego e incorporar la proteína removiendo (sin hervir).", "Servir con arándanos, lino, canela y AOVE."]},{type: "Media mañana", e: "🍊", c: "#30D158", name: "Plátano, kiwi y macadamias", kcal: 342, mb: "🦠 Fruta de bajo FODMAP + macadamia (el fruto seco más seguro para la EoE). Energía e hidratos entre comidas.", ing: ["1 plátano", "2 kiwis", "20g nueces de macadamia"], steps: ["Pelar y trocear la fruta. Acompañar con las macadamias o semillas."]},{type: "Comida", e: "🍽️", c: "#0A84FF", name: "Pescado blanco al horno con patata y pimiento", kcal: 1033, mb: "🦠 Lubina, dorada o bacalao (lo que haya fresco): blanco magro y digestivo. Pimiento rojo asado bajo FODMAP con polifenoles.", ing: ["250g pescado blanco (lubina/dorada/bacalao)", "90g arroz blanco (crudo)", "250g patata", "1 pimiento rojo", "3 cdas AOVE", "perejil", "limón"], steps: ["Patata en rodajas al horno 20 min.", "Añadir pescado y pimiento 15 min más a 180°C.", "AOVE crudo y perejil al servir."]},{type: "Post-entreno", e: "💪", c: "#FF453A", name: "Batido de proteína de guisante con plátano", kcal: 304, mb: "🦠 Ventana post-entreno. Proteína de guisante: completa, hipoalergénica, sin lácteo ni soja, no alimenta sulfuros. Plátano repone glucógeno.", ing: ["30g proteína de guisante", "1 plátano", "250ml bebida de coco", "canela"], steps: ["Triturar todo. Tomar en los 30-60 min tras entrenar."]},{type: "Merienda", e: "🍫", c: "#BF5AF2", name: "Yogur de coco con cacao, plátano y macadamias", kcal: 400, mb: "🦠 Cacao puro y arándanos/granada: polifenoles diarios para estimular Akkermansia. Yogur de coco enriquecido en calcio.", ing: ["150g yogur de coco enriquecido en calcio", "1 cdta cacao puro 100%", "1 plátano", "20g nueces de macadamia", "1 cdta chía"], steps: ["Mezclar el yogur con el cacao, el plátano, las macadamias y la chía."]},{type: "Cena", e: "🌙", c: "#5E5CE6", name: "Pavo a la plancha con arroz y calabacín", kcal: 833, mb: "🦠 Pavo magro. Arroz blanco bajo en fermentación. Calabacín digestivo. Cena de recuperación.", ing: ["200g pechuga de pavo", "80g arroz blanco (crudo)", "1 calabacín", "3 cdas AOVE", "orégano", "sal"], steps: ["Cocer el arroz.", "Calabacín a la plancha.", "Pavo a la plancha 5 min/lado."]}]},
+  {totalKcal:3390,meals:[{type: "Desayuno", e: "🌅", c: "#FF9F0A", name: "Avena con plátano, cacao y cacahuete", kcal: 720, mb: "🦠 La avena es el desayuno más barato por ración y su fibra soluble no fermenta agresivamente. Cacao puro: polifenoles para Akkermansia. Crema de cacahuete: calorías baratas.", ing: ["90g copos de avena SG", "300ml bebida de coco enriquecida en calcio", "1 plátano", "20g crema de cacahuete 100%", "1 cdta cacao puro", "canela"], steps: ["Cocer la avena con la bebida y el cacao 5 min.", "Servir con el plátano en rodajas y la crema de cacahuete por encima."]},{type: "Media mañana", e: "🍊", c: "#30D158", name: "Plátano y cacahuetes", kcal: 330, mb: "🦠 Fruta de bajo FODMAP + grasa barata (cacahuete o semillas) para sumar calorías sin cocinar.", ing: ["1 plátano", "30g cacahuetes tostados"], steps: ["Sin preparación. Llévalo en la mochila."]},{type: "Comida", e: "🍽️", c: "#0A84FF", name: "Lentejas guisadas con arroz y zanahoria", kcal: 880, mb: "🦠 Lo más barato y nutritivo del plan. Lentejas bien enjuagadas y en ración moderada por tu IMO. Con arroz forman proteína completa. Mejora de un día para otro.", ing: ["150g lentejas cocidas (o 70g secas)", "120g arroz blanco (en crudo)", "2 zanahorias", "1 patata", "2 cdas AOVE", "pimentón", "laurel", "cúrcuma"], steps: ["Enjuagar bien las lentejas (reduce fermentables).", "Cocer con la zanahoria y patata en dados, laurel y pimentón 25 min.", "Cocer el arroz aparte y mezclar al servir.", "TUPPER: aguanta 4 días en nevera; añade un chorro de agua al recalentar."]},{type: "Post-entreno", e: "💪", c: "#FF453A", name: "Batido de proteína (dosis progresiva)", kcal: 300, mb: "🦠 EMPIEZA CON 15g y solo días de entreno. Si en 2 semanas las heces siguen bien, sube a 30g. Si se apelmazan, redúcelo y cubre con comida.", ing: ["15-30g proteína de guisante (empieza por 15g)", "1 plátano", "250ml bebida de coco", "canela"], steps: ["Triturar y tomar tras entrenar, separado de las comidas.", "Si notas las heces pastosas, baja la dosis."]},{type: "Merienda", e: "🍫", c: "#BF5AF2", name: "Yogur de coco con plátano, cacao y cacahuete", kcal: 380, mb: "🦠 Calorías baratas para el superávit. Cacao puro y fruta: polifenoles diarios para la microbiota.", ing: ["150g yogur de coco enriquecido en calcio", "1 plátano", "1 cdta cacao puro", "20g crema de cacahuete 100%"], steps: ["Sin cocina. Ideal para llevar a la universidad."]},{type: "Cena", e: "🌙", c: "#5E5CE6", name: "Tortilla de patata con ensalada", kcal: 780, mb: "🦠 Barata, saciante y aguanta días en nevera. Huevo y patata: proteína e hidrato a coste mínimo.", ing: ["3 huevos", "300g patata", "2 cdas AOVE", "tomate y canónigos", "1 cda AOVE para aliñar"], steps: ["Pochar la patata en dados 15 min a fuego suave.", "Mezclar con el huevo batido y cuajar 3 min por lado.", "TUPPER: aguanta 3 días, se come fría o templada."]}]},
+  {totalKcal:3340,meals:[{type: "Desayuno", e: "🌅", c: "#FF9F0A", name: "Tostadas con tomate, atún y aguacate", kcal: 690, mb: "🦠 Sin huevo, para descansar de sulfuros. El atún en lata es proteína barata y estable. Aguacate en ¼ para controlar el FODMAP.", ing: ["3 rebanadas de pan sin gluten", "1 lata de atún al natural", "1 tomate", "¼ aguacate", "1 cda AOVE", "sal"], steps: ["Tostar el pan y frotar el tomate.", "Repartir el atún escurrido y el aguacate laminado.", "Un hilo de AOVE por encima."]},{type: "Media mañana", e: "🍊", c: "#30D158", name: "Naranja, plátano y almendras", kcal: 330, mb: "🦠 Fruta de bajo FODMAP + grasa barata (cacahuete o semillas) para sumar calorías sin cocinar.", ing: ["1 naranja", "1 plátano", "25g almendras"], steps: ["Sin preparación. Llévalo en la mochila."]},{type: "Comida", e: "🍽️", c: "#0A84FF", name: "Arroz con pollo y verduras (batch)", kcal: 900, mb: "🦠 El contramuslo de pollo es mucho más barato que la pechuga y queda jugoso al recalentar. Arroz blanco: bajo en fermentación para tu IMO.", ing: ["250g contramuslo de pollo sin piel", "150g arroz blanco (en crudo)", "1 zanahoria", "1 calabacín", "½ pimiento rojo", "2 cdas AOVE", "cúrcuma", "pimentón"], steps: ["Dorar el pollo troceado en AOVE 6 min.", "Añadir la verdura en dados 5 min.", "Añadir el arroz y el doble de agua, cocer 18 min tapado.", "TUPPER: perfecto 3-4 días, recalienta muy bien."]},{type: "Post-entreno", e: "💪", c: "#FF453A", name: "Batido de proteína (dosis progresiva)", kcal: 300, mb: "🦠 EMPIEZA CON 15g y solo días de entreno. Si en 2 semanas las heces siguen bien, sube a 30g. Si se apelmazan, redúcelo y cubre con comida.", ing: ["15-30g proteína de guisante (empieza por 15g)", "1 plátano", "250ml bebida de coco", "canela"], steps: ["Triturar y tomar tras entrenar, separado de las comidas.", "Si notas las heces pastosas, baja la dosis."]},{type: "Merienda", e: "🍫", c: "#BF5AF2", name: "Tostadas con crema de cacahuete y plátano", kcal: 380, mb: "🦠 Calorías baratas para el superávit. Cacao puro y fruta: polifenoles diarios para la microbiota.", ing: ["2 rebanadas de pan sin gluten", "25g crema de cacahuete 100%", "1 plátano", "canela"], steps: ["Sin cocina. Ideal para llevar a la universidad."]},{type: "Cena", e: "🌙", c: "#5E5CE6", name: "Sardinas en lata con patata y tomate", kcal: 740, mb: "🦠 Las sardinas son la mejor relación precio/omega-3 que hay, y con espina aportan mucho calcio (clave sin lácteos). Cero cocina.", ing: ["2 latas de sardinas en aceite de oliva", "350g patata cocida", "1 tomate", "canónigos", "1 cda AOVE", "limón"], steps: ["Cocer la patata (o aprovechar la ya cocida del batch).", "Servir con las sardinas, tomate y canónigos.", "Aliñar con AOVE y limón."]}]},
+  {totalKcal:3370,meals:[{type: "Desayuno", e: "🌅", c: "#FF9F0A", name: "Avena con plátano, cacao y cacahuete", kcal: 720, mb: "🦠 La avena es el desayuno más barato por ración y su fibra soluble no fermenta agresivamente. Cacao puro: polifenoles para Akkermansia. Crema de cacahuete: calorías baratas.", ing: ["90g copos de avena SG", "300ml bebida de coco enriquecida en calcio", "1 plátano", "20g crema de cacahuete 100%", "1 cdta cacao puro", "canela"], steps: ["Cocer la avena con la bebida y el cacao 5 min.", "Servir con el plátano en rodajas y la crema de cacahuete por encima."]},{type: "Media mañana", e: "🍊", c: "#30D158", name: "Kiwi, plátano y semillas", kcal: 330, mb: "🦠 Fruta de bajo FODMAP + grasa barata (cacahuete o semillas) para sumar calorías sin cocinar.", ing: ["2 kiwis", "1 plátano", "25g semillas de calabaza"], steps: ["Sin preparación. Llévalo en la mochila."]},{type: "Comida", e: "🍽️", c: "#0A84FF", name: "Ensalada de arroz con atún, huevo y aceitunas", kcal: 840, mb: "🦠 Tupper frío, cero cocina al mediodía. Atún en lata y huevo: proteína barata. Aceitunas: polifenoles. Arroz blanco bien tolerado.", ing: ["150g arroz blanco (en crudo)", "2 latas de atún al natural", "2 huevos cocidos", "10 aceitunas", "1 tomate", "½ pimiento rojo", "3 cdas AOVE", "orégano"], steps: ["Cocer el arroz, enfriar y escurrir.", "Mezclar con el atún, tomate, pimiento y aceitunas.", "Añadir el huevo en cuartos y aliñar con AOVE y orégano.", "TUPPER: 3 días en frío, no necesita recalentar."]},{type: "Post-entreno", e: "💪", c: "#FF453A", name: "Batido de proteína (dosis progresiva)", kcal: 300, mb: "🦠 EMPIEZA CON 15g y solo días de entreno. Si en 2 semanas las heces siguen bien, sube a 30g. Si se apelmazan, redúcelo y cubre con comida.", ing: ["15-30g proteína de guisante (empieza por 15g)", "1 plátano", "250ml bebida de coco", "canela"], steps: ["Triturar y tomar tras entrenar, separado de las comidas.", "Si notas las heces pastosas, baja la dosis."]},{type: "Merienda", e: "🍫", c: "#BF5AF2", name: "Fruta con almendras y chocolate negro", kcal: 380, mb: "🦠 Calorías baratas para el superávit. Cacao puro y fruta: polifenoles diarios para la microbiota.", ing: ["1 plátano", "1 naranja", "25g almendras tostadas", "20g chocolate negro 85%"], steps: ["Sin cocina. Ideal para llevar a la universidad."]},{type: "Cena", e: "🌙", c: "#5E5CE6", name: "Pollo al horno con boniato y calabacín", kcal: 800, mb: "🦠 Bandeja única al horno: cocinas para 2-3 días de una vez. Pollo magro y boniato con almidón resistente moderado.", ing: ["250g contramuslo de pollo sin piel", "250g boniato", "1 calabacín", "2 cdas AOVE", "romero", "pimentón"], steps: ["Todo en la bandeja con AOVE, romero y pimentón.", "Horno 200°C 35 min.", "TUPPER: 3 días, recalienta perfecto."]}]},
+  {totalKcal:3320,meals:[{type: "Desayuno", e: "🌅", c: "#FF9F0A", name: "Huevos revueltos con patata y pan SG", kcal: 700, mb: "🦠 El huevo es la proteína más barata que existe. Lo mantengo en 2-3 días para no cargar los sulfuros. La patata sube calorías a coste mínimo.", ing: ["3 huevos", "150g patata cocida", "2 rebanadas de pan sin gluten", "1 cda AOVE", "sal"], steps: ["Saltear la patata cocida en dados 4 min.", "Añadir los huevos batidos y revolver a fuego suave.", "Servir con el pan tostado."]},{type: "Media mañana", e: "🍊", c: "#30D158", name: "Plátano y cacahuetes", kcal: 330, mb: "🦠 Fruta de bajo FODMAP + grasa barata (cacahuete o semillas) para sumar calorías sin cocinar.", ing: ["1 plátano", "30g cacahuetes tostados"], steps: ["Sin preparación. Llévalo en la mochila."]},{type: "Comida", e: "🍽️", c: "#0A84FF", name: "Merluza congelada con patata y guisantes", kcal: 850, mb: "🦠 La merluza congelada cuesta la mitad que la fresca y nutricionalmente es igual. Pescado blanco muy digestivo, bajo en azufre.", ing: ["250g merluza congelada", "300g patata", "150g guisantes congelados", "120g arroz blanco (en crudo)", "2 cdas AOVE", "limón", "perejil"], steps: ["Cocer patata y guisantes 15 min.", "Añadir la merluza los últimos 8 min (se hace desde congelada).", "Cocer el arroz aparte.", "TUPPER: mejor comerlo en 2 días; recalienta suave."]},{type: "Post-entreno", e: "💪", c: "#FF453A", name: "Batido de proteína (dosis progresiva)", kcal: 300, mb: "🦠 EMPIEZA CON 15g y solo días de entreno. Si en 2 semanas las heces siguen bien, sube a 30g. Si se apelmazan, redúcelo y cubre con comida.", ing: ["15-30g proteína de guisante (empieza por 15g)", "1 plátano", "250ml bebida de coco", "canela"], steps: ["Triturar y tomar tras entrenar, separado de las comidas.", "Si notas las heces pastosas, baja la dosis."]},{type: "Merienda", e: "🍫", c: "#BF5AF2", name: "Yogur de coco con plátano, cacao y cacahuete", kcal: 380, mb: "🦠 Calorías baratas para el superávit. Cacao puro y fruta: polifenoles diarios para la microbiota.", ing: ["150g yogur de coco enriquecido en calcio", "1 plátano", "1 cdta cacao puro", "20g crema de cacahuete 100%"], steps: ["Sin cocina. Ideal para llevar a la universidad."]},{type: "Cena", e: "🌙", c: "#5E5CE6", name: "Arroz salteado con huevo y verduras", kcal: 760, mb: "🦠 Aprovecha arroz sobrante del tupper. Rapidísimo y barato. Arroz blanco bajo en fermentación.", ing: ["150g arroz blanco cocido (sobrante)", "3 huevos", "1 zanahoria", "1 calabacín", "2 cdas AOVE", "tamari sin gluten"], steps: ["Saltear la verdura rallada 4 min.", "Añadir el arroz cocido y saltear 3 min.", "Hacer hueco, cuajar los huevos y mezclar."]}]},
+  {totalKcal:3370,meals:[{type: "Desayuno", e: "🌅", c: "#FF9F0A", name: "Tostadas con tomate, atún y aguacate", kcal: 690, mb: "🦠 Sin huevo, para descansar de sulfuros. El atún en lata es proteína barata y estable. Aguacate en ¼ para controlar el FODMAP.", ing: ["3 rebanadas de pan sin gluten", "1 lata de atún al natural", "1 tomate", "¼ aguacate", "1 cda AOVE", "sal"], steps: ["Tostar el pan y frotar el tomate.", "Repartir el atún escurrido y el aguacate laminado.", "Un hilo de AOVE por encima."]},{type: "Media mañana", e: "🍊", c: "#30D158", name: "Naranja, plátano y almendras", kcal: 330, mb: "🦠 Fruta de bajo FODMAP + grasa barata (cacahuete o semillas) para sumar calorías sin cocinar.", ing: ["1 naranja", "1 plátano", "25g almendras"], steps: ["Sin preparación. Llévalo en la mochila."]},{type: "Comida", e: "🍽️", c: "#0A84FF", name: "Garbanzos con espinacas y huevo", kcal: 870, mb: "🦠 Garbanzo de bote enjuagado: barato y rápido. Ración moderada por el IMO. Espinacas aportan hierro y el huevo completa la proteína.", ing: ["200g garbanzos cocidos y enjuagados", "200g espinacas", "2 huevos", "1 patata", "2 cdas AOVE", "pimentón", "comino"], steps: ["Enjuagar muy bien los garbanzos.", "Cocer la patata en dados 15 min.", "Saltear las espinacas, añadir garbanzos, patata, pimentón y comino.", "Cocer los huevos y añadirlos en cuartos al servir.", "TUPPER: 3 días; añade el huevo al momento."]},{type: "Post-entreno", e: "💪", c: "#FF453A", name: "Batido de proteína (dosis progresiva)", kcal: 300, mb: "🦠 EMPIEZA CON 15g y solo días de entreno. Si en 2 semanas las heces siguen bien, sube a 30g. Si se apelmazan, redúcelo y cubre con comida.", ing: ["15-30g proteína de guisante (empieza por 15g)", "1 plátano", "250ml bebida de coco", "canela"], steps: ["Triturar y tomar tras entrenar, separado de las comidas.", "Si notas las heces pastosas, baja la dosis."]},{type: "Merienda", e: "🍫", c: "#BF5AF2", name: "Tostadas con crema de cacahuete y plátano", kcal: 380, mb: "🦠 Calorías baratas para el superávit. Cacao puro y fruta: polifenoles diarios para la microbiota.", ing: ["2 rebanadas de pan sin gluten", "25g crema de cacahuete 100%", "1 plátano", "canela"], steps: ["Sin cocina. Ideal para llevar a la universidad."]},{type: "Cena", e: "🌙", c: "#5E5CE6", name: "Pollo al horno con boniato y calabacín", kcal: 800, mb: "🦠 Bandeja única al horno: cocinas para 2-3 días de una vez. Pollo magro y boniato con almidón resistente moderado.", ing: ["250g contramuslo de pollo sin piel", "250g boniato", "1 calabacín", "2 cdas AOVE", "romero", "pimentón"], steps: ["Todo en la bandeja con AOVE, romero y pimentón.", "Horno 200°C 35 min.", "TUPPER: 3 días, recalienta perfecto."]}]},
+  {totalKcal:3290,meals:[{type: "Desayuno", e: "🌅", c: "#FF9F0A", name: "Huevos revueltos con patata y pan SG", kcal: 700, mb: "🦠 El huevo es la proteína más barata que existe. Lo mantengo en 2-3 días para no cargar los sulfuros. La patata sube calorías a coste mínimo.", ing: ["3 huevos", "150g patata cocida", "2 rebanadas de pan sin gluten", "1 cda AOVE", "sal"], steps: ["Saltear la patata cocida en dados 4 min.", "Añadir los huevos batidos y revolver a fuego suave.", "Servir con el pan tostado."]},{type: "Media mañana", e: "🍊", c: "#30D158", name: "Fresas, plátano y semillas", kcal: 330, mb: "🦠 Fruta de bajo FODMAP + grasa barata (cacahuete o semillas) para sumar calorías sin cocinar.", ing: ["150g fresas", "1 plátano", "25g semillas de calabaza"], steps: ["Sin preparación. Llévalo en la mochila."]},{type: "Comida", e: "🍽️", c: "#0A84FF", name: "Pavo guisado con patata y zanahoria", kcal: 860, mb: "🦠 Pavo magro y barato en bandeja grande. Guiso suave sin sofrito agresivo, ideal para tu tránsito lento. Gana sabor al día siguiente.", ing: ["250g pavo en dados", "350g patata", "2 zanahorias", "120g arroz blanco (en crudo)", "2 cdas AOVE", "laurel", "cúrcuma", "pimentón"], steps: ["Dorar el pavo en AOVE 5 min.", "Añadir patata y zanahoria en dados, laurel, cúrcuma y agua a cubrir.", "Cocer 25 min a fuego medio.", "TUPPER: aguanta 4 días, de los que mejor recalienta."]},{type: "Post-entreno", e: "💪", c: "#FF453A", name: "Batido de proteína (dosis progresiva)", kcal: 300, mb: "🦠 EMPIEZA CON 15g y solo días de entreno. Si en 2 semanas las heces siguen bien, sube a 30g. Si se apelmazan, redúcelo y cubre con comida.", ing: ["15-30g proteína de guisante (empieza por 15g)", "1 plátano", "250ml bebida de coco", "canela"], steps: ["Triturar y tomar tras entrenar, separado de las comidas.", "Si notas las heces pastosas, baja la dosis."]},{type: "Merienda", e: "🍫", c: "#BF5AF2", name: "Fruta con almendras y chocolate negro", kcal: 380, mb: "🦠 Calorías baratas para el superávit. Cacao puro y fruta: polifenoles diarios para la microbiota.", ing: ["1 plátano", "1 naranja", "25g almendras tostadas", "20g chocolate negro 85%"], steps: ["Sin cocina. Ideal para llevar a la universidad."]},{type: "Cena", e: "🌙", c: "#5E5CE6", name: "Merluza con patata y guisantes", kcal: 720, mb: "🦠 Cena ligera de pescado blanco desde congelado. Fácil de digerir por la noche.", ing: ["220g merluza congelada", "300g patata", "150g guisantes congelados", "2 cdas AOVE", "limón", "perejil"], steps: ["Cocer patata y guisantes 15 min.", "Añadir la merluza 8 min.", "AOVE y limón al servir."]}]},
+  {totalKcal:3390,meals:[{type: "Desayuno", e: "🌅", c: "#FF9F0A", name: "Avena con plátano, cacao y cacahuete", kcal: 720, mb: "🦠 La avena es el desayuno más barato por ración y su fibra soluble no fermenta agresivamente. Cacao puro: polifenoles para Akkermansia. Crema de cacahuete: calorías baratas.", ing: ["90g copos de avena SG", "300ml bebida de coco enriquecida en calcio", "1 plátano", "20g crema de cacahuete 100%", "1 cdta cacao puro", "canela"], steps: ["Cocer la avena con la bebida y el cacao 5 min.", "Servir con el plátano en rodajas y la crema de cacahuete por encima."]},{type: "Media mañana", e: "🍊", c: "#30D158", name: "Plátano y cacahuetes", kcal: 330, mb: "🦠 Fruta de bajo FODMAP + grasa barata (cacahuete o semillas) para sumar calorías sin cocinar.", ing: ["1 plátano", "30g cacahuetes tostados"], steps: ["Sin preparación. Llévalo en la mochila."]},{type: "Comida", e: "🍽️", c: "#0A84FF", name: "Lentejas guisadas con arroz y zanahoria", kcal: 880, mb: "🦠 Lo más barato y nutritivo del plan. Lentejas bien enjuagadas y en ración moderada por tu IMO. Con arroz forman proteína completa. Mejora de un día para otro.", ing: ["150g lentejas cocidas (o 70g secas)", "120g arroz blanco (en crudo)", "2 zanahorias", "1 patata", "2 cdas AOVE", "pimentón", "laurel", "cúrcuma"], steps: ["Enjuagar bien las lentejas (reduce fermentables).", "Cocer con la zanahoria y patata en dados, laurel y pimentón 25 min.", "Cocer el arroz aparte y mezclar al servir.", "TUPPER: aguanta 4 días en nevera; añade un chorro de agua al recalentar."]},{type: "Post-entreno", e: "💪", c: "#FF453A", name: "Batido de proteína (dosis progresiva)", kcal: 300, mb: "🦠 EMPIEZA CON 15g y solo días de entreno. Si en 2 semanas las heces siguen bien, sube a 30g. Si se apelmazan, redúcelo y cubre con comida.", ing: ["15-30g proteína de guisante (empieza por 15g)", "1 plátano", "250ml bebida de coco", "canela"], steps: ["Triturar y tomar tras entrenar, separado de las comidas.", "Si notas las heces pastosas, baja la dosis."]},{type: "Merienda", e: "🍫", c: "#BF5AF2", name: "Yogur de coco con plátano, cacao y cacahuete", kcal: 380, mb: "🦠 Calorías baratas para el superávit. Cacao puro y fruta: polifenoles diarios para la microbiota.", ing: ["150g yogur de coco enriquecido en calcio", "1 plátano", "1 cdta cacao puro", "20g crema de cacahuete 100%"], steps: ["Sin cocina. Ideal para llevar a la universidad."]},{type: "Cena", e: "🌙", c: "#5E5CE6", name: "Tortilla de patata con ensalada", kcal: 780, mb: "🦠 Barata, saciante y aguanta días en nevera. Huevo y patata: proteína e hidrato a coste mínimo.", ing: ["3 huevos", "300g patata", "2 cdas AOVE", "tomate y canónigos", "1 cda AOVE para aliñar"], steps: ["Pochar la patata en dados 15 min a fuego suave.", "Mezclar con el huevo batido y cuajar 3 min por lado.", "TUPPER: aguanta 3 días, se come fría o templada."]}]},
 ];
 
 const PLAN2=[
-  {totalKcal:3509,meals:[{type: "⚡ Desayuno", e: "⚡", c: "#FF9F0A", name: "Bowl exprés de avena, arándanos y proteína", kcal: 630, mb: "🦠 2 min sin cocinar. Avena fibra soluble suave. Arándanos polifenoles. Proteína de guisante para aminoácidos.", ing: ["60g copos de avena SG", "300ml bebida de coco enriquecida en calcio", "20g proteína de guisante", "100g arándanos", "15g nueces de macadamia", "1 cda lino", "canela"], steps: ["Mezclar todo en un bol. Listo, o dejar 5 min para que la avena ablande."]},{type: "🍊 Media mañana", e: "🍊", c: "#30D158", name: "Plátano, kiwi y macadamias", kcal: 342, mb: "🦠 Sin preparación. Fruta baja FODMAP + macadamia segura para la EoE.", ing: ["1 plátano", "2 kiwis", "20g nueces de macadamia"], steps: ["Pelar y comer."]},{type: "⚡ Comida", e: "⚡", c: "#0A84FF", name: "Salmón airfryer con arroz en vaso y zanahoria", kcal: 996, mb: "🦠 Salmón airfryer 10 min. Arroz en vaso 2 min. Omega-3 + arroz blanco bajo en fermentación. 12 min total.", ing: ["220g salmón", "2 vasos de arroz blanco precocido", "150g zanahoria", "2 cdas AOVE", "limón", "cúrcuma"], steps: ["Salmón al airfryer 180°C 10 min con cúrcuma.", "Arroz al microondas 2 min.", "Zanahoria rallada con AOVE y limón."]},{type: "💪 Post-entreno", e: "💪", c: "#FF453A", name: "Batido de proteína de guisante con plátano", kcal: 304, mb: "🦠 Post-entreno. Proteína de guisante sin lácteo ni soja. Plátano repone glucógeno.", ing: ["30g proteína de guisante", "1 plátano", "250ml bebida de coco", "canela"], steps: ["Triturar y tomar tras entrenar."]},{type: "🍫 Merienda", e: "🍫", c: "#BF5AF2", name: "Yogur de coco con cacao, plátano y macadamias", kcal: 400, mb: "🦠 Cacao y arándanos/granada: polifenoles para Akkermansia. Yogur de coco enriquecido en calcio.", ing: ["150g yogur de coco enriquecido en calcio", "1 cdta cacao puro 100%", "1 plátano", "20g nueces de macadamia", "1 cdta chía"], steps: ["Mezclar todo en un bol."]},{type: "⚡ Cena", e: "⚡", c: "#5E5CE6", name: "Pavo airfryer con arroz en vaso y calabacín", kcal: 837, mb: "🦠 Pavo magro. Arroz en vaso bajo en fermentación. 14 min total.", ing: ["200g pavo", "2 vasos de arroz blanco precocido", "1 calabacín", "3 cdas AOVE", "orégano"], steps: ["Pavo y calabacín airfryer 12 min.", "Arroz al microondas 2 min."]}]},
-  {totalKcal:3046,meals:[{type: "⚡ Desayuno", e: "⚡", c: "#FF9F0A", name: "Pudin de chía exprés con fresas", kcal: 405, mb: "🦠 Hecho la noche anterior, 2 min. Chía protectora de la mucosa. Fresas polifenoles. Sin huevo.", ing: ["3 cdas chía", "300ml bebida de coco enriquecida en calcio", "20g proteína de guisante", "100g fresas", "1 cda lino", "canela"], steps: ["Noche anterior: chía + bebida de coco + proteína en nevera.", "Por la mañana añadir fresas y canela."]},{type: "🍊 Media mañana", e: "🍊", c: "#30D158", name: "Naranja, plátano y macadamias", kcal: 312, mb: "🦠 Sin preparación. Fruta baja FODMAP + macadamia segura para la EoE.", ing: ["1 naranja", "1 plátano", "20g nueces de macadamia"], steps: ["Pelar y comer."]},{type: "⚡ Comida", e: "⚡", c: "#0A84FF", name: "Merluza airfryer con patata y judía verde", kcal: 1011, mb: "🦠 Merluza airfryer 10 min. Pescado blanco digestivo. Judía verde baja FODMAP. 15 min total.", ing: ["250g merluza", "2 vasos de arroz blanco precocido", "250g patata en gajos", "150g judía verde", "3 cdas AOVE", "limón", "eneldo"], steps: ["Patata airfryer 200°C 12 min.", "Añadir merluza con limón y eneldo 8 min.", "Judía y arroz al microondas."]},{type: "💪 Post-entreno", e: "💪", c: "#FF453A", name: "Batido de proteína de guisante con plátano", kcal: 304, mb: "🦠 Post-entreno. Proteína de guisante sin lácteo ni soja. Plátano repone glucógeno.", ing: ["30g proteína de guisante", "1 plátano", "250ml bebida de coco", "canela"], steps: ["Triturar y tomar tras entrenar."]},{type: "🍫 Merienda", e: "🍫", c: "#BF5AF2", name: "Batido de cacao, arándanos y coco", kcal: 290, mb: "🦠 Cacao y arándanos/granada: polifenoles para Akkermansia. Yogur de coco enriquecido en calcio.", ing: ["1 cdta cacao puro 100%", "80g arándanos", "1 plátano", "250ml bebida de coco enriquecida en calcio", "1 cda chía"], steps: ["Triturar todo."]},{type: "⚡ Cena", e: "⚡", c: "#5E5CE6", name: "Pollo y calabacín al airfryer con boniato", kcal: 724, mb: "🦠 Una tanda. Pollo magro + boniato moderado + calabacín digestivo.", ing: ["200g pollo", "200g boniato en gajos", "1 calabacín", "3 cdas AOVE", "romero"], steps: ["Boniato airfryer 12 min.", "Pollo y calabacín 10 min más."]}]},
-  {totalKcal:3044,meals:[{type: "⚡ Desayuno", e: "⚡", c: "#FF9F0A", name: "Bowl exprés de avena, arándanos y proteína", kcal: 630, mb: "🦠 2 min sin cocinar. Avena fibra soluble suave. Arándanos polifenoles. Proteína de guisante para aminoácidos.", ing: ["60g copos de avena SG", "300ml bebida de coco enriquecida en calcio", "20g proteína de guisante", "100g arándanos", "15g nueces de macadamia", "1 cda lino", "canela"], steps: ["Mezclar todo en un bol. Listo, o dejar 5 min para que la avena ablande."]},{type: "🍊 Media mañana", e: "🍊", c: "#30D158", name: "Kiwi, plátano y semillas", kcal: 338, mb: "🦠 Sin preparación. Fruta baja FODMAP + macadamia segura para la EoE.", ing: ["2 kiwis", "1 plátano", "25g semillas de calabaza"], steps: ["Pelar y comer."]},{type: "⚡ Comida", e: "⚡", c: "#0A84FF", name: "Pollo y boniato al airfryer", kcal: 749, mb: "🦠 Una tanda airfryer. Pollo magro + boniato moderado. 22 min total.", ing: ["220g pollo en tiras", "250g boniato en gajos", "3 cdas AOVE", "romero", "sal"], steps: ["Boniato airfryer 200°C 12 min.", "Añadir pollo con romero 10 min más."]},{type: "💪 Post-entreno", e: "💪", c: "#FF453A", name: "Batido de proteína de guisante con plátano", kcal: 304, mb: "🦠 Post-entreno. Proteína de guisante sin lácteo ni soja. Plátano repone glucógeno.", ing: ["30g proteína de guisante", "1 plátano", "250ml bebida de coco", "canela"], steps: ["Triturar y tomar tras entrenar."]},{type: "🍫 Merienda", e: "🍫", c: "#BF5AF2", name: "Yogur de coco con granada y macadamias", kcal: 354, mb: "🦠 Cacao y arándanos/granada: polifenoles para Akkermansia. Yogur de coco enriquecido en calcio.", ing: ["150g yogur de coco enriquecido en calcio", "½ granada", "20g nueces de macadamia", "1 cdta chía"], steps: ["Mezclar el yogur con la granada, las macadamias y la chía."]},{type: "⚡ Cena", e: "⚡", c: "#5E5CE6", name: "Merluza airfryer con patata y calabacín", kcal: 669, mb: "🦠 Pescado blanco ligero. Una tanda airfryer, 20 min. Cena de fácil digestión.", ing: ["200g merluza", "250g patata en gajos", "1 calabacín", "3 cdas AOVE", "eneldo", "limón"], steps: ["Patata airfryer 12 min.", "Merluza y calabacín 8 min con eneldo y limón."]}]},
-  {totalKcal:2931,meals:[{type: "⚡ Desayuno", e: "⚡", c: "#FF9F0A", name: "Huevos al airfryer con aguacate y pan SG", kcal: 490, mb: "🦠 Día de huevo (2/semana). Huevos al airfryer 8 min sin vigilar. Aguacate ¼ FODMAP controlado.", ing: ["3 huevos", "¼ aguacate", "2 rebanadas de pan sin gluten", "1 cdta AOVE", "sal"], steps: ["Cascar los huevos en un molde, airfryer 180°C 8 min.", "Tostar el pan, añadir aguacate."]},{type: "🍊 Media mañana", e: "🍊", c: "#30D158", name: "Naranja, kiwi y macadamias", kcal: 296, mb: "🦠 Sin preparación. Fruta baja FODMAP + macadamia segura para la EoE.", ing: ["1 naranja", "2 kiwis", "20g nueces de macadamia"], steps: ["Pelar y comer."]},{type: "⚡ Comida", e: "⚡", c: "#0A84FF", name: "Pavo airfryer con quinoa en vaso y zanahoria", kcal: 882, mb: "🦠 Pavo airfryer 12 min. Quinoa en vaso. Pavo magro bajo en azufre. 14 min total.", ing: ["220g pavo", "2 vasos de quinoa precocida", "150g zanahoria", "3 cdas AOVE", "cúrcuma", "limón"], steps: ["Pavo y zanahoria al airfryer 200°C 12 min.", "Quinoa al microondas 2 min.", "AOVE y limón al servir."]},{type: "💪 Post-entreno", e: "💪", c: "#FF453A", name: "Batido de proteína de guisante con plátano", kcal: 304, mb: "🦠 Post-entreno. Proteína de guisante sin lácteo ni soja. Plátano repone glucógeno.", ing: ["30g proteína de guisante", "1 plátano", "250ml bebida de coco", "canela"], steps: ["Triturar y tomar tras entrenar."]},{type: "🍫 Merienda", e: "🍫", c: "#BF5AF2", name: "Batido de cacao, arándanos y coco", kcal: 290, mb: "🦠 Cacao y arándanos/granada: polifenoles para Akkermansia. Yogur de coco enriquecido en calcio.", ing: ["1 cdta cacao puro 100%", "80g arándanos", "1 plátano", "250ml bebida de coco enriquecida en calcio", "1 cda chía"], steps: ["Triturar todo."]},{type: "⚡ Cena", e: "⚡", c: "#5E5CE6", name: "Pescado blanco airfryer con patata y verdura", kcal: 669, mb: "🦠 Pescado blanco ligero (lo que haya). Una tanda airfryer. Cena suave.", ing: ["200g pescado blanco", "250g patata en gajos", "1 calabacín", "3 cdas AOVE", "limón"], steps: ["Patata airfryer 12 min.", "Pescado y calabacín 8 min con limón."]}]},
-  {totalKcal:3116,meals:[{type: "⚡ Desayuno", e: "⚡", c: "#FF9F0A", name: "Pudin de chía exprés con fresas", kcal: 405, mb: "🦠 Hecho la noche anterior, 2 min. Chía protectora de la mucosa. Fresas polifenoles. Sin huevo.", ing: ["3 cdas chía", "300ml bebida de coco enriquecida en calcio", "20g proteína de guisante", "100g fresas", "1 cda lino", "canela"], steps: ["Noche anterior: chía + bebida de coco + proteína en nevera.", "Por la mañana añadir fresas y canela."]},{type: "🍊 Media mañana", e: "🍊", c: "#30D158", name: "Plátano, fresas y macadamias", kcal: 282, mb: "🦠 Sin preparación. Fruta baja FODMAP + macadamia segura para la EoE.", ing: ["1 plátano", "100g fresas", "20g nueces de macadamia"], steps: ["Pelar y comer."]},{type: "⚡ Comida", e: "⚡", c: "#0A84FF", name: "Pescado blanco airfryer con patata y pimiento", kcal: 1001, mb: "🦠 Lubina, dorada o bacalao al airfryer 12 min. Pimiento rojo bajo FODMAP. 15 min total.", ing: ["250g pescado blanco", "2 vasos de arroz blanco precocido", "250g patata en gajos", "1 pimiento rojo", "3 cdas AOVE", "perejil"], steps: ["Patata y pimiento airfryer 12 min.", "Añadir pescado 10 min.", "Arroz al microondas. AOVE y perejil."]},{type: "💪 Post-entreno", e: "💪", c: "#FF453A", name: "Batido de proteína de guisante con plátano", kcal: 304, mb: "🦠 Post-entreno. Proteína de guisante sin lácteo ni soja. Plátano repone glucógeno.", ing: ["30g proteína de guisante", "1 plátano", "250ml bebida de coco", "canela"], steps: ["Triturar y tomar tras entrenar."]},{type: "🍫 Merienda", e: "🍫", c: "#BF5AF2", name: "Yogur de coco con cacao, plátano y macadamias", kcal: 400, mb: "🦠 Cacao y arándanos/granada: polifenoles para Akkermansia. Yogur de coco enriquecido en calcio.", ing: ["150g yogur de coco enriquecido en calcio", "1 cdta cacao puro 100%", "1 plátano", "20g nueces de macadamia", "1 cdta chía"], steps: ["Mezclar todo en un bol."]},{type: "⚡ Cena", e: "⚡", c: "#5E5CE6", name: "Pollo y calabacín al airfryer con boniato", kcal: 724, mb: "🦠 Una tanda. Pollo magro + boniato moderado + calabacín digestivo.", ing: ["200g pollo", "200g boniato en gajos", "1 calabacín", "3 cdas AOVE", "romero"], steps: ["Boniato airfryer 12 min.", "Pollo y calabacín 10 min más."]}]},
-  {totalKcal:3108,meals:[{type: "⚡ Desayuno", e: "⚡", c: "#FF9F0A", name: "Huevos al airfryer con aguacate y pan SG", kcal: 490, mb: "🦠 Día de huevo (2/semana). Huevos al airfryer 8 min sin vigilar. Aguacate ¼ FODMAP controlado.", ing: ["3 huevos", "¼ aguacate", "2 rebanadas de pan sin gluten", "1 cdta AOVE", "sal"], steps: ["Cascar los huevos en un molde, airfryer 180°C 8 min.", "Tostar el pan, añadir aguacate."]},{type: "🍊 Media mañana", e: "🍊", c: "#30D158", name: "Fresas, plátano y semillas", kcal: 295, mb: "🦠 Sin preparación. Fruta baja FODMAP + macadamia segura para la EoE.", ing: ["150g fresas", "1 plátano", "25g semillas de calabaza"], steps: ["Pelar y comer."]},{type: "⚡ Comida", e: "⚡", c: "#0A84FF", name: "Salmón airfryer con arroz en vaso y zanahoria", kcal: 996, mb: "🦠 Salmón airfryer 10 min. Arroz en vaso 2 min. Omega-3 + arroz blanco bajo en fermentación. 12 min total.", ing: ["220g salmón", "2 vasos de arroz blanco precocido", "150g zanahoria", "2 cdas AOVE", "limón", "cúrcuma"], steps: ["Salmón al airfryer 180°C 10 min con cúrcuma.", "Arroz al microondas 2 min.", "Zanahoria rallada con AOVE y limón."]},{type: "💪 Post-entreno", e: "💪", c: "#FF453A", name: "Batido de proteína de guisante con plátano", kcal: 304, mb: "🦠 Post-entreno. Proteína de guisante sin lácteo ni soja. Plátano repone glucógeno.", ing: ["30g proteína de guisante", "1 plátano", "250ml bebida de coco", "canela"], steps: ["Triturar y tomar tras entrenar."]},{type: "🍫 Merienda", e: "🍫", c: "#BF5AF2", name: "Yogur de coco con granada y macadamias", kcal: 354, mb: "🦠 Cacao y arándanos/granada: polifenoles para Akkermansia. Yogur de coco enriquecido en calcio.", ing: ["150g yogur de coco enriquecido en calcio", "½ granada", "20g nueces de macadamia", "1 cdta chía"], steps: ["Mezclar el yogur con la granada, las macadamias y la chía."]},{type: "⚡ Cena", e: "⚡", c: "#5E5CE6", name: "Merluza airfryer con patata y calabacín", kcal: 669, mb: "🦠 Pescado blanco ligero. Una tanda airfryer, 20 min. Cena de fácil digestión.", ing: ["200g merluza", "250g patata en gajos", "1 calabacín", "3 cdas AOVE", "eneldo", "limón"], steps: ["Patata airfryer 12 min.", "Merluza y calabacín 8 min con eneldo y limón."]}]},
-  {totalKcal:3514,meals:[{type: "⚡ Desayuno", e: "⚡", c: "#FF9F0A", name: "Bowl exprés de avena, arándanos y proteína", kcal: 630, mb: "🦠 2 min sin cocinar. Avena fibra soluble suave. Arándanos polifenoles. Proteína de guisante para aminoácidos.", ing: ["60g copos de avena SG", "300ml bebida de coco enriquecida en calcio", "20g proteína de guisante", "100g arándanos", "15g nueces de macadamia", "1 cda lino", "canela"], steps: ["Mezclar todo en un bol. Listo, o dejar 5 min para que la avena ablande."]},{type: "🍊 Media mañana", e: "🍊", c: "#30D158", name: "Plátano, kiwi y macadamias", kcal: 342, mb: "🦠 Sin preparación. Fruta baja FODMAP + macadamia segura para la EoE.", ing: ["1 plátano", "2 kiwis", "20g nueces de macadamia"], steps: ["Pelar y comer."]},{type: "⚡ Comida", e: "⚡", c: "#0A84FF", name: "Pescado blanco airfryer con patata y pimiento", kcal: 1001, mb: "🦠 Lubina, dorada o bacalao al airfryer 12 min. Pimiento rojo bajo FODMAP. 15 min total.", ing: ["250g pescado blanco", "2 vasos de arroz blanco precocido", "250g patata en gajos", "1 pimiento rojo", "3 cdas AOVE", "perejil"], steps: ["Patata y pimiento airfryer 12 min.", "Añadir pescado 10 min.", "Arroz al microondas. AOVE y perejil."]},{type: "💪 Post-entreno", e: "💪", c: "#FF453A", name: "Batido de proteína de guisante con plátano", kcal: 304, mb: "🦠 Post-entreno. Proteína de guisante sin lácteo ni soja. Plátano repone glucógeno.", ing: ["30g proteína de guisante", "1 plátano", "250ml bebida de coco", "canela"], steps: ["Triturar y tomar tras entrenar."]},{type: "🍫 Merienda", e: "🍫", c: "#BF5AF2", name: "Yogur de coco con cacao, plátano y macadamias", kcal: 400, mb: "🦠 Cacao y arándanos/granada: polifenoles para Akkermansia. Yogur de coco enriquecido en calcio.", ing: ["150g yogur de coco enriquecido en calcio", "1 cdta cacao puro 100%", "1 plátano", "20g nueces de macadamia", "1 cdta chía"], steps: ["Mezclar todo en un bol."]},{type: "⚡ Cena", e: "⚡", c: "#5E5CE6", name: "Pavo airfryer con arroz en vaso y calabacín", kcal: 837, mb: "🦠 Pavo magro. Arroz en vaso bajo en fermentación. 14 min total.", ing: ["200g pavo", "2 vasos de arroz blanco precocido", "1 calabacín", "3 cdas AOVE", "orégano"], steps: ["Pavo y calabacín airfryer 12 min.", "Arroz al microondas 2 min."]}]},
+  {totalKcal:3390,meals:[{type: "⚡ Desayuno", e: "⚡", c: "#FF9F0A", name: "Bowl de avena con plátano, cacao y cacahuete", kcal: 720, mb: "🦠 La avena es el desayuno más barato por ración y su fibra soluble no fermenta agresivamente. Cacao puro: polifenoles para Akkermansia. Crema de cacahuete: calorías baratas.", ing: ["90g copos de avena SG", "300ml bebida de coco enriquecida en calcio", "1 plátano", "20g crema de cacahuete 100%", "1 cdta cacao puro", "canela"], steps: ["Mezclar todo en un bol, 2 min. Se puede tomar frío o calentar 1 min al microondas."]},{type: "Media mañana", e: "🍊", c: "#30D158", name: "Plátano y cacahuetes", kcal: 330, mb: "🦠 Fruta de bajo FODMAP + grasa barata (cacahuete o semillas) para sumar calorías sin cocinar.", ing: ["1 plátano", "30g cacahuetes tostados"], steps: ["Sin preparación. Llévalo en la mochila."]},{type: "⚡ Comida", e: "⚡", c: "#0A84FF", name: "Pollo y patata al airfryer con arroz en vaso", kcal: 880, mb: "🦠 Contramuslo (más barato y jugoso) al airfryer. Arroz en vaso 2 min. Listo en 22 min sin vigilar.", ing: ["250g contramuslo de pollo sin piel", "300g patata en gajos", "1 vaso de arroz blanco precocido", "2 cdas AOVE", "pimentón", "romero"], steps: ["Patata al airfryer 200°C 12 min.", "Añadir el pollo con pimentón y romero 12 min más.", "Arroz al microondas 2 min."]},{type: "Post-entreno", e: "💪", c: "#FF453A", name: "Batido de proteína (dosis progresiva)", kcal: 300, mb: "🦠 EMPIEZA CON 15g y solo días de entreno. Si en 2 semanas las heces siguen bien, sube a 30g. Si se apelmazan, redúcelo y cubre con comida.", ing: ["15-30g proteína de guisante (empieza por 15g)", "1 plátano", "250ml bebida de coco", "canela"], steps: ["Triturar y tomar tras entrenar, separado de las comidas.", "Si notas las heces pastosas, baja la dosis."]},{type: "Merienda", e: "🍫", c: "#BF5AF2", name: "Yogur de coco con plátano, cacao y cacahuete", kcal: 380, mb: "🦠 Calorías baratas para el superávit. Cacao puro y fruta: polifenoles diarios para la microbiota.", ing: ["150g yogur de coco enriquecido en calcio", "1 plátano", "1 cdta cacao puro", "20g crema de cacahuete 100%"], steps: ["Sin cocina. Ideal para llevar a la universidad."]},{type: "⚡ Cena", e: "⚡", c: "#5E5CE6", name: "Tortilla de patata con ensalada", kcal: 780, mb: "🦠 Barata, saciante y aguanta días en nevera. Huevo y patata: proteína e hidrato a coste mínimo.", ing: ["3 huevos", "300g patata", "2 cdas AOVE", "tomate y canónigos", "1 cda AOVE para aliñar"], steps: ["Pochar la patata en dados 15 min a fuego suave.", "Mezclar con el huevo batido y cuajar 3 min por lado.", "TUPPER: aguanta 3 días, se come fría o templada."]}]},
+  {totalKcal:3280,meals:[{type: "⚡ Desayuno", e: "⚡", c: "#FF9F0A", name: "Tostadas con tomate, atún y aguacate", kcal: 690, mb: "🦠 Sin huevo, para descansar de sulfuros. El atún en lata es proteína barata y estable. Aguacate en ¼ para controlar el FODMAP.", ing: ["3 rebanadas de pan sin gluten", "1 lata de atún al natural", "1 tomate", "¼ aguacate", "1 cda AOVE", "sal"], steps: ["Tostar el pan y frotar el tomate.", "Repartir el atún escurrido y el aguacate laminado.", "Un hilo de AOVE por encima."]},{type: "Media mañana", e: "🍊", c: "#30D158", name: "Naranja, plátano y almendras", kcal: 330, mb: "🦠 Fruta de bajo FODMAP + grasa barata (cacahuete o semillas) para sumar calorías sin cocinar.", ing: ["1 naranja", "1 plátano", "25g almendras"], steps: ["Sin preparación. Llévalo en la mochila."]},{type: "⚡ Comida", e: "⚡", c: "#0A84FF", name: "Ensalada de arroz con atún, huevo y aceitunas", kcal: 840, mb: "🦠 Cero cocina. Arroz en vaso + latas. El tupper más rápido y barato del plan.", ing: ["2 vasos de arroz blanco precocido", "2 latas de atún al natural", "2 huevos cocidos", "10 aceitunas", "1 tomate", "3 cdas AOVE", "orégano"], steps: ["Arroz al microondas 2 min y enfriar.", "Mezclar con atún, tomate, aceitunas y huevo.", "Aliñar con AOVE y orégano."]},{type: "Post-entreno", e: "💪", c: "#FF453A", name: "Batido de proteína (dosis progresiva)", kcal: 300, mb: "🦠 EMPIEZA CON 15g y solo días de entreno. Si en 2 semanas las heces siguen bien, sube a 30g. Si se apelmazan, redúcelo y cubre con comida.", ing: ["15-30g proteína de guisante (empieza por 15g)", "1 plátano", "250ml bebida de coco", "canela"], steps: ["Triturar y tomar tras entrenar, separado de las comidas.", "Si notas las heces pastosas, baja la dosis."]},{type: "Merienda", e: "🍫", c: "#BF5AF2", name: "Tostadas con crema de cacahuete y plátano", kcal: 380, mb: "🦠 Calorías baratas para el superávit. Cacao puro y fruta: polifenoles diarios para la microbiota.", ing: ["2 rebanadas de pan sin gluten", "25g crema de cacahuete 100%", "1 plátano", "canela"], steps: ["Sin cocina. Ideal para llevar a la universidad."]},{type: "⚡ Cena", e: "⚡", c: "#5E5CE6", name: "Sardinas en lata con patata y tomate", kcal: 740, mb: "🦠 Las sardinas son la mejor relación precio/omega-3 que hay, y con espina aportan mucho calcio (clave sin lácteos). Cero cocina.", ing: ["2 latas de sardinas en aceite de oliva", "350g patata cocida", "1 tomate", "canónigos", "1 cda AOVE", "limón"], steps: ["Cocer la patata (o aprovechar la ya cocida del batch).", "Servir con las sardinas, tomate y canónigos.", "Aliñar con AOVE y limón."]}]},
+  {totalKcal:3370,meals:[{type: "⚡ Desayuno", e: "⚡", c: "#FF9F0A", name: "Bowl de avena con plátano, cacao y cacahuete", kcal: 720, mb: "🦠 La avena es el desayuno más barato por ración y su fibra soluble no fermenta agresivamente. Cacao puro: polifenoles para Akkermansia. Crema de cacahuete: calorías baratas.", ing: ["90g copos de avena SG", "300ml bebida de coco enriquecida en calcio", "1 plátano", "20g crema de cacahuete 100%", "1 cdta cacao puro", "canela"], steps: ["Mezclar todo en un bol, 2 min. Se puede tomar frío o calentar 1 min al microondas."]},{type: "Media mañana", e: "🍊", c: "#30D158", name: "Kiwi, plátano y semillas", kcal: 330, mb: "🦠 Fruta de bajo FODMAP + grasa barata (cacahuete o semillas) para sumar calorías sin cocinar.", ing: ["2 kiwis", "1 plátano", "25g semillas de calabaza"], steps: ["Sin preparación. Llévalo en la mochila."]},{type: "⚡ Comida", e: "⚡", c: "#0A84FF", name: "Merluza congelada al airfryer con patata", kcal: 840, mb: "🦠 Merluza congelada directa al airfryer, sin descongelar. Barata y muy digestiva.", ing: ["250g merluza congelada", "300g patata en gajos", "1 vaso de arroz blanco precocido", "2 cdas AOVE", "limón", "perejil"], steps: ["Patata al airfryer 200°C 12 min.", "Añadir la merluza congelada 12 min.", "Arroz al microondas."]},{type: "Post-entreno", e: "💪", c: "#FF453A", name: "Batido de proteína (dosis progresiva)", kcal: 300, mb: "🦠 EMPIEZA CON 15g y solo días de entreno. Si en 2 semanas las heces siguen bien, sube a 30g. Si se apelmazan, redúcelo y cubre con comida.", ing: ["15-30g proteína de guisante (empieza por 15g)", "1 plátano", "250ml bebida de coco", "canela"], steps: ["Triturar y tomar tras entrenar, separado de las comidas.", "Si notas las heces pastosas, baja la dosis."]},{type: "Merienda", e: "🍫", c: "#BF5AF2", name: "Fruta con almendras y chocolate negro", kcal: 380, mb: "🦠 Calorías baratas para el superávit. Cacao puro y fruta: polifenoles diarios para la microbiota.", ing: ["1 plátano", "1 naranja", "25g almendras tostadas", "20g chocolate negro 85%"], steps: ["Sin cocina. Ideal para llevar a la universidad."]},{type: "⚡ Cena", e: "⚡", c: "#5E5CE6", name: "Pollo y boniato al airfryer", kcal: 800, mb: "🦠 Una tanda, 22 min. Cocina para 2 días de una vez.", ing: ["250g contramuslo de pollo sin piel", "250g boniato en gajos", "1 calabacín", "2 cdas AOVE", "romero"], steps: ["Boniato airfryer 200°C 12 min.", "Añadir pollo y calabacín 10 min."]}]},
+  {totalKcal:3300,meals:[{type: "⚡ Desayuno", e: "⚡", c: "#FF9F0A", name: "Huevos al airfryer con patata y pan SG", kcal: 700, mb: "🦠 El huevo es la proteína más barata que existe. Lo mantengo en 2-3 días para no cargar los sulfuros. La patata sube calorías a coste mínimo.", ing: ["3 huevos", "150g patata cocida", "2 rebanadas de pan sin gluten", "1 cda AOVE", "sal"], steps: ["Patata en gajos al airfryer 200°C 12 min.", "Cascar los huevos en un molde, airfryer 8 min.", "Tostar el pan."]},{type: "Media mañana", e: "🍊", c: "#30D158", name: "Plátano y cacahuetes", kcal: 330, mb: "🦠 Fruta de bajo FODMAP + grasa barata (cacahuete o semillas) para sumar calorías sin cocinar.", ing: ["1 plátano", "30g cacahuetes tostados"], steps: ["Sin preparación. Llévalo en la mochila."]},{type: "⚡ Comida", e: "⚡", c: "#0A84FF", name: "Garbanzos salteados con espinacas y huevo", kcal: 830, mb: "🦠 Garbanzo de bote enjuagado, ración moderada por el IMO. 12 min en sartén.", ing: ["200g garbanzos cocidos y enjuagados", "200g espinacas", "2 huevos", "1 vaso de arroz blanco precocido", "2 cdas AOVE", "comino", "pimentón"], steps: ["Enjuagar los garbanzos.", "Saltear espinacas 3 min, añadir garbanzos, comino y pimentón 5 min.", "Cuajar los huevos encima. Arroz al microondas."]},{type: "Post-entreno", e: "💪", c: "#FF453A", name: "Batido de proteína (dosis progresiva)", kcal: 300, mb: "🦠 EMPIEZA CON 15g y solo días de entreno. Si en 2 semanas las heces siguen bien, sube a 30g. Si se apelmazan, redúcelo y cubre con comida.", ing: ["15-30g proteína de guisante (empieza por 15g)", "1 plátano", "250ml bebida de coco", "canela"], steps: ["Triturar y tomar tras entrenar, separado de las comidas.", "Si notas las heces pastosas, baja la dosis."]},{type: "Merienda", e: "🍫", c: "#BF5AF2", name: "Yogur de coco con plátano, cacao y cacahuete", kcal: 380, mb: "🦠 Calorías baratas para el superávit. Cacao puro y fruta: polifenoles diarios para la microbiota.", ing: ["150g yogur de coco enriquecido en calcio", "1 plátano", "1 cdta cacao puro", "20g crema de cacahuete 100%"], steps: ["Sin cocina. Ideal para llevar a la universidad."]},{type: "⚡ Cena", e: "⚡", c: "#5E5CE6", name: "Arroz salteado con huevo y verduras", kcal: 760, mb: "🦠 Aprovecha arroz sobrante del tupper. Rapidísimo y barato. Arroz blanco bajo en fermentación.", ing: ["150g arroz blanco cocido (sobrante)", "3 huevos", "1 zanahoria", "1 calabacín", "2 cdas AOVE", "tamari sin gluten"], steps: ["Saltear la verdura rallada 4 min.", "Añadir el arroz cocido y saltear 3 min.", "Hacer hueco, cuajar los huevos y mezclar."]}]},
+  {totalKcal:3350,meals:[{type: "⚡ Desayuno", e: "⚡", c: "#FF9F0A", name: "Tostadas con tomate, atún y aguacate", kcal: 690, mb: "🦠 Sin huevo, para descansar de sulfuros. El atún en lata es proteína barata y estable. Aguacate en ¼ para controlar el FODMAP.", ing: ["3 rebanadas de pan sin gluten", "1 lata de atún al natural", "1 tomate", "¼ aguacate", "1 cda AOVE", "sal"], steps: ["Tostar el pan y frotar el tomate.", "Repartir el atún escurrido y el aguacate laminado.", "Un hilo de AOVE por encima."]},{type: "Media mañana", e: "🍊", c: "#30D158", name: "Naranja, plátano y almendras", kcal: 330, mb: "🦠 Fruta de bajo FODMAP + grasa barata (cacahuete o semillas) para sumar calorías sin cocinar.", ing: ["1 naranja", "1 plátano", "25g almendras"], steps: ["Sin preparación. Llévalo en la mochila."]},{type: "⚡ Comida", e: "⚡", c: "#0A84FF", name: "Pavo y verduras al airfryer con arroz", kcal: 850, mb: "🦠 Pavo magro y barato. Una sola tanda de airfryer, 15 min.", ing: ["250g pavo en filetes", "1 calabacín", "2 zanahorias", "2 vasos de arroz blanco precocido", "2 cdas AOVE", "cúrcuma"], steps: ["Verduras en bastones al airfryer 200°C 10 min.", "Añadir el pavo con cúrcuma 8 min.", "Arroz al microondas."]},{type: "Post-entreno", e: "💪", c: "#FF453A", name: "Batido de proteína (dosis progresiva)", kcal: 300, mb: "🦠 EMPIEZA CON 15g y solo días de entreno. Si en 2 semanas las heces siguen bien, sube a 30g. Si se apelmazan, redúcelo y cubre con comida.", ing: ["15-30g proteína de guisante (empieza por 15g)", "1 plátano", "250ml bebida de coco", "canela"], steps: ["Triturar y tomar tras entrenar, separado de las comidas.", "Si notas las heces pastosas, baja la dosis."]},{type: "Merienda", e: "🍫", c: "#BF5AF2", name: "Tostadas con crema de cacahuete y plátano", kcal: 380, mb: "🦠 Calorías baratas para el superávit. Cacao puro y fruta: polifenoles diarios para la microbiota.", ing: ["2 rebanadas de pan sin gluten", "25g crema de cacahuete 100%", "1 plátano", "canela"], steps: ["Sin cocina. Ideal para llevar a la universidad."]},{type: "⚡ Cena", e: "⚡", c: "#5E5CE6", name: "Pollo y boniato al airfryer", kcal: 800, mb: "🦠 Una tanda, 22 min. Cocina para 2 días de una vez.", ing: ["250g contramuslo de pollo sin piel", "250g boniato en gajos", "1 calabacín", "2 cdas AOVE", "romero"], steps: ["Boniato airfryer 200°C 12 min.", "Añadir pollo y calabacín 10 min."]}]},
+  {totalKcal:3290,meals:[{type: "⚡ Desayuno", e: "⚡", c: "#FF9F0A", name: "Huevos al airfryer con patata y pan SG", kcal: 700, mb: "🦠 El huevo es la proteína más barata que existe. Lo mantengo en 2-3 días para no cargar los sulfuros. La patata sube calorías a coste mínimo.", ing: ["3 huevos", "150g patata cocida", "2 rebanadas de pan sin gluten", "1 cda AOVE", "sal"], steps: ["Patata en gajos al airfryer 200°C 12 min.", "Cascar los huevos en un molde, airfryer 8 min.", "Tostar el pan."]},{type: "Media mañana", e: "🍊", c: "#30D158", name: "Fresas, plátano y semillas", kcal: 330, mb: "🦠 Fruta de bajo FODMAP + grasa barata (cacahuete o semillas) para sumar calorías sin cocinar.", ing: ["150g fresas", "1 plátano", "25g semillas de calabaza"], steps: ["Sin preparación. Llévalo en la mochila."]},{type: "⚡ Comida", e: "⚡", c: "#0A84FF", name: "Patatas y huevos al airfryer con atún", kcal: 860, mb: "🦠 Huevo y atún: la proteína más barata. Todo en airfryer salvo el atún.", ing: ["350g patata en gajos", "3 huevos", "1 lata de atún al natural", "2 cdas AOVE", "pimentón"], steps: ["Patata al airfryer 200°C 15 min.", "Cascar los huevos en molde, airfryer 8 min.", "Servir con el atún y pimentón."]},{type: "Post-entreno", e: "💪", c: "#FF453A", name: "Batido de proteína (dosis progresiva)", kcal: 300, mb: "🦠 EMPIEZA CON 15g y solo días de entreno. Si en 2 semanas las heces siguen bien, sube a 30g. Si se apelmazan, redúcelo y cubre con comida.", ing: ["15-30g proteína de guisante (empieza por 15g)", "1 plátano", "250ml bebida de coco", "canela"], steps: ["Triturar y tomar tras entrenar, separado de las comidas.", "Si notas las heces pastosas, baja la dosis."]},{type: "Merienda", e: "🍫", c: "#BF5AF2", name: "Fruta con almendras y chocolate negro", kcal: 380, mb: "🦠 Calorías baratas para el superávit. Cacao puro y fruta: polifenoles diarios para la microbiota.", ing: ["1 plátano", "1 naranja", "25g almendras tostadas", "20g chocolate negro 85%"], steps: ["Sin cocina. Ideal para llevar a la universidad."]},{type: "⚡ Cena", e: "⚡", c: "#5E5CE6", name: "Merluza y patata al airfryer", kcal: 720, mb: "🦠 Cena ligera desde congelado, 20 min sin vigilar.", ing: ["220g merluza congelada", "300g patata en gajos", "2 cdas AOVE", "limón", "perejil"], steps: ["Patata airfryer 12 min.", "Añadir merluza congelada 10 min. Limón al servir."]}]},
+  {totalKcal:3390,meals:[{type: "⚡ Desayuno", e: "⚡", c: "#FF9F0A", name: "Bowl de avena con plátano, cacao y cacahuete", kcal: 720, mb: "🦠 La avena es el desayuno más barato por ración y su fibra soluble no fermenta agresivamente. Cacao puro: polifenoles para Akkermansia. Crema de cacahuete: calorías baratas.", ing: ["90g copos de avena SG", "300ml bebida de coco enriquecida en calcio", "1 plátano", "20g crema de cacahuete 100%", "1 cdta cacao puro", "canela"], steps: ["Mezclar todo en un bol, 2 min. Se puede tomar frío o calentar 1 min al microondas."]},{type: "Media mañana", e: "🍊", c: "#30D158", name: "Plátano y cacahuetes", kcal: 330, mb: "🦠 Fruta de bajo FODMAP + grasa barata (cacahuete o semillas) para sumar calorías sin cocinar.", ing: ["1 plátano", "30g cacahuetes tostados"], steps: ["Sin preparación. Llévalo en la mochila."]},{type: "⚡ Comida", e: "⚡", c: "#0A84FF", name: "Pollo y patata al airfryer con arroz en vaso", kcal: 880, mb: "🦠 Contramuslo (más barato y jugoso) al airfryer. Arroz en vaso 2 min. Listo en 22 min sin vigilar.", ing: ["250g contramuslo de pollo sin piel", "300g patata en gajos", "1 vaso de arroz blanco precocido", "2 cdas AOVE", "pimentón", "romero"], steps: ["Patata al airfryer 200°C 12 min.", "Añadir el pollo con pimentón y romero 12 min más.", "Arroz al microondas 2 min."]},{type: "Post-entreno", e: "💪", c: "#FF453A", name: "Batido de proteína (dosis progresiva)", kcal: 300, mb: "🦠 EMPIEZA CON 15g y solo días de entreno. Si en 2 semanas las heces siguen bien, sube a 30g. Si se apelmazan, redúcelo y cubre con comida.", ing: ["15-30g proteína de guisante (empieza por 15g)", "1 plátano", "250ml bebida de coco", "canela"], steps: ["Triturar y tomar tras entrenar, separado de las comidas.", "Si notas las heces pastosas, baja la dosis."]},{type: "Merienda", e: "🍫", c: "#BF5AF2", name: "Yogur de coco con plátano, cacao y cacahuete", kcal: 380, mb: "🦠 Calorías baratas para el superávit. Cacao puro y fruta: polifenoles diarios para la microbiota.", ing: ["150g yogur de coco enriquecido en calcio", "1 plátano", "1 cdta cacao puro", "20g crema de cacahuete 100%"], steps: ["Sin cocina. Ideal para llevar a la universidad."]},{type: "⚡ Cena", e: "⚡", c: "#5E5CE6", name: "Tortilla de patata con ensalada", kcal: 780, mb: "🦠 Barata, saciante y aguanta días en nevera. Huevo y patata: proteína e hidrato a coste mínimo.", ing: ["3 huevos", "300g patata", "2 cdas AOVE", "tomate y canónigos", "1 cda AOVE para aliñar"], steps: ["Pochar la patata en dados 15 min a fuego suave.", "Mezclar con el huevo batido y cuajar 3 min por lado.", "TUPPER: aguanta 3 días, se come fría o templada."]}]},
 ];
 
 const PLAN3=[
@@ -615,88 +580,80 @@ const EXTRAS=[
   {name:"Tartar de salmón y aguacate con mango",kcal:520,tiempo:"20 min",desc:"Entrante fresco y elegante, sin cocinar. Perfecto para empezar una cena especial.",mb:"🦠 Salmón crudo de calidad (congelado antes 48h por anisakis): omega-3 puro. Aguacate prebiótico. Mango en poca cantidad por el FODMAP.",ing:["200g salmón fresco (congelado 48h previo)","1 aguacate","½ mango pequeño","1 lima","2 cdas AOVE","cebollino, sésamo, sal","tamari sin gluten (opcional)"],steps:["Cortar el salmón en dados pequeños (debe haber estado congelado 48h).","Picar el aguacate y el mango en dados similares.","Aliñar con zumo de lima, AOVE, un toque de tamari y sal.","Montar con un aro: salmón abajo, aguacate, mango. Sésamo y cebollino encima."]},
   {name:"Merluza rellena de gambas y espinacas al horno",kcal:640,tiempo:"40 min",desc:"Plato de celebración que parece de chef. Suave para tu sistema.",mb:"🦠 Merluza blanca digestiva. Nota: las gambas son marisco, ocasional y en poca cantidad — si notas que te sientan mal, sustituye por más espinaca y zanahoria.",ing:["2 lomos gruesos de merluza","100g gambas peladas (opcional)","150g espinacas","1 zanahoria","3 cdas AOVE","100ml caldo de pescado","limón, eneldo, sal"],steps:["Saltear espinacas y zanahoria rallada en AOVE 4 min. Añadir las gambas 2 min.","Abrir los lomos de merluza y rellenar con el salteado.","Colocar en fuente con el caldo, limón y eneldo.","Hornear 180°C 18-20 min. Regar con el jugo al servir."]}
 ];
+const EXTRAS_DIA=[
+  {name:"Hummus casero de garbanzo (ración controlada)",kcal:230,tiempo:"10 min",desc:"Para untar con tortitas de maíz o crudités. Ración pequeña para no fermentar de más.",mb:"🦠 Garbanzo en poca cantidad y bien triturado: más digestivo. Tahini (sésamo) aporta calcio. Sin ajo crudo para no irritar.",ing:["120g garbanzos cocidos y enjuagados","1 cda de tahini","2 cdas AOVE","½ limón","1 cdta comino","pimentón dulce","sal"],steps:["Enjuagar bien los garbanzos (reduce los fermentables).","Triturar con tahini, AOVE, zumo de limón, comino y sal hasta que quede fino.","Servir con un hilo de AOVE y pimentón. Ración: 2-3 cucharadas como dip."]},
+  {name:"Guacamole fresco sin cebolla cruda",kcal:250,tiempo:"10 min",desc:"Cremoso y suave, sin la cebolla cruda que te da gases.",mb:"🦠 Aguacate: grasa buena y prebiótico suave. La cebolla va infusionada en el aceite y retirada: da sabor sin los fructanos fermentables.",ing:["1 aguacate maduro","1 tomate maduro","1 lima","2 cdas AOVE","¼ de cebolla (para infusionar)","cilantro","sal"],steps:["Calentar el AOVE con la cebolla 3 min a fuego suave y RETIRAR la cebolla (te quedas con el aceite aromatizado).","Aplastar el aguacate con el zumo de lima y la sal.","Añadir el tomate en dados, el aceite aromatizado y cilantro picado."]},
+  {name:"Ensalada de garbanzos con atún, aceitunas y tomate",kcal:480,tiempo:"15 min",desc:"Plato único completo, frío, listo en 15 min. Ideal para llevar al trabajo.",mb:"🦠 Garbanzo en ración moderada y enjuagado. Atún proteína magra. Aceitunas: polifenoles para Akkermansia. Puedes cambiar garbanzo por alubia o lenteja.",ing:["150g garbanzos cocidos y enjuagados","1 lata de atún al natural","8 aceitunas","1 tomate","½ pimiento rojo","½ pepino","3 cdas AOVE","vinagre suave","orégano"],steps:["Enjuagar bien los garbanzos.","Trocear el tomate, pimiento y pepino.","Mezclar todo con el atún escurrido y las aceitunas.","Aliñar con AOVE, un toque de vinagre y orégano."]},
+  {name:"Ensalada de arroz con atún y encurtidos",kcal:520,tiempo:"20 min",desc:"Arroz frío, saciante y muy fácil. El arroz blanco es de lo que mejor toleras.",mb:"🦠 Arroz blanco: bajo en fermentación, ideal con tu IMO. Atún y huevo: proteína. Encurtidos y aceitunas dan sabor sin azúcar.",ing:["120g arroz blanco (en crudo)","1 lata de atún al natural","1 huevo cocido","8 aceitunas","encurtidos variados (pepinillo, etc.)","1 tomate","3 cdas AOVE","perejil"],steps:["Cocer el arroz, enfriar bajo el grifo y escurrir.","Cocer el huevo 10 min.","Mezclar el arroz con atún, aceitunas, encurtidos picados y tomate.","Aliñar con AOVE y perejil. Coronar con el huevo en cuartos."]},
+  {name:"Gazpacho andaluz sin ajo (con pan SG opcional)",kcal:220,tiempo:"15 min",desc:"Refrescante y cargado de polifenoles. Versión suave para tu intestino.",mb:"🦠 Tomate, pepino y pimiento: antioxidantes y polifenoles. Sin ajo ni cebolla cruda (que te fermentan). Pan SG opcional para más cuerpo.",ing:["750g tomate maduro","½ pepino","½ pimiento rojo","1 rebanada de pan sin gluten (opcional)","4 cdas AOVE","vinagre suave","sal"],steps:["Trocear las verduras (pela el pepino para que sea más digestivo).","Triturar todo con el AOVE, un toque de vinagre y sal.","Si lo quieres más cremoso, añade el pan SG remojado.","Colar si lo prefieres fino. Servir bien frío."]},
+  {name:"Salteado de gambas con calabacín y yuca",kcal:430,tiempo:"25 min",desc:"Plato caliente, proteico y reconfortante. La yuca da energía sin gluten.",mb:"🦠 Gambas: proteína (marisco, ocasional — vigila tolerancia). Calabacín muy digestivo. Yuca: hidrato sin gluten. Cebolla infusionada y retirada.",ing:["150g gambas peladas","1 calabacín","250g yuca (o patata)","3 cdas AOVE","¼ cebolla (para infusionar)","perejil","pimentón","limón"],steps:["Cocer la yuca pelada en dados 20 min hasta que esté tierna.","Infusionar el AOVE con la cebolla 3 min y retirar la cebolla.","En ese aceite, saltear el calabacín 4 min y luego las gambas 2-3 min.","Añadir la yuca, pimentón y perejil. Limón al servir."]},
+  {name:"Ensalada templada de lentejas con verduras y almendras",kcal:450,tiempo:"20 min",desc:"Templada y nutritiva. Las lentejas rojas o pardinas bien enjuagadas son las más digestivas.",mb:"🦠 Lenteja en ración moderada y enjuagada: butirato sin exceso de gases. Almendras tostadas: alternativa a la macadamia, en poca cantidad. Espinaca con folato.",ing:["150g lentejas cocidas y enjuagadas (rojas o pardinas)","1 zanahoria","½ pimiento rojo","80g espinacas","15g almendras tostadas","3 cdas AOVE","comino","limón"],steps:["Enjuagar bien las lentejas.","Saltear la zanahoria rallada y el pimiento en AOVE 5 min.","Añadir las espinacas 2 min hasta que bajen.","Mezclar con las lentejas, las almendras picadas, comino y limón."]},
+  {name:"Brócoli y setas salteados con almendras",kcal:270,tiempo:"20 min",desc:"Los que peor te sientan, hechos bien: poca cantidad, muy cocidos. Guarnición sabrosa.",mb:"🦠 Brócoli y setas en RACIÓN PEQUEÑA y bien cocidos (fermentan menos). Mejor gírgolas que champiñón. Si notas gases, redúcelos. Almendras para textura.",ing:["120g brócoli (en ramilletes pequeños)","100g setas (gírgolas mejor)","15g almendras tostadas","3 cdas AOVE","¼ cebolla (para infusionar)","perejil","sal"],steps:["Cocer el brócoli al vapor 8-10 min hasta que esté MUY tierno (fermenta menos).","Infusionar el AOVE con la cebolla 3 min y retirarla.","Saltear las setas en ese aceite 6-7 min hasta que suelten el agua y doren.","Añadir el brócoli y las almendras 2 min. Perejil al servir."]}
+];
 
 const SHOPPING_CATS=[
-  {cat:"🐟 Pescado y proteína",items:[
-    "Salmón fresco — 1 kg (lomos)",
-    "Merluza — 1 kg (lomos o filetes)",
-    "Lubina — 500 g",
-    "Bacalao fresco desalado — 500 g",
-    "Dorada — 2 piezas",
-    "Pechuga de pollo — 800 g",
-    "Pechuga de pavo — 800 g",
-    "Huevos camperos — media docena"
+  {cat:"🥚 Proteína barata",items:[
+    "Huevos — 2 docenas",
+    "Contramuslo de pollo sin piel — 1,5 kg",
+    "Pavo en filetes o dados — 800 g",
+    "Merluza congelada en lomos — 1 kg",
+    "Atún al natural en lata — 8 latas",
+    "Sardinas en aceite de oliva en lata — 6 latas"
   ]},
-  {cat:"💪 Proteína en polvo",items:[
-    "Proteína de guisante aislada sin lactosa/soja/gluten — 1 bote (sabor neutro o vainilla)"
-  ]},
-  {cat:"🌾 Hidratos",items:[
-    "Arroz blanco — 1 kg",
+  {cat:"🫘 Legumbres y arroz",items:[
+    "Lentejas cocidas en bote (o secas) — 3 botes",
+    "Garbanzos cocidos en bote — 3 botes",
+    "Arroz blanco — 2 kg",
     "Arroz blanco en vaso precocido — 6 vasos",
-    "Quinoa — 500 g",
-    "Quinoa en vaso precocida — 4 vasos",
-    "Copos de avena sin gluten certificada — 750 g",
-    "Patata — 3 kg",
+    "Guisantes congelados — 1 kg"
+  ]},
+  {cat:"🥔 Hidratos",items:[
+    "Patata — 5 kg",
     "Boniato — 1,5 kg",
-    "Pan sin gluten — 1 paquete"
+    "Copos de avena sin gluten certificada — 1 kg",
+    "Pan sin gluten — 2 paquetes"
   ]},
   {cat:"🥦 Verduras",items:[
-    "Zanahoria — 1,5 kg",
+    "Zanahoria — 2 kg",
     "Calabacín — 6 unidades",
-    "Calabaza — 1 (para cremas)",
-    "Judía verde — 600 g",
-    "Espinacas frescas — 300 g",
-    "Canónigos — 1 bolsa",
+    "Espinacas (fresca o congelada) — 600 g",
+    "Tomate — 1,5 kg",
     "Pimiento rojo — 3 unidades",
-    "Tomate — 1 kg"
+    "Canónigos o lechuga — 2 bolsas"
   ]},
-  {cat:"🍓 Fruta",items:[
-    "Plátano — 18-20 unidades",
-    "Arándanos — 600 g (fresco o congelado)",
-    "Fresas — 400 g",
-    "Granada — 3 unidades",
-    "Kiwi — 12 unidades",
-    "Naranja — 8 unidades",
-    "Mandarina — 6 unidades",
-    "Aguacate — 4 unidades"
+  {cat:"🍌 Fruta",items:[
+    "Plátano — 25 unidades",
+    "Naranja — 10 unidades",
+    "Kiwi — 8 unidades",
+    "Fresas — 300 g",
+    "Aguacate — 3 unidades"
   ]},
-  {cat:"🥥 Grasas y semillas",items:[
-    "AOVE aceite oliva virgen extra — 1,5 L",
-    "Nueces de macadamia — 400 g",
+  {cat:"🥜 Grasas baratas",items:[
+    "Crema de cacahuete 100% sin azúcar — 1 bote grande",
+    "Cacahuetes tostados sin sal — 500 g",
+    "Almendras tostadas — 400 g",
     "Semillas de calabaza — 250 g",
-    "Semillas de lino molido — 250 g",
-    "Semillas de chía — 250 g",
-    "Semillas de girasol — 100 g"
+    "Aceitunas — 1 bote"
   ]},
   {cat:"🥛 Sustitutos sin lácteo",items:[
-    "Bebida de coco enriquecida en calcio sin azúcar — 8-10 bricks",
-    "Yogur de coco enriquecido en calcio sin azúcar — 7-8 unidades"
+    "Bebida de coco enriquecida en calcio sin azúcar — 10 bricks",
+    "Yogur de coco enriquecido en calcio sin azúcar — 6 unidades"
   ]},
-  {cat:"🧂 Condimentos",items:[
-    "Cúrcuma en polvo",
-    "Jengibre fresco — 1 raíz",
-    "Canela de Ceilán",
-    "Orégano, romero, eneldo, perejil, laurel",
-    "Limón — 12 unidades",
-    "Sal",
-    "Cacao puro 100% en polvo — 1 bote"
-  ]},
-  {cat:"🍘 Snacks permitidos",items:[
-    "Tortitas de maíz (no las de arroz con cacahuete) — 2 paquetes",
-    "Chocolate negro 85%+ sin leche — 1 tableta",
-    "Dátiles — paquete pequeño"
+  {cat:"🍫 Despensa",items:[
+    "Cacao puro 100% en polvo — 1 bote",
+    "Chocolate negro 85%+ sin leche — 2 tabletas",
+    "Tortitas de maíz — 2 paquetes"
   ]}
 ];
 
 const SUPLS=[
   {group:"🌄 Al levantarte — en ayunas",sub:"Solo agua · esperar 30-40 min antes de desayunar",items:[
-    {pill:"💊 Suplemento",pc:"rgba(10,132,255,0.2)",ptx:"#6AB8FF",name:"Zinc-carnosina PepZin GI",dose:"1 cápsula · con agua · en ayunas estricto<br/>Nunca junto a la Akkermansia (necesita ayunas)"},
+    {pill:"💊 Suplemento",pc:"rgba(10,132,255,0.2)",ptx:"#6AB8FF",name:"Zinc-carnosina PepZin GI",dose:"1 cápsula · con agua · en ayunas estricto"},
     {pill:"💊 Prescrito",pc:"rgba(48,209,88,0.18)",ptx:"#70D080",name:"Miconeo GYB",dose:"1 cápsula · en ayunas"},
     {pill:"💊 Prescrito",pc:"rgba(48,209,88,0.18)",ptx:"#70D080",name:"Neuraxbiotic Zen",dose:"1 cápsula · en ayunas<br/>Psicobiótico — eje intestino-cerebro (pauta 1-0-0)"},
     {pill:"💊 Prescrito",pc:"rgba(48,209,88,0.18)",ptx:"#70D080",name:"L-Glutamina ZE 877 — 1ª toma",dose:"1 cápsula · en ayunas, antes del desayuno (pauta 1-1-0)"}
   ]},
   {group:"🍳 Con el desayuno",sub:"Con alimento",items:[
-    {pill:"💊 Prescrito",pc:"rgba(48,209,88,0.18)",ptx:"#70D080",name:"Akkermansia Metagenics",dose:"1 comprimido · con alimento<br/>Siempre con comida, nunca en ayunas"},
     {pill:"💊 Prescrito",pc:"rgba(255,214,10,0.18)",ptx:"#FFD60A",name:"Eubiotics Buty-D — extra si diarrea",dose:"Solo si hay diarrea ese día: 1 cápsula aquí (pauta 1-1-0 los días de diarrea)"}
   ]},
   {group:"⏱ Antes de comer — ayunas",sub:"15-20 min antes de comer",items:[
@@ -706,7 +663,8 @@ const SUPLS=[
     {pill:"💊 Día IMPAR",pc:"rgba(255,159,10,0.18)",ptx:"#FFB340",name:"Biome Balance",dose:"1 cápsula · con la comida<br/><b style=\'color:#FFB340\'>Solo días IMPARES (1,3,5...)</b> — alterna con Vivomixx",alt:"odd"},
     {pill:"💊 Día PAR",pc:"rgba(94,92,230,0.2)",ptx:"#A8A6FF",name:"Vivomixx Neo 9",dose:"1 cápsula · con la comida<br/><b style=\'color:#A8A6FF\'>Solo días PARES (2,4,6...)</b> — alterna con Biome Balance",alt:"even"},
     {pill:"💊 Prescrito",pc:"rgba(48,209,88,0.18)",ptx:"#70D080",name:"Eubiotics Buty-D",dose:"1 cápsula · con la comida (pauta 0-1-0)"},
-    {pill:"💊 Fármaco",pc:"rgba(142,142,147,0.2)",ptx:"#C7C7CC",name:"Finasteride",dose:"1 comprimido · con la comida (sin interacción, encaja aquí)"}
+    {pill:"💊 Fármaco",pc:"rgba(142,142,147,0.2)",ptx:"#C7C7CC",name:"Finasteride",dose:"1 comprimido · con la comida (sin interacción, encaja aquí)"},
+    {pill:"💊 Fármaco",pc:"rgba(10,132,255,0.2)",ptx:"#6AB8FF",name:"PrEP",dose:"1 comprimido · con alimento<br/><b>Siempre a la misma hora cada día</b> — la constancia horaria es lo importante"}
   ]},
   {group:"🦷 Después de comer",sub:"Justo al terminar la comida",items:[
     {pill:"💊 Fármaco",pc:"rgba(255,69,58,0.2)",ptx:"#FF8A85",name:"Jorveza 0,5mg",dose:"Después de comer:<br/>① Disolver lentamente en la boca<br/>② Esperar 30 min sin comer, beber ni enjuagarse<br/>③ Enjuague oral y escupir<br/>Así no pasas la noche sin enjuagar (reduce la cándida)"}
@@ -716,9 +674,6 @@ const SUPLS=[
   ]},
   {group:"🌙 Con la cena",sub:"Con alimento",items:[
     {pill:"💊 Prescrito",pc:"rgba(48,209,88,0.18)",ptx:"#70D080",name:"NPRO Lactoferrina",dose:"1 cápsula · con la cena (pauta 0-0-1)<br/>Lactoferrina — quela hierro libre, antimicrobiana y antifúngica"}
-  ]},
-  {group:"🌑 Antes de dormir",sub:"Mientras dure la candidiasis",items:[
-    {pill:"💊 Fármaco",pc:"rgba(255,69,58,0.2)",ptx:"#FF8A85",name:"Mycostatin",dose:"Mientras dure el tratamiento de candidiasis<br/>Enjuague bucal y tragar"}
   ]}
 ];
 
@@ -740,7 +695,6 @@ function showTab(id,btn){
   if(id==='plan'){updatePlanWeekSub();buildTrainingDays();}
   if(id==='remind'){ buildRemindTimeline(); loadFastTimes(); updateFasting(); }
   if(id==='supl'){ suplDay=getTodayIdx(); buildSuplDays(); buildSupl(); const dEl=document.getElementById('supl-date-sub'); if(dEl){const n=new Date();dEl.textContent=n.toLocaleDateString('es-ES',{weekday:'long',day:'numeric',month:'long'});}}
-  if(id==='sintomas'){ if(symDay===0){symDay=getTodayIdx();} buildSymDays(); renderSymGrid(); renderSymWeek(); }
 }
 function showGuia(id,btn){
   document.querySelectorAll('.gsec').forEach(s=>s.classList.remove('active'));
@@ -928,8 +882,19 @@ function mealHTML(m,i){
 function toggleMeal(i){if(openMeals.has(i))openMeals.delete(i);else openMeals.add(i);renderMeals();}
 
 // -- EXTRAS ----------------------------------------------------------------
+let currentExtra=0;
+function switchExtra(idx){
+  currentExtra=idx;openExtras=new Set();
+  document.getElementById('ex-tab-0').classList.toggle('active',idx===0);
+  document.getElementById('ex-tab-1').classList.toggle('active',idx===1);
+  document.getElementById('extra-note-txt').innerHTML = idx===0
+    ? '🍴 Platos sencillos y compatibles para sumar variedad: ensaladas, hummus, guacamole, gazpacho... Toca para ver ingredientes y pasos.'
+    : '✨ Más elaboradas, para cuando quieras cocinar algo especial (cena con tu pareja, invitados).';
+  buildExtras();
+}
 function buildExtras(){
-  document.getElementById('extras-container').innerHTML=EXTRAS.map((r,i)=>extraHTML(r,i)).join('');
+  const list = currentExtra===0 ? EXTRAS_DIA : EXTRAS;
+  document.getElementById('extras-container').innerHTML=list.map((r,i)=>extraHTML(r,i)).join('');
 }
 function extraHTML(r,i){
   const open=openExtras.has(i);
@@ -1049,52 +1014,8 @@ function resetMealsWeek(){
   localStorage.removeItem('meallog');
   renderMeals();
 }
-function resetSymptomsWeek(){
-  if(!confirm('Borrar todos los sintomas de la semana?'))return;
-  localStorage.removeItem('symptoms');
-  renderSymGrid();
-  renderSymWeek();
-}
 
 // -- SHOP ------------------------------------------------------------------
-let currentStore=0;
-const STORE_NAMES=['Mercadona','Aldi','Lidl'];
-function selectStore(idx){
-  currentStore=idx;
-  [0,1,2].forEach(i=>{
-    const b=document.getElementById('store-btn-'+i);
-    if(b)b.className='price-store-btn'+(i===idx?' active-store':'');
-  });
-  const label=document.getElementById('store-name-label');
-  if(label)label.textContent=STORE_NAMES[idx];
-  const el2=document.getElementById('shop-total');
-  if(el2)el2.textContent='€ 0,00';
-  updateShop();
-}
-function getPriceKey(itemKey){return'price-s'+currentStore+'-'+itemKey;}
-function savePrice(itemKey,val){
-  const k=getPriceKey(itemKey);
-  const prices=JSON.parse(localStorage.getItem('shopprices')||'{}');
-  if(val==='')delete prices[k];else prices[k]=val;
-  localStorage.setItem('shopprices',JSON.stringify(prices));
-  updateTotal();
-}
-function getPrice(itemKey){
-  const k=getPriceKey(itemKey);
-  const prices=JSON.parse(localStorage.getItem('shopprices')||'{}');
-  return prices[k]||'';
-}
-function updateTotal(){
-  const prices=JSON.parse(localStorage.getItem('shopprices')||'{}');
-  let total=0;
-  SHOPPING_CATS.forEach(cat=>cat.items.forEach((_,i)=>{
-    const k='price-s'+currentStore+'-'+cat.cat+'-'+i;
-    const v=parseFloat((prices[k]||'').replace(',','.'));
-    if(!isNaN(v))total+=v;
-  }));
-  const el=document.getElementById('shop-total');
-  if(el)el.textContent='€ '+total.toFixed(2).replace('.',',');
-}
 function getPrice3(key,store){
   const all=JSON.parse(localStorage.getItem('shopprices')||'{}');
   return (all[key]&&all[key][store]!==undefined)?all[key][store]:'';
@@ -1130,6 +1051,66 @@ function updateStoreTotals(){
     if(el)el.textContent=totals[s]>0?('€'+totals[s].toFixed(2)+'/kg'):'—';
   });
 }
+
+function getCustomItems(){ try{return JSON.parse(localStorage.getItem('customshop')||'[]');}catch(e){return [];} }
+function saveCustomItems(a){ localStorage.setItem('customshop',JSON.stringify(a)); }
+function addCustomItem(){
+  const el=document.getElementById('cust-input'); if(!el) return;
+  const v=(el.value||'').trim(); if(!v) return;
+  const a=getCustomItems(); a.push(v); saveCustomItems(a); el.value=''; updateShop();
+}
+function removeCustomItem(i){
+  const a=getCustomItems();
+  const prices=JSON.parse(localStorage.getItem('shopprices')||'{}');
+  const n=a.length;
+  // Desplazar checks y precios de los items posteriores
+  const others=[...shopChecked].filter(k=>!k.startsWith('CUSTOM-'));
+  const shifted=[];
+  for(let j=0;j<n;j++){
+    if(j===i){ delete prices['CUSTOM-'+j]; continue; }
+    const nj = j>i ? j-1 : j;
+    if(shopChecked.has('CUSTOM-'+j)) shifted.push('CUSTOM-'+nj);
+    if(j>i && prices['CUSTOM-'+j]){ prices['CUSTOM-'+nj]=prices['CUSTOM-'+j]; delete prices['CUSTOM-'+j]; }
+  }
+  a.splice(i,1); saveCustomItems(a);
+  shopChecked=new Set([...others,...shifted]);
+  localStorage.setItem('nutricheck',JSON.stringify([...shopChecked]));
+  localStorage.setItem('shopprices',JSON.stringify(prices));
+  updateShop();
+}
+function customShopHTML(){
+  const a=getCustomItems(); const stores=['🟢','🔵','🔴'];
+  return `<div class="card" style="margin-bottom:12px;border:1px solid rgba(48,209,88,0.25);">
+    <div style="padding:13px 16px 0;"><div style="font-size:15px;font-weight:700;">➕ Extras y ocasionales</div>
+    <div style="font-size:11.5px;color:#8E8E93;margin-top:3px;line-height:1.45;">Cosas que se acaban o compras de vez en cuando: proteína en polvo, suplementos, especias, papel de horno...</div></div>
+    <div style="padding:6px 16px 12px;">
+    ${a.length? a.map((it,i)=>{
+      const key='CUSTOM-'+i; const t=shopChecked.has(key);
+      return `<div style="border-bottom:1px solid rgba(255,255,255,0.07);padding:6px 0 8px;">
+        <div style="display:flex;align-items:center;">
+          <button class="check-btn" style="padding-bottom:2px;flex:1;" onclick="toggleShop('${key}')">
+            <div class="check-box ${t?'tb':'ub'}">${t?'<svg width=\"13\" height=\"13\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"#000\" stroke-width=\"3\" stroke-linecap=\"round\"><path d=\"M20 6L9 17l-5-5\"/></svg>':''}</div>
+            <span class="cl${t?' done':''}">${it}</span>
+          </button>
+          <button class="cust-del" onclick="removeCustomItem(${i})">&times;</button>
+        </div>
+        <div class="p3-row">
+          ${[0,1,2].map(s=>`<div class="p3-cell" id="pc-${key}-${s}">
+            <div class="p3-dot" style="color:${['#30D158','#6AB8FF','#FF8A85'][s]};">${stores[s]}</div>
+            <div style="position:relative;"><span class="cur">&euro;</span>
+            <input type="number" min="0" step="0.01" inputmode="decimal" placeholder="kg" value="${getPrice3(key,s)}" oninput="savePrice3('${key}',${s},this.value)"/></div>
+          </div>`).join('')}
+        </div>
+      </div>`;
+    }).join('') : '<div style="font-size:12.5px;color:#636366;padding:8px 0;">Aún no has añadido nada.</div>'}
+    <div class="custom-add">
+      <input id="cust-input" type="text" placeholder="Añadir producto..." onkeydown="if(event.key==='Enter')addCustomItem()"/>
+      <button onclick="addCustomItem()">+</button>
+    </div>
+    </div>
+  </div>`;
+}
+
 function updateShop(){
   const total=SHOPPING_CATS.reduce((s,c)=>s+c.items.length,0);
   const done=SHOPPING_CATS.reduce((s,c)=>s+c.items.filter((_,i)=>shopChecked.has(c.cat+'-'+i)).length,0);
@@ -1163,9 +1144,10 @@ function updateShop(){
       }).join('')}
       </div>
     </div>`;
-  }).join('');
+  }).join('')+customShopHTML();
   // Apply cheapest highlights + totals after render
   SHOPPING_CATS.forEach(cat=>cat.items.forEach((_,i)=>highlightCheapest(cat.cat+'-'+i)));
+  getCustomItems().forEach((_,i)=>highlightCheapest('CUSTOM-'+i));
   updateStoreTotals();
 }
 function toggleShop(key){if(shopChecked.has(key))shopChecked.delete(key);else shopChecked.add(key);localStorage.setItem('nutricheck',JSON.stringify([...shopChecked]));updateShop();}
@@ -1173,229 +1155,6 @@ function clearAll(){shopChecked=new Set();localStorage.setItem('nutricheck','[]'
 
 // -- INIT ------------------------------------------------------------------
 currentDay=getTodayIdx();suplDay=getTodayIdx();updatePlanWeekSub();buildTrainingDays();buildDays();renderMeals();buildExtras();buildSuplDays();buildSupl();updateShop();
-
-
-// ==============================================================================
-// SÍNTOMAS
-// ==============================================================================
-const SYM_GENERAL = [
-  {id:'great', label:'😊 Muy bien', cls:'s-ok'},
-  {id:'ok',    label:'🙂 Normal',   cls:'s-ok'},
-  {id:'tired', label:'😴 Cansado',  cls:'s-mild'},
-  {id:'bad',   label:'😞 Mal día',  cls:'s-bad'},
-];
-const SYM_DIGESTION = [
-  {id:'nodiarrea', label:'✅ Sin diarrea',    cls:'s-ok'},
-  {id:'soft',      label:'⚠️ Heces blandas', cls:'s-mild'},
-  {id:'diarrea',   label:'🔴 Diarrea',       cls:'s-bad'},
-  {id:'estreni',   label:'😣 Estreñimiento', cls:'s-bad'},
-  {id:'gases',     label:'💨 Gases',         cls:'s-mild'},
-  {id:'dolor',     label:'🔴 Dolor abdomen', cls:'s-bad'},
-  {id:'hincha',    label:'😮 Hinchazón',     cls:'s-mild'},
-  {id:'nausea',    label:'🤢 Náuseas',       cls:'s-bad'},
-];
-const SYM_ESOFAGO = [
-  {id:'eok',    label:'✅ Sin molestias',  cls:'s-ok'},
-  {id:'disfa',  label:'⚠️ Disfagia leve', cls:'s-mild'},
-  {id:'atasco', label:'🔴 Atasco comida', cls:'s-bad'},
-  {id:'ardor',  label:'🔥 Ardor/reflujo', cls:'s-bad'},
-];
-const SYM_PIEL = [
-  {id:'pielok',     label:'✅ Piel sin molestias', cls:'s-ok'},
-  {id:'picorpiel',  label:'🔴 Picores en piel',    cls:'s-bad'},
-  {id:'picorpubis', label:'🔴 Picores en pubis',   cls:'s-bad'},
-  {id:'dermatis',   label:'🟠 Dermatitis',          cls:'s-mild'},
-  {id:'rojeces',    label:'🟠 Rojeces/eccema',      cls:'s-mild'},
-  {id:'urticaria',  label:'🔴 Urticaria',           cls:'s-bad'},
-];
-
-let symDay = 0; // will be set to today on init
-
-function getSymKey(day, id){ return 'sym-' + day + '-' + id; }
-function getSymVal(day, id){
-  return JSON.parse(localStorage.getItem('symptoms')||'{}')[getSymKey(day,id)] || false;
-}
-function toggleSym(day, id){
-  const data = JSON.parse(localStorage.getItem('symptoms')||'{}');
-  const k = getSymKey(day, id);
-  if(data[k]) delete data[k]; else data[k] = true;
-  localStorage.setItem('symptoms', JSON.stringify(data));
-  renderSymGrid();
-}
-function saveSymNote(day, val){
-  const data = JSON.parse(localStorage.getItem('symptoms')||'{}');
-  const k = 'sym-' + day + '-note';
-  if(val==='') delete data[k]; else data[k] = val;
-  localStorage.setItem('symptoms', JSON.stringify(data));
-}
-function getSymNote(day){
-  return JSON.parse(localStorage.getItem('symptoms')||'{}')['sym-' + day + '-note'] || '';
-}
-function clearSymDay(){
-  const data = JSON.parse(localStorage.getItem('symptoms')||'{}');
-  Object.keys(data).forEach(k=>{ if(k.startsWith('sym-'+symDay+'-')) delete data[k]; });
-  localStorage.setItem('symptoms', JSON.stringify(data));
-  renderSymGrid();
-}
-
-function buildSymDays(){
-  const el = document.getElementById('sym-day-row');
-  if(!el) return;
-  el.innerHTML = DAYS.map((d,i) =>
-    `<button class="sym-day-pill${i===symDay?' active':''}" onclick="selectSymDay(${i})">${d}</button>`
-  ).join('');
-}
-function selectSymDay(i){
-  symDay = i;
-  buildSymDays();
-  renderSymGrid();
-  renderSymWeek();
-}
-
-function renderSymGrid(){
-  const renderGroup = (id, items) => {
-    const el = document.getElementById(id);
-    if(!el) return;
-    el.innerHTML = items.map(s => {
-      const on = getSymVal(symDay, s.id);
-      return `<button class="sym-btn ${s.cls}${on?' active-sym':''}" onclick="toggleSym(${symDay},'${s.id}')">${s.label}</button>`;
-    }).join('');
-  };
-  renderGroup('sym-grid-general', SYM_GENERAL);
-  renderGroup('sym-grid-digestion', SYM_DIGESTION);
-  renderGroup('sym-grid-esofago', SYM_ESOFAGO);
-  renderGroup('sym-grid-piel', SYM_PIEL);
-  const noteEl = document.getElementById('sym-note-txt');
-  if(noteEl) noteEl.value = getSymNote(symDay);
-  noteEl.oninput = () => saveSymNote(symDay, noteEl.value);
-  // Gratitude diary
-  const gratEl = document.getElementById('grat-txt');
-  if(gratEl){
-    gratEl.value = getGratitude(symDay);
-    gratEl.oninput = () => saveGratitude(symDay, gratEl.value);
-  }
-  renderBristol();
-  renderJorveza();
-}
-function renderBristol(){
-  const el=document.getElementById('bristol-row');
-  if(!el)return;
-  const data=JSON.parse(localStorage.getItem('symptoms')||'{}');
-  const cur=data['bristol-'+symDay];
-  const cls=n=>n<=2?'b-hard':n<=4?'b-ok':'b-soft';
-  el.innerHTML=[1,2,3,4,5,6,7].map(n=>`<button class="bristol-btn ${cls(n)}${cur==n?' active-b':''}" onclick="setBristol(${n})">${n}</button>`).join('');
-}
-function setBristol(n){
-  const data=JSON.parse(localStorage.getItem('symptoms')||'{}');
-  if(data['bristol-'+symDay]==n)delete data['bristol-'+symDay];
-  else data['bristol-'+symDay]=n;
-  localStorage.setItem('symptoms',JSON.stringify(data));
-  renderBristol();
-}
-function renderJorveza(){
-  const data=JSON.parse(localStorage.getItem('symptoms')||'{}');
-  const v=data['jorveza-'+symDay];
-  const yes=document.getElementById('jor-yes'),no=document.getElementById('jor-no');
-  if(yes)yes.className='jor-btn jor-yes'+(v===true?' active-j':'');
-  if(no)no.className='jor-btn jor-no'+(v===false?' active-j':'');
-}
-function setJorveza(val){
-  const data=JSON.parse(localStorage.getItem('symptoms')||'{}');
-  if(data['jorveza-'+symDay]===val)delete data['jorveza-'+symDay];
-  else data['jorveza-'+symDay]=val;
-  localStorage.setItem('symptoms',JSON.stringify(data));
-  renderJorveza();
-}
-function getGratitude(day){
-  return JSON.parse(localStorage.getItem('symptoms')||'{}')['grat-'+day] || '';
-}
-function saveGratitude(day, val){
-  const data = JSON.parse(localStorage.getItem('symptoms')||'{}');
-  const k = 'grat-'+day;
-  if(val==='') delete data[k]; else data[k]=val;
-  localStorage.setItem('symptoms', JSON.stringify(data));
-}
-
-function renderSymWeek(){
-  const el = document.getElementById('sym-week-summary');
-  if(!el) return;
-  const data = JSON.parse(localStorage.getItem('symptoms')||'{}');
-  // Tag definitions with category
-  const TAG_MAP = [
-    {id:'great',   label:'Muy bien',    cls:'sym-tag-ok'},
-    {id:'ok',      label:'Normal',      cls:'sym-tag-ok'},
-    {id:'tired',   label:'Cansado',     cls:'sym-tag-mild'},
-    {id:'bad',     label:'Mal día',     cls:'sym-tag-bad'},
-    {id:'nodiarrea',label:'Sin diarrea',cls:'sym-tag-ok'},
-    {id:'soft',    label:'Heces blandas',cls:'sym-tag-mild'},
-    {id:'diarrea', label:'Diarrea',     cls:'sym-tag-bad'},
-    {id:'estreni', label:'Estreñimiento',cls:'sym-tag-bad'},
-    {id:'gases',   label:'Gases',       cls:'sym-tag-mild'},
-    {id:'dolor',   label:'Dolor abdominal',cls:'sym-tag-bad'},
-    {id:'hincha',  label:'Hinchazón',   cls:'sym-tag-mild'},
-    {id:'nausea',  label:'Náuseas',     cls:'sym-tag-bad'},
-    {id:'eok',     label:'Esófago OK',  cls:'sym-tag-ok'},
-    {id:'disfa',   label:'Disfagia',    cls:'sym-tag-mild'},
-    {id:'atasco',    label:'Atasco',           cls:'sym-tag-bad'},
-    {id:'ardor',     label:'Ardor',             cls:'sym-tag-bad'},
-    {id:'pielok',    label:'Piel OK',            cls:'sym-tag-ok'},
-    {id:'picorpiel', label:'Picores piel',       cls:'sym-tag-bad'},
-    {id:'picorpubis',label:'Picores pubis',      cls:'sym-tag-bad'},
-    {id:'dermatis',  label:'Dermatitis',         cls:'sym-tag-mild'},
-    {id:'rojeces',   label:'Rojeces/eccema',     cls:'sym-tag-mild'},
-    {id:'urticaria', label:'Urticaria',          cls:'sym-tag-bad'},
-  ];
-  let html = '<div class="sym-week-grid">';
-  DAYS.forEach((d,i) => {
-    const hasAny = Object.keys(data).some(k => k.startsWith('sym-'+i+'-'));
-    const hasBad = data['sym-'+i+'-bad']||data['sym-'+i+'-diarrea']||data['sym-'+i+'-dolor']||data['sym-'+i+'-atasco'];
-    const hasMild = !hasBad && (data['sym-'+i+'-tired']||data['sym-'+i+'-soft']||data['sym-'+i+'-gases']||data['sym-'+i+'-hincha']||data['sym-'+i+'-disfa']||data['sym-'+i+'-ardor']);
-    const hasGood = !hasBad && !hasMild && (data['sym-'+i+'-great']||data['sym-'+i+'-ok']||data['sym-'+i+'-nodiarrea']||data['sym-'+i+'-eok']);
-    const emoji = !hasAny ? '⬜' : hasBad ? '🔴' : hasMild ? '🟡' : '🟢';
-    const borderColor = !hasAny ? 'rgba(255,255,255,0.05)' : hasBad ? 'rgba(255,69,58,0.3)' : hasMild ? 'rgba(255,159,10,0.3)' : 'rgba(48,209,88,0.3)';
-    const activeTags = TAG_MAP.filter(t => data['sym-'+i+'-'+t.id]);
-    const note = data['sym-'+i+'-note'] || '';
-    html += `<div class="sym-week-card" style="border:1.5px solid ${borderColor};">
-      <div class="sym-week-day-header">
-        <div class="sym-week-emoji">${emoji}</div>
-        <div class="sym-week-day-name">${d}</div>
-        ${!hasAny ? '<div style="font-size:11.5px;color:#3A3A3C;">Sin registrar</div>' : ''}
-      </div>
-      ${activeTags.length ? `<div class="sym-week-tags">${activeTags.map(t=>`<span class="sym-tag ${t.cls}">${t.label}</span>`).join('')}</div>` : ''}
-      ${note ? `<div class="sym-week-note">📝 ${note}</div>` : ''}
-      ${(data['bristol-'+i]) ? `<div class="sym-week-note" style="color:#6AB8FF;">💩 Bristol ${data['bristol-'+i]}/7${data['jorveza-'+i]===false?' · ⚠️ sin Jorveza':''}</div>` : (data['jorveza-'+i]===false?`<div class="sym-week-note" style="color:#FF8A85;">⚠️ Sin Jorveza</div>`:'')}
-      ${(data['grat-'+i]) ? `<div class="sym-week-note" style="color:#FFB340;">🌻 ${data['grat-'+i]}</div>` : ''}
-    </div>`;
-  });
-  html += '</div>';
-  el.innerHTML = html;
-}
-
-function exportSymptoms(){
-  const data = JSON.parse(localStorage.getItem('symptoms')||'{}');
-  const today = new Date().toLocaleDateString('es-ES',{weekday:'long',year:'numeric',month:'long',day:'numeric'});
-  let txt = `SÍNTOMAS SEMANALES — NUTRIPLAN\nExportado: ${today}\n${'-'.repeat(40)}\n\n`;
-  DAYS.forEach((d,i) => {
-    const active = [];
-    [...SYM_GENERAL, ...SYM_DIGESTION, ...SYM_ESOFAGO].forEach(s => {
-      if(data['sym-'+i+'-'+s.id]) active.push(s.label.replace(/[\u{1F000}-\u{1FFFF}]/gu,'').trim());
-    });
-    const note = data['sym-'+i+'-note'] || '';
-    txt += `📅 ${d.toUpperCase()}\n`;
-    if(active.length) txt += `  Síntomas: ${active.join(' · ')}\n`;
-    else txt += `  Sin registro\n`;
-    if(note) txt += `  Notas: ${note}\n`;
-    const grat=data['grat-'+i]; if(grat) txt += `  🌻 Gratitud: ${grat}\n`;
-    txt += '\n';
-  });
-  if(navigator.share){
-    navigator.share({title:'Síntomas semana — NutriPlan', text: txt}).catch(()=>{});
-  } else {
-    navigator.clipboard.writeText(txt).then(()=>alert('Síntomas copiados al portapapeles')).catch(()=>{
-      const ta=document.createElement('textarea');ta.value=txt;document.body.appendChild(ta);ta.select();document.execCommand('copy');document.body.removeChild(ta);alert('Copiado');
-    });
-  }
-}
 
 // ==============================================================================
 // RECORDATORIOS
@@ -1408,7 +1167,6 @@ const REMIND_SLOTS = [
     {name:'L-Glutamina ZE 877 (1ª)', dose:'1 cáp · antes del desayuno'},
   ]},
   { time:'07:45', label:'Desayuno', icon:'🍳', items:[
-    {name:'Akkermansia Metagenics', dose:'1 comp · con alimento'},
     {name:'Buty-D extra', dose:'Solo si diarrea ese día'},
   ]},
   { time:'13:45', label:'Antes de comer', icon:'⏱', items:[
@@ -1418,6 +1176,7 @@ const REMIND_SLOTS = [
     {name:'Probiótico del día', dose:'IMPAR: Biome Balance · PAR: Vivomixx · con alimento'},
     {name:'Eubiotics Buty-D', dose:'1 cáp · con la comida'},
     {name:'Finasteride', dose:'1 comp · con la comida'},
+    {name:'PrEP', dose:'1 comp · con alimento · siempre a la misma hora'},
   ]},
   { time:'14:30', label:'Después de comer', icon:'🦷', items:[
     {name:'Jorveza 0,5mg', dose:'Disolver, 30 min sin nada, enjuagar y escupir'},
@@ -1427,9 +1186,6 @@ const REMIND_SLOTS = [
   ]},
   { time:'21:00', label:'Cena', icon:'🌙', items:[
     {name:'NPRO Lactoferrina', dose:'1 cáp · con la cena'},
-  ]},
-  { time:'23:00', label:'Antes de dormir', icon:'🌑', items:[
-    {name:'Mycostatin', dose:'Mientras dure candidiasis · enjuague y tragar'},
   ]},
 ];
 
@@ -1466,13 +1222,12 @@ function calcSuplTimes(bf, di){
   }
   return [
     add(bf,-30),   // 0: Al levantarte
-    bf,            // 1: Desayuno (Akkermansia)
+    bf,            // 1: Desayuno
     add(di,-15),   // 2: Antes de comer (Glutamina 2ª)
     di,            // 3: Comida (probiótico, Buty-D, Finasteride)
     add(di,30),    // 4: Después de comer (Jorveza)
     add(di,210),   // 5: Media tarde (Zinc 2ª) ~3.5h tras comer
     add(di,420),   // 6: Cena
-    add(di,540),   // 7: Antes de dormir (Mycostatin)
   ];
 }
 function buildRemindTimeline(){
@@ -1599,6 +1354,49 @@ function saveFastTimes(){
     dinner:    di ? di.value : '21:00'
   }));
 }
+
+// -- DÍAS DE ENTRENO (por semana ISO) --------------------------------------
+function getWeekKey(){
+  const now=new Date();
+  const oneJan=new Date(now.getFullYear(),0,1);
+  const week=Math.ceil((((now-oneJan)/86400000)+oneJan.getDay()+1)/7);
+  return 'train-'+now.getFullYear()+'-w'+week;
+}
+function getTrainingDays(){ try{return JSON.parse(localStorage.getItem(getWeekKey())||'[]');}catch(e){return [];} }
+function toggleTrainingDay(i){
+  let d=getTrainingDays();
+  d = d.includes(i) ? d.filter(x=>x!==i) : d.concat([i]);
+  localStorage.setItem(getWeekKey(),JSON.stringify(d));
+  buildTrainingDays(); renderMeals();
+}
+function buildTrainingDays(){
+  const el=document.getElementById('train-days'); if(!el) return;
+  const d=getTrainingDays();
+  el.innerHTML=DAYS.map((n,i)=>`<button class="train-day${d.includes(i)?' training':''}" onclick="toggleTrainingDay(${i})">${n}</button>`).join('');
+}
+function isTrainingDay(i){ return getTrainingDays().includes(i); }
+
+// -- CABECERA SEMANA/FECHA --------------------------------------------------
+function updatePlanWeekSub(){
+  const el=document.getElementById('plan-week-sub'); if(!el) return;
+  const now=new Date();
+  const oneJan=new Date(now.getFullYear(),0,1);
+  const week=Math.ceil((((now-oneJan)/86400000)+oneJan.getDay()+1)/7);
+  const meses=['ene','feb','mar','abr','may','jun','jul','ago','sep','oct','nov','dic'];
+  el.textContent='Semana '+week+' · '+now.getDate()+' '+meses[now.getMonth()]+' '+now.getFullYear()+' · SG/SL/SA';
+}
+
+// -- INIT AYUNO -------------------------------------------------------------
+function initFasting(){
+  const bf=document.getElementById('fast-breakfast');
+  const di=document.getElementById('fast-dinner');
+  if(!bf||!di) return;
+  loadFastTimes();
+  bf.addEventListener('change',()=>{saveFastTimes();updateFasting();});
+  di.addEventListener('change',()=>{saveFastTimes();updateFasting();});
+  updateFasting();
+}
+
 function addMinutes(time, mins){
   const [h,m] = time.split(':').map(Number);
   const total = h*60 + m + mins;
@@ -1659,128 +1457,19 @@ function updateFasting(){
 
   // Supplement schedule note
   buildRemindTimeline();
-  note.innerHTML = `<b>📋 Horario estimado para hoy (ajusta en Calculadora):</b><br/>
+  note.innerHTML = `<b>📋 Horario estimado para hoy (ajusta arriba):</b><br/>
     🌄 <b>${zinc_morning}</b> → Zinc + Miconeo + Neuraxbiotic + L-Glutamina<br/>
-    🍳 <b>${breakfast}</b> → Desayuno · Akkermansia<br/>
-    ⏱ <b>${glut_lunch}</b> → L-Glutamina 2ª (antes de comer)<br/>
-    🍽️ Comida → Probiótico del día · Buty-D · Finasteride<br/>
+    🍳 <b>${breakfast}</b> → Desayuno<br/>
+    ⏱ Antes de comer → L-Glutamina 2ª<br/>
+    🍽️ Comida → Probiótico del día · Buty-D · Finasteride · PrEP<br/>
     🦷 Después de comer → Jorveza (disolver, 30 min, enjuagar)<br/>
     🌿 <b>17:30</b> → Zinc-carnosina 2ª (ayunas)<br/>
-    🌙 <b>${dinner}</b> → Cena · NPRO Lactoferrina<br/>
-    🌑 Antes de dormir → Mycostatin`;
+    🌙 <b>${dinner}</b> → Cena · NPRO Lactoferrina`;
 }
 
-
-function updatePlanWeekSub(){
-  const el=document.getElementById('plan-week-sub');
-  if(!el)return;
-  const now=new Date();
-  const oneJan=new Date(now.getFullYear(),0,1);
-  const week=Math.ceil((((now-oneJan)/86400000)+oneJan.getDay()+1)/7);
-  const months=['ene','feb','mar','abr','may','jun','jul','ago','sep','oct','nov','dic'];
-  const dateStr=now.getDate()+' '+months[now.getMonth()]+' '+now.getFullYear();
-  el.textContent='Semana '+week+' · '+dateStr+' · SG/SL/SA';
-}
-
-
-function getWeekKey(){
-  const now=new Date();
-  const oneJan=new Date(now.getFullYear(),0,1);
-  const week=Math.ceil((((now-oneJan)/86400000)+oneJan.getDay()+1)/7);
-  return 'train-'+now.getFullYear()+'-w'+week;
-}
-function getTrainingDays(){
-  return JSON.parse(localStorage.getItem(getWeekKey())||'[]');
-}
-function toggleTrainingDay(i){
-  let days=getTrainingDays();
-  if(days.includes(i))days=days.filter(d=>d!==i);
-  else days.push(i);
-  localStorage.setItem(getWeekKey(),JSON.stringify(days));
-  buildTrainingDays();
-  renderMeals();
-}
-function buildTrainingDays(){
-  const el=document.getElementById('train-days');
-  if(!el)return;
-  const days=getTrainingDays();
-  el.innerHTML=DAYS.map((d,i)=>`<button class="train-day${days.includes(i)?' training':''}" onclick="toggleTrainingDay(${i})">${d}</button>`).join('');
-}
-function isTrainingDay(i){
-  return getTrainingDays().includes(i);
-}
-
-function initFasting(){ loadFastTimes(); updateFasting(); }
-initFasting();
 function exportAll(){
-  const plan = currentMenu===0?PLAN1:currentMenu===1?PLAN2:PLAN3;
-  const menuName = currentMenu===0?'Menú 1 — Casa':currentMenu===1?'Menú 2 — Airfryer':'Menú 3 — Fuera de casa';
-  const log = JSON.parse(localStorage.getItem('meallog')||'{}');
-  const symData = JSON.parse(localStorage.getItem('symptoms')||'{}');
-  // (legacy suplData replaced by suplDataAll for per-day tracking)
-  const today = new Date().toLocaleDateString('es-ES',{weekday:'long',year:'numeric',month:'long',day:'numeric'});
   const bar = '='.repeat(42);
-
-  let txt = `${bar}\nRESUMEN SEMANAL COMPLETO — NUTRIPLAN\n${menuName}\nExportado: ${today}\n${bar}\n\n`;
-
-  // -- DIETA --
-  txt += `🍽️  DIETA\n${'-'.repeat(42)}\n`;
-  let totalM=0, doneM=0;
-  DAYS.forEach((d,i)=>{
-    txt += `\n📅 ${d.toUpperCase()} — ${plan[i].totalKcal} kcal\n`;
-    plan[i].meals.forEach((m,j)=>{
-      totalM++;
-      const key = getMealKey(i, currentMenu, j);
-      const done = log[key+'-done']||false;
-      const note = log[key+'-note']||'';
-      if(done) doneM++;
-      txt += `  ${done?'✅':'⬜'} ${m.type}: ${m.name}\n`;
-      if(note) txt += `     📝 ${note}\n`;
-    });
-  });
-  txt += `\n📊 Adherencia dieta: ${doneM}/${totalM} (${Math.round(doneM/totalM*100)}%)\n`;
-
-  // -- SÍNTOMAS --
-  txt += `\n\n🩺  SÍNTOMAS\n${'-'.repeat(42)}\n`;
-  const ALL_SYMS = [...SYM_GENERAL,...SYM_DIGESTION,...SYM_ESOFAGO,...SYM_PIEL];
-  DAYS.forEach((d,i)=>{
-    const active = ALL_SYMS.filter(s=>symData['sym-'+i+'-'+s.id]);
-    const note = symData['sym-'+i+'-note']||'';
-    txt += `\n📅 ${d.toUpperCase()}\n`;
-    if(active.length){
-      txt += `  ${active.map(s=>s.label.split(' ').slice(1).join(' '))}\n`;
-    } else {
-      txt += `  Sin registro\n`;
-    }
-    if(note) txt += `  📝 ${note}\n`;
-    const g=symData['grat-'+i]; if(g) txt += `  🌻 ${g}\n`;
-  });
-
-  // -- CORRELACIÓN COMIDA-SÍNTOMA --
-  txt += `\n\n🔍  CORRELACIÓN COMIDA ↔ SÍNTOMA\n${'-'.repeat(42)}\n`;
-  txt += `Días con síntomas digestivos y qué se comió ese día:\n`;
-  let foundCorr=false;
-  DAYS.forEach((d,i)=>{
-    const hasBadDigest = symData['sym-'+i+'-diarrea']||symData['sym-'+i+'-soft']||symData['sym-'+i+'-gases']||symData['sym-'+i+'-dolor']||symData['sym-'+i+'-hincha'];
-    const bristol = symData['bristol-'+i];
-    const badBristol = bristol && bristol>=5;
-    if(hasBadDigest||badBristol){
-      foundCorr=true;
-      txt += `\n📅 ${d.toUpperCase()}`;
-      if(bristol) txt += ` · Bristol ${bristol}/7`;
-      txt += `\n`;
-      // What was eaten (notes override planned)
-      plan[i].meals.forEach((m,j)=>{
-        const key=getMealKey(i,currentMenu,j);
-        const note=log[key+'-note']||'';
-        const done=log[key+'-done'];
-        if(note) txt += `   • ${m.type}: ${note} (real)\n`;
-        else if(done) txt += `   • ${m.type}: ${m.name}\n`;
-      });
-      if(symData['jorveza-'+i]===false) txt += `   ⚠️ No tomó Jorveza\n`;
-    }
-  });
-  if(!foundCorr) txt += `\n✅ Sin días de síntomas digestivos destacables esta semana.\n`;
+  let txt = `${bar}\n🌿  RESUMEN COMPLETO NUTRIPLAN\n${bar}\n`;
 
   // -- SUPLEMENTACIÓN POR DÍAS --
   txt += `\n\n💊  SUPLEMENTACIÓN — ADHERENCIA SEMANAL\n${'-'.repeat(42)}\n`;
@@ -1813,6 +1502,10 @@ function exportAll(){
     });
   }
 }
+
+
+// -- INIT DIFERIDO (tras declarar REMIND_SLOTS y demás const) ---------------
+initFasting();
 
 </script>
 </body>
